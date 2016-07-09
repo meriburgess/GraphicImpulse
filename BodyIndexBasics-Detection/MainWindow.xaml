@@ -1,0 +1,71 @@
+﻿<Window x:Class="Microsoft.Samples.Kinect.BodyIndexBasics.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Detection_2" 
+        Height="727.595" Width="1131.392" 
+        Closing="MainWindow_Closing">
+    <Window.Resources>
+        <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
+        <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f" />
+        <SolidColorBrush x:Key="KinectBlueBrush" Color="#ff00BCF2" />
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+
+    </Window.Resources>
+    <Grid Margin="10,0,19,6" RenderTransformOrigin="0.479,0.705">
+
+        <Viewbox Grid.Row="1" HorizontalAlignment="Left">
+            <Image Source="{Binding BodyImageSource}" Stretch="UniformToFill" />
+        </Viewbox>
+
+        <Viewbox Grid.Row="1" HorizontalAlignment="Left">
+            <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
+        </Viewbox>
+
+
+
+        <TextBox x:Name="statusTitleText" HorizontalAlignment="Left" Height="20" Margin="857,162,0,0" TextWrapping="Wrap" Text="Sensor Status:" VerticalAlignment="Top" Width="96" FontSize="10.667" TextAlignment="Center"/>
+        <TextBox x:Name="statusTextBox" HorizontalAlignment="Left" Height="20" Margin="953,162,0,0" TextWrapping="Wrap" Text="{Binding StatusText}" VerticalAlignment="Top" Width="131" />
+
+        <TextBox x:Name="regionTitleText" HorizontalAlignment="Left" Height="43" Margin="857,182,0,0" TextWrapping="Wrap" Text="Region X-Y-Z:" VerticalAlignment="Top" Width="96" TextAlignment="Center" FontSize="10.667"/>
+        <TextBox x:Name="regionText" HorizontalAlignment="Left" Height="43" Margin="953,182,0,0" TextWrapping="Wrap" Text="{Binding XYZregion}" VerticalAlignment="Top" Width="131"/>
+
+        <TextBox x:Name="sidewaysTitleText" HorizontalAlignment="Left" Height="16" Margin="857,225,0,0" TextWrapping="Wrap" Text="Sideways Movement:" VerticalAlignment="Top" Width="96" FontSize="9.333" TextAlignment="Center"/>
+        <TextBox x:Name="sidewaysText" HorizontalAlignment="Left" Height="16" Margin="953,225,0,0" TextWrapping="Wrap" Text="{Binding sidewaysMvmt}" VerticalAlignment="Top" Width="131"/>
+
+        <TextBox x:Name="upDownTitleText" HorizontalAlignment="Left" Height="34" Margin="857,241,0,0" TextWrapping="Wrap" Text="Vertical Movement:" VerticalAlignment="Top" Width="96" FontSize="9.333" TextAlignment="Center"/>
+        <TextBox x:Name="upDownText" HorizontalAlignment="Left" Height="34" Margin="953,241,0,0" TextWrapping="Wrap" Text="{Binding upDownMvmt}" VerticalAlignment="Top" Width="131"/>
+
+        <TextBox x:Name="sweepTitleText" HorizontalAlignment="Left" Height="18" Margin="857,275,0,0" TextWrapping="Wrap" Text="Sweep:" VerticalAlignment="Top" Width="96" TextAlignment="Center" FontSize="10.667"/>
+        <TextBox x:Name="sweepText" HorizontalAlignment="Left" Height="18" Margin="953,275,0,0" TextWrapping="Wrap" Text="{Binding sweepMvmt}" VerticalAlignment="Top" Width="131"/>
+
+        <TextBox x:Name="rightHandTitleText" HorizontalAlignment="Left" Height="18" Margin="857,293,0,0" TextWrapping="Wrap" Text="Right Hand Gesture:" VerticalAlignment="Top" Width="96" FontSize="9.333" TextAlignment="Center"/>
+        <TextBox x:Name="rightHandText" HorizontalAlignment="Left" Height="18" Margin="953,293,0,0" TextWrapping="Wrap" Text="{Binding RightHandGestureText}" VerticalAlignment="Top" Width="131"/>
+        <Rectangle x:Name="rightHandOpenRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="12" Margin="958,296,0,0"  VerticalAlignment="Top" Width="19"/>
+        <Rectangle x:Name="rightHandClosedRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="12" Margin="977,296,0,0"  VerticalAlignment="Top" Width="19"/>
+        <Rectangle x:Name="rightHandLassoRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="12" Margin="996,296,0,0"  VerticalAlignment="Top" Width="19"/>
+        <Rectangle x:Name="rightHandUnknownRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="12" Margin="1015,296,0,0"  VerticalAlignment="Top" Width="19"/>
+        <Rectangle x:Name="rightHandNotTrackedRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="12" Margin="1035,296,0,0"  VerticalAlignment="Top" Width="19"/>
+
+        <TextBox x:Name="leftHandTitleText" HorizontalAlignment="Left" Height="18" Margin="857,311,0,0" TextWrapping="Wrap" Text="Left Hand Gesture:" VerticalAlignment="Top" Width="96" FontSize="9.333" TextAlignment="Center"/>
+        <TextBox x:Name="leftHandText" HorizontalAlignment="Left" Height="18" Margin="953,311,0,0" TextWrapping="Wrap" Text="{Binding LeftHandGestureText}" VerticalAlignment="Top" Width="131"/>
+        <Rectangle x:Name="leftHandOpenRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="12" Margin="958,313,0,0" VerticalAlignment="Top" Width="19"/>
+        <Rectangle x:Name="leftHandClosedRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="12" Margin="977,313,0,0" VerticalAlignment="Top" Width="19"/>
+        <Rectangle x:Name="leftHandLassoRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="12" Margin="996,313,0,0"  VerticalAlignment="Top" Width="19"/>
+        <Rectangle x:Name="leftHandUnknownRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="12" Margin="1015,313,0,0"  VerticalAlignment="Top" Width="19"/>
+        <Rectangle x:Name="leftHandNotTrackedRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="12" Margin="1034,313,0,0"  VerticalAlignment="Top" Width="19"/>
+
+        <TextBox x:Name="velocityTitleText" HorizontalAlignment="Left" Height="16" Margin="857,329,0,0" TextWrapping="Wrap" Text="Velocity:" VerticalAlignment="Top" Width="96" FontSize="10.667" TextAlignment="Center"/>
+        <TextBox x:Name="velocityText" HorizontalAlignment="Left" Height="16" Margin="953,329,0,0" TextWrapping="Wrap" Text="{Binding velocityOverall}" VerticalAlignment="Top" Width="131"/>
+
+        <TextBox x:Name="orientationTitleText" HorizontalAlignment="Left" Height="20" Margin="857,345,0,0" TextWrapping="Wrap" Text="Orientation:" VerticalAlignment="Top" Width="96" FontSize="10.667" TextAlignment="Center"/>
+        <TextBox x:Name="orientationText" HorizontalAlignment="Left" Height="20" Margin="953,345,0,0" TextWrapping="Wrap" Text="{Binding bodyOrientation}" VerticalAlignment="Top" Width="131"/>
+
+        <TextBox x:Name="timeTitleText" HorizontalAlignment="Left" Height="21" Margin="857,365,0,0" TextWrapping="Wrap" Text="Timer: " VerticalAlignment="Top" Width="96" FontSize="10.667" TextAlignment="Center"/>
+        <TextBox x:Name="timeText" HorizontalAlignment="Left" Height="21" Margin="953,365,0,0" TextWrapping="Wrap" Text="{Binding timerValue}" VerticalAlignment="Top" Width="131"/>
+
+
+
+    </Grid>
+</Window>
