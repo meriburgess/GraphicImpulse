@@ -70,6 +70,27 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private readonly Brush redBrush = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
         private readonly Brush lightPurpleBrush = new SolidColorBrush(Color.FromArgb(100, 204, 0, 153));
         private readonly Brush purpleBrush = new SolidColorBrush(Color.FromArgb(255, 204, 0, 153));
+
+
+        private readonly Brush[, ,] regionBrushes = 
+            {
+                   {
+                        { new SolidColorBrush(Color.FromArgb(255, 0, 0, 255)), new SolidColorBrush(Color.FromArgb(255, 0, 21, 184)), new SolidColorBrush(Color.FromArgb(255, 0, 12, 90)) }, 
+                        { new SolidColorBrush(Color.FromArgb(255, 60, 210, 200)),   new SolidColorBrush(Color.FromArgb(255, 32, 175, 135)),  new SolidColorBrush(Color.FromArgb(255, 20, 150, 50)) },
+                        {  new SolidColorBrush(Color.FromArgb(255, 40, 250, 240)),  new SolidColorBrush(Color.FromArgb(255, 40, 250, 170)),  new SolidColorBrush(Color.FromArgb(255, 20, 235, 40)) },
+                   },
+                   {
+                        { new SolidColorBrush(Color.FromArgb(255, 190, 45, 230)), new SolidColorBrush(Color.FromArgb(255, 200, 60, 120)), new SolidColorBrush(Color.FromArgb(255, 135, 10, 20)) }, 
+                        { new SolidColorBrush(Color.FromArgb(255, 225, 135, 255)), new SolidColorBrush(Color.FromArgb(255, 168, 90, 135)), new SolidColorBrush(Color.FromArgb(255, 190, 100, 20))}, 
+                        { new SolidColorBrush(Color.FromArgb(255, 225, 150, 255)), new SolidColorBrush(Color.FromArgb(255, 10, 255, 105)), new SolidColorBrush(Color.FromArgb(255, 100, 230, 150))}
+                   },
+                   { 
+                        { new SolidColorBrush(Color.FromArgb(255, 255, 145, 250)), new SolidColorBrush(Color.FromArgb(255,255, 55, 250)), new SolidColorBrush(Color.FromArgb(255, 255, 30, 80)) }, 
+                        { new SolidColorBrush(Color.FromArgb(255, 250, 180, 255)), new SolidColorBrush(Color.FromArgb(255, 255, 155, 153)), new SolidColorBrush(Color.FromArgb(255, 255, 190, 40)) }, 
+                        { new SolidColorBrush(Color.FromArgb(255, 255, 210, 255)), new SolidColorBrush(Color.FromArgb(255, 255, 244, 125)), new SolidColorBrush(Color.FromArgb(255, 255, 234, 0)) },
+                    },
+            };
+
         /// <summary>
         /// Brush used for drawing hands that are currently tracked as closed
         /// </summary>
@@ -965,152 +986,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             }
 
             Console.WriteLine("XYZ region: " + xRegion + ", " + yRegion + ", " + zRegion);
-            regionTextyText.Text = "XYZ region: " + xRegion + ", " + yRegion + ", " + zRegion;
+            regionText.Text = "XYZ region: " + xRegion + ", " + yRegion + ", " + zRegion;
 
-            if (xRegion == 1)
-            {
-                if(yRegion == 1)
-                {
-                    if (zRegion == 1)
-                    {
-                        _111Region.Fill = blueBrush;
-                    }
-                    else if (zRegion == 2 )
-                    {
-                        _112Region.Fill = blueBrush;
-                    }
-                    else
-                    {
-                        _113Region.Fill = blueBrush;
-                    }
-                }
-                else if (yRegion == 2)
-                {
-                    if (zRegion == 1)
-                    {
-                        _121Region.Fill = purpleBrush;
-                    }
-                    else if (zRegion == 2)
-                    {
-                        _122Region.Fill = purpleBrush;
-                    }
-                    else
-                    {
-                        _123Region.Fill = purpleBrush;
-                    }
-                }
-                else
-                {
-                    if (zRegion == 1)
-                    {
-                        _131Region.Fill = redBrush;
-                    }
-                    else if (zRegion == 2)
-                    {
-                        _132Region.Fill = redBrush;
-                    }
-                    else
-                    {
-                        _133Region.Fill = redBrush;
-                    }
-                }
-            }
-            else if (xRegion == 2)
-            {
-                if (yRegion == 1)
-                {
-                    if (zRegion == 1)
-                    {
-                        _211Region.Fill = blueBrush;
-                    }
-                    else if (zRegion == 2)
-                    {
-                        _212Region.Fill = blueBrush;
-                    }
-                    else
-                    {
-                        _213Region.Fill = blueBrush;
-                    }
-                }
-                else if (yRegion == 2)
-                {
-                    if (zRegion == 1)
-                    {
-                        _221Region.Fill = purpleBrush;
-                    }
-                    else if (zRegion == 2)
-                    {
-                        _222Region.Fill = purpleBrush;
-                    }
-                    else
-                    {
-                        _223Region.Fill = purpleBrush;
-                    }
-                }
-                else
-                {
-                    if (zRegion == 1)
-                    {
-                        _331Region.Fill = redBrush;
-                    }
-                    else if (zRegion == 2)
-                    {
-                        _332Region.Fill = redBrush;
-                    }
-                    else
-                    {
-                        _333Region.Fill = redBrush;
-                    }
-                }
-            }
-            else
-            {
-                if (yRegion == 1)
-                {
-                    if (zRegion == 1)
-                    {
-                        _311Region.Fill = blueBrush;
-                    }
-                    else if (zRegion == 2)
-                    {
-                        _312Region.Fill = blueBrush;
-                    }
-                    else
-                    {
-                        _313Region.Fill = blueBrush;
-                    }
-                }
-                else if (yRegion == 2)
-                {
-                    if (zRegion == 1)
-                    {
-                        _321Region.Fill = purpleBrush;
-                    }
-                    else if (zRegion == 2)
-                    {
-                        _322Region.Fill = purpleBrush;
-                    }
-                    else
-                    {
-                        _323Region.Fill = purpleBrush;
-                    }
-                }
-                else
-                {
-                    if (zRegion == 1)
-                    {
-                        _331Region.Fill = redBrush;
-                    }
-                    else if (zRegion == 2)
-                    {
-                        _332Region.Fill = redBrush;
-                    }
-                    else
-                    {
-                        _333Region.Fill = redBrush;
-                    }
-                }
-            }
+            regionColorRect.Fill = regionBrushes[xRegion-1, yRegion-1, zRegion-1];
+
         }
 
         /// <summary>

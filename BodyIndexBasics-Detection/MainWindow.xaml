@@ -28,44 +28,19 @@
         <TextBox x:Name="statusTitleText" HorizontalAlignment="Left" Height="43" Margin="857,10,0,0" TextWrapping="Wrap" Text="Sensor Status:" VerticalAlignment="Top" Width="152" FontSize="22" TextAlignment="Center"/>
         <TextBox x:Name="statusTextBox" HorizontalAlignment="Left" Height="43" Margin="1009,10,0,0" TextWrapping="Wrap" Text="{Binding StatusText}" VerticalAlignment="Top" Width="288" />
 
-        <TextBox x:Name="regionTitleText" HorizontalAlignment="Left" Height="208" Margin="857,53,0,0" TextWrapping="Wrap" Text="Region&#xD;&#xA; X-Y-Z:" VerticalAlignment="Top" Width="152" TextAlignment="Center" FontSize="24"/>
-        <TextBox x:Name="regionText" HorizontalAlignment="Left" Height="208" Margin="1009,53,0,0" TextWrapping="Wrap" Text="{Binding XYZregion}" VerticalAlignment="Top" Width="288"/>
-        <Rectangle x:Name="_111Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1054,219,0,0" Stroke="Black" VerticalAlignment="Top" Width="46"/>
-        <Rectangle x:Name="_112Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="19" Margin="1041,200,0,0" Stroke="Black" VerticalAlignment="Top" Width="28"/>
-        <Rectangle x:Name="_113Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="8" Margin="1032,192,0,0" Stroke="Black" VerticalAlignment="Top" Width="17"/>
-        <Rectangle x:Name="_121Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="36" Margin="1054,156,0,0" Stroke="Black" VerticalAlignment="Top" Width="46"/>
-        <Rectangle x:Name="_122Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="19" Margin="1039,137,0,0" Stroke="Black" VerticalAlignment="Top" Width="28"/>
-        <Rectangle x:Name="_123Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="9" Margin="1030,128,0,0" Stroke="Black" VerticalAlignment="Top" Width="18"/>
-        <Rectangle x:Name="_131Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="36" Margin="1054,91,0,0" Stroke="Black" VerticalAlignment="Top" Width="46"/>
-        <Rectangle x:Name="_132Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="19" Margin="1039,72,0,0" Stroke="Black" VerticalAlignment="Top" Width="28"/>
-        <Rectangle x:Name="_133Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="9" Margin="1030,63,0,0" Stroke="Black" VerticalAlignment="Top" Width="18"/>
-        <Rectangle x:Name="_211Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1135,219,0,0" Stroke="Black" VerticalAlignment="Top" Width="46"/>
-        <Rectangle x:Name="_212Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="19" Margin="1122,200,0,0" Stroke="Black" VerticalAlignment="Top" Width="28"/>
-        <Rectangle x:Name="_213Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="8" Margin="1113,192,0,0" Stroke="Black" VerticalAlignment="Top" Width="17"/>
-        <Rectangle x:Name="_311Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1212,219,0,0" Stroke="Black" VerticalAlignment="Top" Width="46"/>
-        <Rectangle x:Name="_312Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="19" Margin="1199,200,0,0" Stroke="Black" VerticalAlignment="Top" Width="28"/>
-        <Rectangle x:Name="_313Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="8" Margin="1190,192,0,0" Stroke="Black" VerticalAlignment="Top" Width="17"/>
-        <Rectangle x:Name="_221Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1135,155,0,0" Stroke="Black" VerticalAlignment="Top" Width="46"/>
-        <Rectangle x:Name="_222Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="19" Margin="1122,136,0,0" Stroke="Black" VerticalAlignment="Top" Width="28"/>
-        <Rectangle x:Name="_223Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="8" Margin="1113,128,0,0" Stroke="Black" VerticalAlignment="Top" Width="17"/>
-        <Rectangle x:Name="_231Region"  Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1127,90,0,0" Stroke="Black" VerticalAlignment="Top" Width="46"/>
-        <Rectangle x:Name="_232Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="19" Margin="1114,71,0,0" Stroke="Black" VerticalAlignment="Top" Width="28"/>
-        <Rectangle x:Name="_233Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="8" Margin="1105,63,0,0" Stroke="Black" VerticalAlignment="Top" Width="17"/>
-        <Rectangle x:Name="_331Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1221,89,0,0" Stroke="Black" VerticalAlignment="Top" Width="46"/>
-        <Rectangle x:Name="_332Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="19" Margin="1208,70,0,0" Stroke="Black" VerticalAlignment="Top" Width="28"/>
-        <Rectangle x:Name="_333Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="8" Margin="1199,62,0,0" Stroke="Black" VerticalAlignment="Top" Width="17"/>
-        <Rectangle x:Name="_321Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1221,155,0,0" Stroke="Black" VerticalAlignment="Top" Width="46"/>
-        <Rectangle x:Name="_322Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="19" Margin="1208,136,0,0" Stroke="Black" VerticalAlignment="Top" Width="28"/>
-        <Rectangle x:Name="_323Region" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="8" Margin="1199,128,0,0" Stroke="Black" VerticalAlignment="Top" Width="17"/>
+        <TextBox x:Name="regionTitleText" HorizontalAlignment="Left" Height="140" Margin="857,53,0,0" TextWrapping="Wrap" Text="Region&#xD;&#xA; X-Y-Z:" VerticalAlignment="Top" Width="152" TextAlignment="Center" FontSize="24"/>
+        <TextBox x:Name="regionText" HorizontalAlignment="Left" Height="140" Margin="1009,53,0,0" TextWrapping="Wrap" Text="{Binding XYZregion}" VerticalAlignment="Top" Width="288" TextAlignment="Right"/>
+        <Rectangle x:Name="regionColorRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="66" Margin="1088,100,0,0" Stroke="Black" VerticalAlignment="Top" Width="133"/>
 
-        <TextBox x:Name="sidewaysTitleText" HorizontalAlignment="Left" Height="55" Margin="857,261,0,0" TextWrapping="Wrap" Text="Sideways Movement:" VerticalAlignment="Top" Width="152" FontSize="17" TextAlignment="Center"/>
-        <TextBox x:Name="sidewaysText" HorizontalAlignment="Left" Height="55" Margin="1009,261,0,0" TextWrapping="Wrap" Text="{Binding sidewaysMvmt}" VerticalAlignment="Top" Width="288"/>
-        <Rectangle x:Name="rightToLeftRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1026,274,0,0" VerticalAlignment="Top" Width="87" RenderTransformOrigin="1,1"/>
-        <Rectangle x:Name="noSidewaysRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1113,274,0,0" VerticalAlignment="Top" Width="87" RenderTransformOrigin="1,1"/>
-        <Rectangle x:Name="leftToRightRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1200,274,0,0" VerticalAlignment="Top" Width="87" RenderTransformOrigin="1,1"/>
 
-        <TextBox x:Name="upDownTitleText" HorizontalAlignment="Left" Height="68" Margin="857,316,0,0" TextWrapping="Wrap" Text="Vertical Movement:" VerticalAlignment="Top" Width="152" FontSize="24" TextAlignment="Center"/>
-        <TextBox x:Name="upDownText" HorizontalAlignment="Left" Height="68" Margin="1009,316,0,0" TextWrapping="Wrap" Text="{Binding upDownMvmt}" VerticalAlignment="Top" Width="288"/>
+        <TextBox x:Name="sidewaysTitleText" HorizontalAlignment="Left" Height="55" Margin="858,185,0,0" TextWrapping="Wrap" Text="Sideways Movement:" VerticalAlignment="Top" Width="151" FontSize="17" TextAlignment="Center"/>
+        <TextBox x:Name="sidewaysText" HorizontalAlignment="Left" Height="55" Margin="1010,185,0,0" TextWrapping="Wrap" Text="{Binding sidewaysMvmt}" VerticalAlignment="Top" Width="287"/>
+        <Rectangle x:Name="rightToLeftRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1027,198,0,0" VerticalAlignment="Top" Width="87" RenderTransformOrigin="1,1"/>
+        <Rectangle x:Name="noSidewaysRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1114,198,0,0" VerticalAlignment="Top" Width="87" RenderTransformOrigin="1,1"/>
+        <Rectangle x:Name="leftToRightRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="37" Margin="1201,198,0,0" VerticalAlignment="Top" Width="87" RenderTransformOrigin="1,1"/>
+
+        <TextBox x:Name="upDownTitleText" HorizontalAlignment="Left" Height="144" Margin="858,240,0,0" TextWrapping="Wrap" Text="Vertical Movement:" VerticalAlignment="Top" Width="152" FontSize="24" TextAlignment="Center"/>
+        <TextBox x:Name="upDownText" HorizontalAlignment="Left" Height="144" Margin="1009,240,0,0" TextWrapping="Wrap" Text="{Binding upDownMvmt}" VerticalAlignment="Top" Width="288"/>
 
         <TextBox x:Name="sweepTitleText" HorizontalAlignment="Left" Height="38" Margin="857,384,0,0" TextWrapping="Wrap" Text="Sweep:" VerticalAlignment="Top" Width="152" TextAlignment="Center" FontSize="24"/>
         <TextBox x:Name="sweepText" HorizontalAlignment="Left" Height="38" Margin="1009,384,0,0" TextWrapping="Wrap" Text="{Binding sweepMvmt}" VerticalAlignment="Top" Width="288"/>
@@ -102,7 +77,8 @@
 
         <TextBox x:Name="timeTitleText" HorizontalAlignment="Left" Height="49" Margin="857,632,0,0" TextWrapping="Wrap" Text="Timer: " VerticalAlignment="Top" Width="152" FontSize="27" TextAlignment="Center"/>
         <TextBox x:Name="timeText" HorizontalAlignment="Left" Height="49" Margin="1009,632,0,0" TextWrapping="Wrap" Text="{Binding timerValue}" VerticalAlignment="Top" Width="288"/>
-        <TextBox x:Name="regionTextyText" HorizontalAlignment="Left" Height="78" Margin="882,156,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="94"/>
+
+
 
 
 
