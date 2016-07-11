@@ -169,8 +169,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// Current status text to display
         /// </summary>
         private string statusText = null;
-        private string rightHandGesture = null;
-        private string leftHandGesture = null;
 
         private Dictionary<JointType, Point> oldPositions = new Dictionary<JointType, Point>()
             {
@@ -204,7 +202,19 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private double[] velocitiesX = new double[25];
         private double[] velocitiesY = new double[25];
         private double avgVelocity = 0;
-        
+
+
+        private double[] jointXCoordinates = new double[25];
+        private double[] jointYCoordinates = new double[25];
+        private double[] jointZCoordinates = new double[25];
+        private double[] avgXYZCoordinates = new double[3];
+
+        private const double maxXRange = 2.5;
+        private const double maxYRange = 1.5;
+        private const double maxZRange = 4.5;
+        private const double minXRange = -2.5;
+        private const double minYRange = -1.5;
+        private const double minZRange = 0;
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
@@ -484,15 +494,23 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                                                 //update old position
                                                 oldPositions[jointType] = new Point(jointPoints[jointType].X, jointPoints[jointType].Y);
+
+                                                jointXCoordinates[jointCount] = joints[jointType].Position.X;
+                                                jointYCoordinates[jointCount] = joints[jointType].Position.Y;
+                                                jointZCoordinates[jointCount] = joints[jointType].Position.Z;
+
                                             }
                                             //update joint count tracker
                                             jointCount++;
                                         }
+
+                                        getAvgCoordinates();
                                         getAvgVelocity();
                                         this.DrawBody(joints, jointPoints, dc, drawPen);
                                         this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc, true);
                                         this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc, false);
-                                        
+                                        Console.WriteLine("X: " + avgXYZCoordinates[0] + " Y: " + avgXYZCoordinates[1] + " Z: " + avgXYZCoordinates[2]);
+                                        getRegionOccupied();
                                     }
                                     
                                 }
@@ -879,6 +897,220 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             mediumVelocityRect.Fill = medBrush;
             medHighVelocityRect.Fill = medHiBrush;
             highVelocityRect.Fill = hiBrush;
+        }
+
+        private void getAvgCoordinates()
+        {
+            double totalX = 0;
+            double totalY = 0;
+            double totalZ = 0;
+
+            for (int i = 0; i < jointXCoordinates.Length; i++)
+            {
+                totalX += jointXCoordinates[i];
+                totalY += jointYCoordinates[i];
+                totalZ += jointZCoordinates[i];
+            }
+
+            avgXYZCoordinates[0] = totalX / jointXCoordinates.Length;
+            avgXYZCoordinates[1] = totalY / jointYCoordinates.Length;
+            avgXYZCoordinates[2] = totalZ / jointZCoordinates.Length;
+
+        }
+
+        private void getRegionOccupied()
+        {
+            int xRegion = 0;
+            int yRegion = 0;
+            int zRegion = 0;
+
+            if (avgXYZCoordinates[0] < -0.6)
+            {
+                xRegion = 1;
+            }
+            else if (avgXYZCoordinates[0] >=  0.6 && avgXYZCoordinates[0] < 1.0)
+            {
+                xRegion = 2;
+            }
+            else
+            {
+                xRegion = 3;
+            }
+
+            if (avgXYZCoordinates[1] < -0.25)
+            {
+                yRegion = 1;
+            }
+            else if (avgXYZCoordinates[1] >= -0.25 && avgXYZCoordinates[1] < 0.25)
+            {
+                yRegion = 2;
+            }
+            else
+            {
+                yRegion = 3;
+            }
+
+
+            if (avgXYZCoordinates[2] < 2.0)
+            {
+                zRegion = 1;
+            }
+            else if (avgXYZCoordinates[2] >= 2.0 && avgXYZCoordinates[2] < 3.3)
+            {
+                zRegion = 2;
+            }
+            else
+            {
+                zRegion = 3;
+            }
+
+            Console.WriteLine("XYZ region: " + xRegion + ", " + yRegion + ", " + zRegion);
+            regionTextyText.Text = "XYZ region: " + xRegion + ", " + yRegion + ", " + zRegion;
+
+            if (xRegion == 1)
+            {
+                if(yRegion == 1)
+                {
+                    if (zRegion == 1)
+                    {
+                        _111Region.Fill = blueBrush;
+                    }
+                    else if (zRegion == 2 )
+                    {
+                        _112Region.Fill = blueBrush;
+                    }
+                    else
+                    {
+                        _113Region.Fill = blueBrush;
+                    }
+                }
+                else if (yRegion == 2)
+                {
+                    if (zRegion == 1)
+                    {
+                        _121Region.Fill = purpleBrush;
+                    }
+                    else if (zRegion == 2)
+                    {
+                        _122Region.Fill = purpleBrush;
+                    }
+                    else
+                    {
+                        _123Region.Fill = purpleBrush;
+                    }
+                }
+                else
+                {
+                    if (zRegion == 1)
+                    {
+                        _131Region.Fill = redBrush;
+                    }
+                    else if (zRegion == 2)
+                    {
+                        _132Region.Fill = redBrush;
+                    }
+                    else
+                    {
+                        _133Region.Fill = redBrush;
+                    }
+                }
+            }
+            else if (xRegion == 2)
+            {
+                if (yRegion == 1)
+                {
+                    if (zRegion == 1)
+                    {
+                        _211Region.Fill = blueBrush;
+                    }
+                    else if (zRegion == 2)
+                    {
+                        _212Region.Fill = blueBrush;
+                    }
+                    else
+                    {
+                        _213Region.Fill = blueBrush;
+                    }
+                }
+                else if (yRegion == 2)
+                {
+                    if (zRegion == 1)
+                    {
+                        _221Region.Fill = purpleBrush;
+                    }
+                    else if (zRegion == 2)
+                    {
+                        _222Region.Fill = purpleBrush;
+                    }
+                    else
+                    {
+                        _223Region.Fill = purpleBrush;
+                    }
+                }
+                else
+                {
+                    if (zRegion == 1)
+                    {
+                        _331Region.Fill = redBrush;
+                    }
+                    else if (zRegion == 2)
+                    {
+                        _332Region.Fill = redBrush;
+                    }
+                    else
+                    {
+                        _333Region.Fill = redBrush;
+                    }
+                }
+            }
+            else
+            {
+                if (yRegion == 1)
+                {
+                    if (zRegion == 1)
+                    {
+                        _311Region.Fill = blueBrush;
+                    }
+                    else if (zRegion == 2)
+                    {
+                        _312Region.Fill = blueBrush;
+                    }
+                    else
+                    {
+                        _313Region.Fill = blueBrush;
+                    }
+                }
+                else if (yRegion == 2)
+                {
+                    if (zRegion == 1)
+                    {
+                        _321Region.Fill = purpleBrush;
+                    }
+                    else if (zRegion == 2)
+                    {
+                        _322Region.Fill = purpleBrush;
+                    }
+                    else
+                    {
+                        _323Region.Fill = purpleBrush;
+                    }
+                }
+                else
+                {
+                    if (zRegion == 1)
+                    {
+                        _331Region.Fill = redBrush;
+                    }
+                    else if (zRegion == 2)
+                    {
+                        _332Region.Fill = redBrush;
+                    }
+                    else
+                    {
+                        _333Region.Fill = redBrush;
+                    }
+                }
+            }
         }
 
         /// <summary>
