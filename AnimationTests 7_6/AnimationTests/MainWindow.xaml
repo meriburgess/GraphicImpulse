@@ -1,0 +1,13 @@
+﻿<Window x:Class="AnimationTests.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AnimationTests"
+        mc:Ignorable="d"
+        Title="Animation Tests" Height="479.959" Width="704.132">
+    <Grid>
+        <Canvas x:Name="myCanvas" HorizontalAlignment="Left" Height="428" Margin="19,10,0,0" VerticalAlignment="Top" Width="641" ClipToBounds="True"/>
+
+    </Grid>
+</Window>

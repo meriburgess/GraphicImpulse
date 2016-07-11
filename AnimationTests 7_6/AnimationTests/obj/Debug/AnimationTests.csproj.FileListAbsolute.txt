@@ -1,0 +1,42 @@
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\bin\Debug\AnimationTests.exe.config
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\bin\Debug\AnimationTests.exe
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\bin\Debug\AnimationTests.pdb
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\obj\Debug\AnimationTests.csprojResolveAssemblyReference.cache
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\obj\Debug\MainWindow.g.cs
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\obj\Debug\App.g.cs
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\obj\Debug\AnimationTests_MarkupCompile.cache
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\obj\Debug\AnimationTests_MarkupCompile.lref
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\obj\Debug\MainWindow.baml
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\obj\Debug\AnimationTests.g.resources
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\obj\Debug\AnimationTests.Properties.Resources.resources
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\obj\Debug\AnimationTests.csproj.GenerateResource.Cache
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\obj\Debug\AnimationTests.exe
+c:\users\ironlab\documents\visual studio 2015\Projects\AnimationTests\AnimationTests\obj\Debug\AnimationTests.pdb
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\bin\Debug\AnimationTests.exe.config
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\bin\Debug\AnimationTests.exe
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\bin\Debug\AnimationTests.pdb
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\obj\Debug\AnimationTests.csprojResolveAssemblyReference.cache
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\obj\Debug\MainWindow.g.cs
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\obj\Debug\App.g.cs
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\obj\Debug\AnimationTests_MarkupCompile.cache
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\obj\Debug\AnimationTests_MarkupCompile.lref
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\obj\Debug\MainWindow.baml
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\obj\Debug\AnimationTests.g.resources
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\obj\Debug\AnimationTests.Properties.Resources.resources
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\obj\Debug\AnimationTests.csproj.GenerateResource.Cache
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\obj\Debug\AnimationTests.exe
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 6_27\AnimationTests\obj\Debug\AnimationTests.pdb
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\bin\Debug\AnimationTests.exe.config
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\obj\Debug\AnimationTests.exe
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\obj\Debug\AnimationTests.pdb
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\bin\Debug\AnimationTests.exe
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\bin\Debug\AnimationTests.pdb
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\obj\Debug\AnimationTests.csprojResolveAssemblyReference.cache
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\obj\Debug\MainWindow.g.cs
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\obj\Debug\App.g.cs
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\obj\Debug\AnimationTests_MarkupCompile.cache
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\obj\Debug\AnimationTests_MarkupCompile.lref
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\obj\Debug\MainWindow.baml
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\obj\Debug\AnimationTests.g.resources
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\obj\Debug\AnimationTests.Properties.Resources.resources
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\AnimationTests 7_6\AnimationTests\obj\Debug\AnimationTests.csproj.GenerateResource.Cache

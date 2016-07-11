@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AnimationTests"
         mc:Ignorable="d"
-        Title="Animation Tests" Height="582.032" Width="558.624">
+        Title="Animation Tests" Height="479.959" Width="704.132">
     <Grid>
-        <Canvas x:Name="myCanvas" HorizontalAlignment="Left" Height="517" Margin="30,10,0,0" VerticalAlignment="Top" Width="503" ClipToBounds="True"/>
+        <Canvas x:Name="myCanvas" HorizontalAlignment="Left" Height="428" Margin="19,10,0,0" VerticalAlignment="Top" Width="641" ClipToBounds="True"/>
 
     </Grid>
 </Window>

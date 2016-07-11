@@ -36,6 +36,7 @@ namespace AnimationTests
         };
 
         private Storyboard mySBoard;
+        private Storyboard myLineSB;
 
         private const int linePoints = 70;
         private const int circleNum = 80;
@@ -48,6 +49,17 @@ namespace AnimationTests
         private Ellipse[] linePointCircles = new Ellipse[linePtCirNum];
 
         private Random rnd = new Random();
+
+        private const int numOfLines = 5;
+        private Line[] myLines = new Line[numOfLines];
+        private int startX;
+        private int startY;
+        private int endX;
+        private int endY;
+        private int YMove = 10;
+        private int XMove = 10;
+        private int XlineDuration = 3;
+        private int YlineDuration = 3;
         
         private Timer myTimer = new Timer();
         private TimeSpan myTS = new TimeSpan();
@@ -63,15 +75,50 @@ namespace AnimationTests
             myTimer.Enabled = true;
 
             mySBoard = new Storyboard();
+            myLineSB = new Storyboard();
+
 
             //this.wanderingCircles();
             //this.insertLine();
             //this.rainChunk();
             // this.insertSimpleLine();
-            this.insertSimplestLine(10, 10, 110, 100);
-            Console.WriteLine(myTimer);
 
-            
+
+            //int startX = rnd.Next(15, (int)myCanvas.Width - 15);
+            //int startY = rnd.Next(15, (int)myCanvas.Height - 15);
+            //int endX = rnd.Next(15, (int)myCanvas.Width - 15);
+            //int endY = rnd.Next(15, (int)myCanvas.Height - 15);
+
+            //for (int i = 0; i < numOfLines; i++)
+            //{
+            //    myLines[i] = new Line();
+
+            //    this.insertSimplestLine(myLines[i], startX, startY, endX, endY, i);
+            //    Console.WriteLine("Line no: " + i + " x1: " + myLines[i].X1 + " y1: " + myLines[i].Y1 + " x2: " + myLines[i].X2 + " y2: " + myLines[i].Y2);
+            //    this.animateSimplestLine(myLines[i], startX, startY, endX, endY, i);
+            //    Console.WriteLine("Line no: " + i + " x1: " + myLines[i].X1 + " y1: " + myLines[i].Y1 + " x2: " + myLines[i].X2 + " y2: " + myLines[i].Y2);
+
+
+            //    startX = endX;
+            //    startY = endY;
+
+            //    endX = rnd.Next(15, (int)myCanvas.Width - 15);
+            //    endY = rnd.Next(15, (int)myCanvas.Height - 15);
+
+
+            //}
+
+            this.createLines();
+
+            bool keepLinesMoving = true;
+
+            while (keepLinesMoving == true)
+            {
+                this.animateLines();
+            }
+
+            //Console.WriteLine(myTimer);
+
 
 
         }
@@ -102,9 +149,7 @@ namespace AnimationTests
             }
             myLine.Points = myPCollection;
             myCanvas.Children.Add(myLine);
-
-
-
+            
         }
 
         private void insertSimpleLine()
@@ -152,41 +197,70 @@ namespace AnimationTests
             }
         }
 
-        private void insertSimplestLine(int x1, int y1, int x2, int y2)
+        private void insertSimplestLine(Line line, int x1, int y1, int x2, int y2, int lineCount)
         {
-            Line myLine = new Line();
-            myLine.Stroke = Brushes.Crimson;
-            myLine.StrokeThickness = 2;
-            myLine.X1 = x1;
-            myLine.Y2 = y2;
-           // myLine.X2 = x2;
-            //myLine.Y2 = y2;
-            myCanvas.Children.Add(myLine);
-            Storyboard sb = new Storyboard();
-            DoubleAnimation Yanim = new DoubleAnimation(myLine.Y2, 10, new Duration(new TimeSpan(1,0,1)));
-            DoubleAnimation Xanim = new DoubleAnimation(myLine.X2, 10, new Duration(new TimeSpan(1, 0, 1)));
-            Storyboard.SetTargetProperty(Yanim, new PropertyPath("(Line.Y2)"));
-            sb.Children.Add(Yanim);
-            Storyboard.SetTargetProperty(Xanim, new PropertyPath("(Line.X2)"));
-            sb.Children.Add(Xanim);
-
-            myLine.BeginStoryboard(sb);
+            line.Stroke = Brushes.Crimson;
+            line.StrokeThickness = 2;
+            line.X1 = x1;
+            line.Y1 = y1;
+            line.X2 = x2;
+            line.Y2 = y2;
+            myCanvas.Children.Add(line);
         }
 
-
-
-        private void animateSimplestLine(Line myLine, int startX, int startY, int endX, int endY, int Y2Time)
+        private void animateSimplestLine(Line line, int x1, int y1, int x2, int y2, int lineIndex)
         {
-            DoubleAnimation Yanim = new DoubleAnimation();
-            Yanim.From = startY;
-            Yanim.To = endY;
-            Yanim.Duration= new Duration(TimeSpan.FromSeconds(Y2Time));
-            Yanim.RepeatBehavior = RepeatBehavior.Forever;
-            Yanim.AutoReverse = true;
+            int newY1 = y1;
+            int newY2 = y2;
+            int newX1 = x1;
+            int newX2 = x2;
+            
+            newY1 += YMove;
 
-            Storyboard.SetTargetProperty(Yanim, new PropertyPath("(Line.Y2"));
-            mySBoard.Children.Add(Yanim);
+            YMove = rnd.Next(-75, 75);
+            newY2 += YMove;
+           
+            newX1 += XMove;
 
+            XMove = rnd.Next(-75, 75);
+            newX2 += XMove;
+
+            DoubleAnimation Y1anim = new DoubleAnimation(line.Y1, newY1, TimeSpan.FromSeconds(YlineDuration));
+            DoubleAnimation X1anim = new DoubleAnimation(line.X1, newX1, TimeSpan.FromSeconds(XlineDuration));
+            Storyboard.SetTargetProperty(Y1anim, new PropertyPath("(Line.Y1)"));
+            Storyboard.SetTargetProperty(X1anim, new PropertyPath("(Line.X1)"));
+
+            //Y1anim.RepeatBehavior = RepeatBehavior.Forever;
+            //X1anim.RepeatBehavior = RepeatBehavior.Forever;
+            //Y1anim.AutoReverse = true;
+            //X1anim.AutoReverse = true;
+
+            YlineDuration = rnd.Next(5, 10);
+            XlineDuration = rnd.Next(5, 10);
+
+            DoubleAnimation Y2anim = new DoubleAnimation(line.Y2, newY2, TimeSpan.FromSeconds(YlineDuration));
+            DoubleAnimation X2anim = new DoubleAnimation(line.X2, newX2, TimeSpan.FromSeconds(XlineDuration));
+            Storyboard.SetTargetProperty(Y2anim, new PropertyPath("(Line.Y2)"));
+            Storyboard.SetTargetProperty(X2anim, new PropertyPath("(Line.X2)"));
+
+
+            //Y2anim.RepeatBehavior = RepeatBehavior.Forever;
+            //X2anim.RepeatBehavior = RepeatBehavior.Forever;
+            //Y2anim.AutoReverse = true;
+            //X2anim.AutoReverse = true;
+
+            line.X1 = newX1;
+            line.Y1 = newY1;
+            line.X2 = newX2;
+            line.Y2 = newY2;
+            
+
+            myLineSB.Children.Add(Y1anim);
+            myLineSB.Children.Add(X1anim);
+            myLineSB.Children.Add(Y2anim);
+            myLineSB.Children.Add(X2anim);
+
+            line.BeginStoryboard(myLineSB);
         }
 
 
@@ -403,6 +477,35 @@ namespace AnimationTests
 
         }
 
+        private void createLines()
+        {
+            startX = rnd.Next(15, (int)myCanvas.Width - 15);
+            startY = rnd.Next(15, (int)myCanvas.Height - 15);
+            endX = rnd.Next(15, (int)myCanvas.Width - 15);
+            endY = rnd.Next(15, (int)myCanvas.Height - 15);
+
+            for (int i = 0; i < numOfLines; i++)
+            {
+                myLines[i] = new Line();
+
+                this.insertSimplestLine(myLines[i], startX, startY, endX, endY, i);
+
+                startX = endX;
+                startY = endY;
+
+                endX = rnd.Next(15, (int)myCanvas.Width - 15);
+                endY = rnd.Next(15, (int)myCanvas.Height - 15);
+            }
+        }
+
+        private void animateLines()
+        {
+            for (int i = 0; i < numOfLines; i++)
+            {
+                this.animateSimplestLine(myLines[i], (int)myLines[i].X1, (int)myLines[i].Y1, (int)myLines[i].X2, (int)myLines[i].Y2, i);
+            }
+        }
+
         private void myCircleLoaded(object sender, RoutedEventArgs e)
         {
             mySBoard.Begin(this);
@@ -411,7 +514,7 @@ namespace AnimationTests
         private void timer_Tick(object sender, EventArgs e)
         {
             myTS = myTS.Add(TimeSpan.FromSeconds(2));
-            Console.WriteLine(string.Format("{0}:{1}", myTS.Minutes, myTS.Seconds));
+          //  Console.WriteLine(string.Format("{0}:{1}", myTS.Minutes, myTS.Seconds));
             
         }
         

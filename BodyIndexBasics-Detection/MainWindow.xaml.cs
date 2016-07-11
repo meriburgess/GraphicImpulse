@@ -57,6 +57,19 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private readonly Brush whiteBrush = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
         private readonly Brush unknownBrush = new SolidColorBrush(Color.FromArgb(255, 255, 153, 0));
         private readonly Brush noDataBrush = new SolidColorBrush(Color.FromArgb(255, 204, 51, 255));
+
+        private readonly Brush lightBlueBrush = new SolidColorBrush(Color.FromArgb(100, 0, 204, 255));
+        private readonly Brush blueBrush = new SolidColorBrush(Color.FromArgb(255, 0, 204, 255));
+        private readonly Brush lightGreenBrush = new SolidColorBrush(Color.FromArgb(100, 0, 204, 0));
+        private readonly Brush greenBrush = new SolidColorBrush(Color.FromArgb(255, 0, 204, 0));
+        private readonly Brush lightYellowBrush = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
+        private readonly Brush yellowBrush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
+        private readonly Brush lightOrangeBrush = new SolidColorBrush(Color.FromArgb(100, 255, 153, 0));
+        private readonly Brush orangeBrush = new SolidColorBrush(Color.FromArgb(255, 255, 153, 0));
+        private readonly Brush lightRedBrush = new SolidColorBrush(Color.FromArgb(100, 255, 0, 0));
+        private readonly Brush redBrush = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+        private readonly Brush lightPurpleBrush = new SolidColorBrush(Color.FromArgb(100, 204, 0, 153));
+        private readonly Brush purpleBrush = new SolidColorBrush(Color.FromArgb(255, 204, 0, 153));
         /// <summary>
         /// Brush used for drawing hands that are currently tracked as closed
         /// </summary>
@@ -158,6 +171,40 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private string statusText = null;
         private string rightHandGesture = null;
         private string leftHandGesture = null;
+
+        private Dictionary<JointType, Point> oldPositions = new Dictionary<JointType, Point>()
+            {
+            { JointType.Head, new Point(-1, -1) },
+            { JointType.Neck,  new Point(-1, -1) },
+            { JointType.SpineShoulder, new Point(-1, -1) },
+            { JointType.SpineMid, new Point(-1, -1) },
+            { JointType.SpineBase, new Point(-1, -1) },
+            { JointType.ShoulderRight, new Point(-1, -1) },
+            { JointType.ElbowRight, new Point(-1, -1) } ,
+            { JointType.WristRight, new Point(-1, -1) } ,
+            { JointType.HandRight, new Point(-1, -1) },
+            { JointType.HandTipRight, new Point(-1, -1) },
+            { JointType.ThumbRight, new Point(-1, -1) },
+            { JointType.ShoulderLeft, new Point(-1, -1) },
+            { JointType.ElbowLeft, new Point(-1, -1) },
+            { JointType.WristLeft, new Point(-1, -1) } ,
+            { JointType.HandLeft, new Point(-1, -1) },
+            { JointType.HandTipLeft, new Point(-1, -1) },
+            { JointType.ThumbLeft, new Point(-1, -1) },
+            { JointType.HipLeft, new Point(-1, -1) } ,
+            { JointType.KneeLeft, new Point(-1, -1) } ,
+            { JointType.AnkleLeft, new Point(-1, -1) } ,
+            { JointType.FootLeft, new Point(-1, -1) },
+            { JointType.HipRight, new Point(-1, -1) },
+            { JointType.KneeRight, new Point(-1, -1) },
+            { JointType.AnkleRight, new Point(-1, -1) },
+            { JointType.FootRight, new Point(-1, -1) }
+            };
+
+        private double[] velocitiesX = new double[25];
+        private double[] velocitiesY = new double[25];
+        private double avgVelocity = 0;
+        
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
@@ -310,46 +357,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             }
         }
 
-        public string LeftHandGestureText
-        {
-            get
-            {
-                return this.leftHandGesture;
-            }
-            set
-            {
-                if (this.leftHandGesture != value)
-                {
-                    this.leftHandGesture = value;
-
-                   if (this.PropertyChanged != null)
-                   {
-                        this.PropertyChanged(this, new PropertyChangedEventArgs("LeftHandGestureText"));
-                   }
-                }
-            }
-        }
-
-        public string RightHandGestureText
-        {
-            get
-            {
-                return this.rightHandGesture;
-            }
-            set
-            {
-                if (this.rightHandGesture != value)
-                {
-                    this.rightHandGesture = value;
-
-                    if (this.PropertyChanged != null)
-                    {
-                        this.PropertyChanged(this, new PropertyChangedEventArgs("RightHandGestureText"));
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// Execute shutdown tasks
         /// </summary>
@@ -429,6 +436,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                         if (dataReceived)
                         {
+                            int jointCount = 0;
+
                             using (DrawingContext dc = this.drawingGroup.Open())
                             {
                                 // Draw a transparent background to set the render size
@@ -461,57 +470,29 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                                             DepthSpacePoint depthSpacePoint = this.coordinateMapper.MapCameraPointToDepthSpace(position);
                                             jointPoints[jointType] = new Point(depthSpacePoint.X, depthSpacePoint.Y);
-                                        }
 
+                                            //If first coordinates for velocity have not been established yet, assign current coordinates 
+                                            if (oldPositions[jointType].X == -1 && oldPositions[jointType].Y == -1)
+                                            {
+                                                oldPositions[jointType] = new Point(jointPoints[jointType].X, jointPoints[jointType].Y);
+                                            }
+                                            else
+                                            {
+                                                //calculate the velocity of current joint, comparing old position to new position
+                                                velocitiesX[jointCount] = getVelocity(oldPositions[jointType].X, jointPoints[jointType].X);
+                                                velocitiesY[jointCount] = getVelocity(oldPositions[jointType].Y, jointPoints[jointType].Y);
+
+                                                //update old position
+                                                oldPositions[jointType] = new Point(jointPoints[jointType].X, jointPoints[jointType].Y);
+                                            }
+                                            //update joint count tracker
+                                            jointCount++;
+                                        }
+                                        getAvgVelocity();
                                         this.DrawBody(joints, jointPoints, dc, drawPen);
                                         this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc, true);
                                         this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc, false);
-
-
-                                        //switch (body.HandRightState)
-                                        //{
-                                        //    case HandState.Closed:
-                                        //        this.rightHandGesture = Properties.Resources.HandStateClosedText;
-                                        //        break;
-
-                                        //    case HandState.Open:
-                                        //        this.rightHandGesture = Properties.Resources.HandStateOpenText;
-                                        //        break;
-
-                                        //    case HandState.Lasso:
-                                        //        this.rightHandGesture = Properties.Resources.HandStateLassoText;
-                                        //        break;
-
-                                        //    case HandState.NotTracked:
-                                        //        this.rightHandGesture = Properties.Resources.HandStateNotTrackedText;
-                                        //        break;
-
-                                        //    case HandState.Unknown:
-                                        //        this.rightHandGesture = Properties.Resources.HandStateUnknownText;
-                                        //        break;
-                                        //}
-                                        //switch (body.HandLeftState)
-                                        //{
-                                        //    case HandState.Closed:
-                                        //        this.leftHandGesture = Properties.Resources.HandStateClosedText;
-                                        //        break;
-
-                                        //    case HandState.Open:
-                                        //        this.leftHandGesture = Properties.Resources.HandStateOpenText;
-                                        //        break;
-
-                                        //    case HandState.Lasso:
-                                        //        this.leftHandGesture = Properties.Resources.HandStateLassoText;
-                                        //        break;
-
-                                        //    case HandState.NotTracked:
-                                        //        this.leftHandGesture = Properties.Resources.HandStateNotTrackedText;
-                                        //        break;
-
-                                        //    case HandState.Unknown:
-                                        //        this.leftHandGesture = Properties.Resources.HandStateUnknownText;
-                                        //        break;
-                                        //}
+                                        
                                     }
                                     
                                 }
@@ -788,6 +769,116 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     null,
                     new Rect(this.displayWidth - ClipBoundsThickness, 0, ClipBoundsThickness, this.displayHeight));
             }
+        }
+
+        private double getVelocity(double oldPoint, double newPoint)
+        {
+            double velocity = newPoint - oldPoint;
+            return velocity;
+        }
+
+        private void getAvgVelocity()
+        {
+
+            double total1 = 0;
+            double total2 = 0;
+            int length = 0;
+
+            foreach (double v in velocitiesX)
+            {
+                length++;
+                total1 += v;
+            }
+
+            foreach (double v in velocitiesY)
+            {
+                total2 += v;
+            }
+
+            avgVelocity = Math.Abs((total1 + total2) / (length * 2));
+
+            if (avgVelocity < 0.35)
+            {
+                fillVelocityRectangles(blueBrush, whiteBrush, whiteBrush, whiteBrush, whiteBrush, whiteBrush);
+            }
+            else if (avgVelocity >= 0.35 && avgVelocity < 0.5)
+            {
+                fillVelocityRectangles(blueBrush, lightGreenBrush, whiteBrush, whiteBrush, whiteBrush, whiteBrush);
+
+            }
+            else if (avgVelocity >= 0.5 && avgVelocity < 0.85)
+            {
+                fillVelocityRectangles(lightBlueBrush, greenBrush, whiteBrush, whiteBrush, whiteBrush, whiteBrush);
+
+            }
+            else if (avgVelocity >= 0.85 && avgVelocity < 1.35)
+            {
+                fillVelocityRectangles(lightBlueBrush, greenBrush, lightYellowBrush, whiteBrush, whiteBrush, whiteBrush);
+
+            }
+            else if (avgVelocity >= 1.35 && avgVelocity < 1.85)
+            {
+                fillVelocityRectangles(whiteBrush, greenBrush, lightYellowBrush, whiteBrush, whiteBrush, whiteBrush);
+
+            }
+            else if (avgVelocity >= 1.85 && avgVelocity < 2.5)
+            {
+                fillVelocityRectangles(whiteBrush, lightGreenBrush, yellowBrush, whiteBrush, whiteBrush, whiteBrush);
+
+            }
+            else if (avgVelocity >= 2.5 && avgVelocity < 3.5)
+            {
+                fillVelocityRectangles(whiteBrush, lightGreenBrush, yellowBrush, lightOrangeBrush, whiteBrush, whiteBrush);
+
+            }
+            else if (avgVelocity >= 3.5 && avgVelocity < 4.0)
+            {
+                fillVelocityRectangles(whiteBrush, whiteBrush, yellowBrush, lightOrangeBrush, whiteBrush, whiteBrush);
+            }
+            else if (avgVelocity >= 4.0 && avgVelocity < 4.5)
+            {
+                fillVelocityRectangles(whiteBrush, whiteBrush, lightYellowBrush, orangeBrush, whiteBrush, whiteBrush);
+
+            }
+            else if (avgVelocity >= 4.5 && avgVelocity < 5.0)
+            {
+                fillVelocityRectangles(whiteBrush, whiteBrush, lightYellowBrush, orangeBrush, lightRedBrush, whiteBrush);
+
+            }
+            else if (avgVelocity >= 5.0 && avgVelocity < 5.5)
+            {
+                fillVelocityRectangles(whiteBrush, whiteBrush, whiteBrush, orangeBrush, lightRedBrush, whiteBrush);
+
+            }
+            else if (avgVelocity >= 5.5 && avgVelocity < 6.0)
+            {
+                fillVelocityRectangles(whiteBrush, whiteBrush, whiteBrush, lightOrangeBrush, redBrush, whiteBrush);
+
+            }
+            else if (avgVelocity >= 6.0 && avgVelocity < 6.3)
+            {
+                fillVelocityRectangles(whiteBrush, whiteBrush, whiteBrush, whiteBrush, redBrush, lightPurpleBrush);
+
+            }
+            else if (avgVelocity >= 6.3 && avgVelocity < 6.6)
+            {
+                fillVelocityRectangles(whiteBrush, whiteBrush, whiteBrush, whiteBrush, lightRedBrush, purpleBrush);
+            }
+            else if (avgVelocity >= 6.6)
+            {
+                fillVelocityRectangles(whiteBrush, whiteBrush, whiteBrush, whiteBrush, whiteBrush, purpleBrush);
+            }
+
+        }
+
+        private void fillVelocityRectangles(Brush noVelBrush, Brush lowVelBrush, Brush medLowBrush, Brush medBrush, Brush medHiBrush, Brush hiBrush)
+        {
+            noVelocityRect.Fill = noVelBrush;
+            lowVelocityRect.Fill = lowVelBrush;
+            medLowVelocityRect.Fill = medLowBrush;
+            mediumVelocityRect.Fill = medBrush;
+            medHighVelocityRect.Fill = medHiBrush;
+            highVelocityRect.Fill = hiBrush;
         }
 
         /// <summary>
