@@ -220,6 +220,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             { JointType.FootRight, new Point(-1, -1) }
             };
 
+        private Point spineOriginPoint = new Point(-10, -10);
+        private Point XYOriginPoint = new Point(-10, -10);
+
         private double[] velocitiesX = new double[25];
         private double[] velocitiesY = new double[25];
         private double avgVelocity = 0;
@@ -521,16 +524,42 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                                 jointZCoordinates[jointCount] = joints[jointType].Position.Z;
 
                                             }
+                                           
                                             //update joint count tracker
                                             jointCount++;
                                         }
 
+                                        //if (spineOriginPoint.X == -10 && spineOriginPoint.Y == -10)
+                                        //{
+                                        //    spineOriginPoint = new Point(jointPoints[JointType.SpineShoulder].X, jointPoints[JointType.SpineShoulder].Y);
+                                        //}
+                                        //else
+                                        //{
+                                        //    checkLeftRightMovement(spineOriginPoint, jointPoints[JointType.SpineShoulder]);
+                                        //    spineOriginPoint = new Point(jointPoints[JointType.SpineShoulder].X, jointPoints[JointType.SpineShoulder].Y);
+                                        //}
+
                                         getAvgCoordinates();
+
+                                        if (XYOriginPoint.X == -10 && XYOriginPoint.Y  == -10)
+                                        {
+                                            XYOriginPoint = new Point(avgXYZCoordinates[0], avgXYZCoordinates[1]);
+                                        }
+                                        else
+                                        {
+                                            Point updatedPoint = new Point(avgXYZCoordinates[0], avgXYZCoordinates[1]);
+                                            checkLeftRightMovement(XYOriginPoint, updatedPoint);
+                                            checkUpDownMovement(XYOriginPoint, updatedPoint);
+                                            XYOriginPoint = new Point(updatedPoint.X, updatedPoint.Y);
+                                        }
+
+                                        
                                         getAvgVelocity();
                                         this.DrawBody(joints, jointPoints, dc, drawPen);
                                         this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc, true);
                                         this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc, false);
-                                        Console.WriteLine("X: " + avgXYZCoordinates[0] + " Y: " + avgXYZCoordinates[1] + " Z: " + avgXYZCoordinates[2]);
+                                        //   Console.WriteLine("X: " + avgXYZCoordinates[0] + " Y: " + avgXYZCoordinates[1] + " Z: " + avgXYZCoordinates[2]);
+                                        Console.WriteLine("Z: " + avgXYZCoordinates[2]);
                                         getRegionOccupied();
                                     }
                                     
@@ -984,12 +1013,59 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             {
                 zRegion = 3;
             }
-
-            Console.WriteLine("XYZ region: " + xRegion + ", " + yRegion + ", " + zRegion);
+            
             regionText.Text = "XYZ region: " + xRegion + ", " + yRegion + ", " + zRegion;
 
             regionColorRect.Fill = regionBrushes[xRegion-1, yRegion-1, zRegion-1];
 
+        }
+
+        private void checkLeftRightMovement(Point oldPoint, Point newPoint)
+        {
+            Console.WriteLine("X change: " + (oldPoint.X - newPoint.X));
+
+            if (oldPoint.X - newPoint.X > 0.05)
+            {
+                rightToLeftRect.Fill = greenBrush;
+                noSidewaysRect.Fill = whiteBrush;
+                leftToRightRect.Fill = whiteBrush;
+            }
+            else if ( oldPoint.X - newPoint.X < -0.05)
+            {
+                rightToLeftRect.Fill = whiteBrush;
+                noSidewaysRect.Fill = whiteBrush;
+                leftToRightRect.Fill = redBrush;
+            }
+            else
+            {
+                rightToLeftRect.Fill = whiteBrush;
+                noSidewaysRect.Fill = blueBrush;
+                leftToRightRect.Fill = whiteBrush;
+            }
+        }
+
+        private void checkUpDownMovement(Point oldPoint, Point newPoint)
+        {
+            Console.WriteLine("Y change: " + (oldPoint.Y - newPoint.Y));
+
+            if (oldPoint.Y - newPoint.Y > 0.05)
+            {
+                upMoveRect.Fill = greenBrush;
+                noVerticalMoveRect.Fill = whiteBrush;
+                downMoveRect.Fill = whiteBrush;
+            }
+            else if (oldPoint.Y - newPoint.Y < -0.05)
+            {
+                upMoveRect.Fill = whiteBrush;
+                noVerticalMoveRect.Fill = whiteBrush;
+                downMoveRect.Fill = redBrush;
+            }
+            else
+            {
+                upMoveRect.Fill = whiteBrush;
+                noVerticalMoveRect.Fill = blueBrush;
+                downMoveRect.Fill = whiteBrush;
+            }
         }
 
         /// <summary>

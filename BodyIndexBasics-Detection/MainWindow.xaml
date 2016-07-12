@@ -14,6 +14,7 @@
 
     </Window.Resources>
     <Grid Margin="10,0,19,6" RenderTransformOrigin="0.479,0.705">
+        <Rectangle x:Name="regionColorRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="66" Margin="331,185,0,0" Stroke="Black" VerticalAlignment="Top" Width="133"/>
 
         <Viewbox Grid.Row="1" HorizontalAlignment="Left">
             <Image Source="{Binding BodyImageSource}" Stretch="UniformToFill" />
@@ -29,8 +30,7 @@
         <TextBox x:Name="statusTextBox" HorizontalAlignment="Left" Height="43" Margin="1009,10,0,0" TextWrapping="Wrap" Text="{Binding StatusText}" VerticalAlignment="Top" Width="288" />
 
         <TextBox x:Name="regionTitleText" HorizontalAlignment="Left" Height="140" Margin="857,53,0,0" TextWrapping="Wrap" Text="Region&#xD;&#xA; X-Y-Z:" VerticalAlignment="Top" Width="152" TextAlignment="Center" FontSize="24"/>
-        <TextBox x:Name="regionText" HorizontalAlignment="Left" Height="140" Margin="1009,53,0,0" TextWrapping="Wrap" Text="{Binding XYZregion}" VerticalAlignment="Top" Width="288" TextAlignment="Right"/>
-        <Rectangle x:Name="regionColorRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="66" Margin="1088,100,0,0" Stroke="Black" VerticalAlignment="Top" Width="133"/>
+        <TextBox x:Name="regionText" HorizontalAlignment="Left" Height="132" Margin="1009,53,0,0" TextWrapping="Wrap" Text="{Binding XYZregion}" VerticalAlignment="Top" Width="288" TextAlignment="Right" FontSize="24"/>
 
 
         <TextBox x:Name="sidewaysTitleText" HorizontalAlignment="Left" Height="55" Margin="858,185,0,0" TextWrapping="Wrap" Text="Sideways Movement:" VerticalAlignment="Top" Width="151" FontSize="17" TextAlignment="Center"/>
@@ -41,6 +41,9 @@
 
         <TextBox x:Name="upDownTitleText" HorizontalAlignment="Left" Height="144" Margin="858,240,0,0" TextWrapping="Wrap" Text="Vertical Movement:" VerticalAlignment="Top" Width="152" FontSize="24" TextAlignment="Center"/>
         <TextBox x:Name="upDownText" HorizontalAlignment="Left" Height="144" Margin="1009,240,0,0" TextWrapping="Wrap" Text="{Binding upDownMvmt}" VerticalAlignment="Top" Width="288"/>
+        <Rectangle x:Name="upMoveRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="42" Margin="1105,250,0,0" VerticalAlignment="Top" Width="96"/>
+        <Rectangle x:Name="noVerticalMoveRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="42" Margin="1105,292,0,0" VerticalAlignment="Top" Width="96"/>
+        <Rectangle x:Name="downMoveRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="42" Margin="1105,334,0,0" VerticalAlignment="Top" Width="96"/>
 
         <TextBox x:Name="sweepTitleText" HorizontalAlignment="Left" Height="38" Margin="857,384,0,0" TextWrapping="Wrap" Text="Sweep:" VerticalAlignment="Top" Width="152" TextAlignment="Center" FontSize="24"/>
         <TextBox x:Name="sweepText" HorizontalAlignment="Left" Height="38" Margin="1009,384,0,0" TextWrapping="Wrap" Text="{Binding sweepMvmt}" VerticalAlignment="Top" Width="288"/>
@@ -77,6 +80,7 @@
 
         <TextBox x:Name="timeTitleText" HorizontalAlignment="Left" Height="49" Margin="857,632,0,0" TextWrapping="Wrap" Text="Timer: " VerticalAlignment="Top" Width="152" FontSize="27" TextAlignment="Center"/>
         <TextBox x:Name="timeText" HorizontalAlignment="Left" Height="49" Margin="1009,632,0,0" TextWrapping="Wrap" Text="{Binding timerValue}" VerticalAlignment="Top" Width="288"/>
+        
 
 
 
