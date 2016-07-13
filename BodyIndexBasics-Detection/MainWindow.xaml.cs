@@ -14,6 +14,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
     using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
     using Microsoft.Kinect;
+    using System.Timers;
 
     /// <summary>
     /// Interaction logic for the MainWindow
@@ -220,7 +221,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             { JointType.FootRight, new Point(-1, -1) }
             };
 
-        private Point spineOriginPoint = new Point(-10, -10);
+        private Point notFoundPt = new Point(-10, -10);
+        private Point handLeftOriginPt = new Point(-10, -10);
+        private Point handRightOriginPt = new Point(-10, -10);
+        private Point footLeftOriginPt = new Point(-10, -10);
+        private Point footRightOriginPt = new Point(-10, -10);
+
         private Point XYOriginPoint = new Point(-10, -10);
 
         private double[] velocitiesX = new double[25];
@@ -239,6 +245,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private const double minXRange = -2.5;
         private const double minYRange = -1.5;
         private const double minZRange = 0;
+
+        private Timer myTimer = new Timer();
+        private TimeSpan myTS = new TimeSpan();
+        private string minutes;
+        private string seconds;
+
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
@@ -316,6 +328,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             this.bodyColors.Add(new Pen(Brushes.Blue, 3));
             this.bodyColors.Add(new Pen(Brushes.Indigo, 3));
             this.bodyColors.Add(new Pen(Brushes.Violet, 3));
+
+            this.myTimer.Elapsed += new ElapsedEventHandler(timer_Tick);
+            this.myTimer.Interval = 1000;
+            this.myTimer.Enabled = true;
 
             // set IsAvailableChanged event notifier
             this.kinectSensor.IsAvailableChanged += this.Sensor_IsAvailableChanged;
@@ -430,6 +446,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             bool bodyIndexFrameProcessed = false;
             bool dataReceived = false;
 
+            timeText.Text = this.minutes + ":" + this.seconds;
+
             if (msf != null)
             {
                 using (BodyFrame bodyFrame = msf.BodyFrameReference.AcquireFrame())
@@ -528,16 +546,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                             //update joint count tracker
                                             jointCount++;
                                         }
-
-                                        //if (spineOriginPoint.X == -10 && spineOriginPoint.Y == -10)
-                                        //{
-                                        //    spineOriginPoint = new Point(jointPoints[JointType.SpineShoulder].X, jointPoints[JointType.SpineShoulder].Y);
-                                        //}
-                                        //else
-                                        //{
-                                        //    checkLeftRightMovement(spineOriginPoint, jointPoints[JointType.SpineShoulder]);
-                                        //    spineOriginPoint = new Point(jointPoints[JointType.SpineShoulder].X, jointPoints[JointType.SpineShoulder].Y);
-                                        //}
+                                        
 
                                         getAvgCoordinates();
 
@@ -553,13 +562,29 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                             XYOriginPoint = new Point(updatedPoint.X, updatedPoint.Y);
                                         }
 
-                                        
+                                        if (handRightOriginPt == notFoundPt || handLeftOriginPt == notFoundPt || footLeftOriginPt == notFoundPt || footRightOriginPt == notFoundPt)
+                                        {
+                                            handRightOriginPt = jointPoints[JointType.HandRight];
+                                            handLeftOriginPt = jointPoints[JointType.HandLeft];
+                                            footLeftOriginPt = jointPoints[JointType.FootLeft];
+                                            footRightOriginPt = jointPoints[JointType.FootRight];
+                                        }
+                                        else
+                                        {
+                                            checkForSweepMovement(handRightOriginPt, jointPoints[JointType.HandRight], handLeftOriginPt, jointPoints[JointType.HandLeft], footLeftOriginPt, jointPoints[JointType.FootLeft], footRightOriginPt, jointPoints[JointType.FootRight]);
+                                            handRightOriginPt = jointPoints[JointType.HandRight];
+                                            handLeftOriginPt = jointPoints[JointType.HandLeft];
+                                            footLeftOriginPt = jointPoints[JointType.FootLeft];
+                                            footRightOriginPt = jointPoints[JointType.FootRight];
+                                        }
+
+                                        bodyOrientation(jointPoints[JointType.HipLeft], jointPoints[JointType.HipRight], jointPoints[JointType.ShoulderLeft], jointPoints[JointType.ShoulderRight], jointPoints[JointType.FootLeft], jointPoints[JointType.FootRight]);
                                         getAvgVelocity();
                                         this.DrawBody(joints, jointPoints, dc, drawPen);
                                         this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc, true);
                                         this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc, false);
                                         //   Console.WriteLine("X: " + avgXYZCoordinates[0] + " Y: " + avgXYZCoordinates[1] + " Z: " + avgXYZCoordinates[2]);
-                                        Console.WriteLine("Z: " + avgXYZCoordinates[2]);
+                                      Console.WriteLine("Z: " + avgXYZCoordinates[2]);
                                         getRegionOccupied();
                                     }
                                     
@@ -1022,7 +1047,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private void checkLeftRightMovement(Point oldPoint, Point newPoint)
         {
-            Console.WriteLine("X change: " + (oldPoint.X - newPoint.X));
+            //Console.WriteLine("X change: " + (oldPoint.X - newPoint.X));
 
             if (oldPoint.X - newPoint.X > 0.05)
             {
@@ -1046,7 +1071,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private void checkUpDownMovement(Point oldPoint, Point newPoint)
         {
-            Console.WriteLine("Y change: " + (oldPoint.Y - newPoint.Y));
+           // Console.WriteLine("Y change: " + (oldPoint.Y - newPoint.Y));
 
             if (oldPoint.Y - newPoint.Y > 0.05)
             {
@@ -1067,6 +1092,98 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 downMoveRect.Fill = whiteBrush;
             }
         }
+
+        private void checkForSweepMovement(Point handRightOld, Point handRightNew, Point handLeftOld, Point handLeftNew, Point footLeftOld, Point footLeftNew, Point footRightOld, Point footRightNew)
+        {
+            //Console.WriteLine("Left X Hand Diff: " + (handLeftOld.X - handLeftNew.X));
+            //Console.WriteLine("Left X Foot Diff: " + (footLeftOld.X - footLeftNew.X));
+            //Console.WriteLine("Left Y Hand Diff: " + (handLeftOld.Y - handLeftNew.Y));
+            //Console.WriteLine("Left Y Foot Diff: " + (footLeftOld.Y - footLeftNew.Y));
+            if (
+                (handRightOld.X - handRightNew.X) > 5.0 || 
+                (handRightOld.X - handRightNew.X) < -5.0 ||
+                (handRightOld.Y - handRightNew.Y) > 5.0 ||
+                (handRightOld.Y - handRightNew.Y) < -5.0)
+            {
+                handRightSweepRect.Fill = purpleBrush;
+
+            }
+            else
+            {
+                handRightSweepRect.Fill = whiteBrush;
+            }
+
+            if (
+               (handLeftOld.X - handLeftNew.X) > 5.0 ||
+               (handLeftOld.X - handLeftNew.X) < -5.0 ||
+               (handLeftOld.Y - handLeftNew.Y) > 5.0 ||
+               (handLeftOld.Y - handLeftNew.Y) < -5.0)
+            {
+                handLeftSweepRect.Fill = lightPurpleBrush;
+
+            }
+            else
+            {
+                handLeftSweepRect.Fill = whiteBrush;
+            }
+
+            if (
+               (footRightOld.X - footRightNew.X) > 5.0 ||
+               (footRightOld.X - footRightNew.X) < -5.0 ||
+               (footRightOld.Y - footRightNew.Y) > 5.0 ||
+               (footRightOld.Y - footRightNew.Y) < -5.0)
+            {
+                footRightSweepRect.Fill = redBrush;
+
+            }
+            else
+            {
+                footRightSweepRect.Fill = whiteBrush;
+            }
+
+            if (
+               (footLeftOld.X - footLeftNew.X) > 5.0 ||
+               (footLeftOld.X - footLeftNew.X) < -5.0 ||
+               (footLeftOld.Y - footLeftNew.Y) > 5.0 ||
+               (footLeftOld.Y - footLeftNew.Y) < -5.0)
+            {
+                footLeftSweepRect.Fill = lightRedBrush;
+
+            }
+            else
+            {
+                footLeftSweepRect.Fill = whiteBrush;
+            }
+
+        }
+
+        private void bodyOrientation(Point hipLeft, Point hipRight, Point shoulderLeft, Point shoulderRight, Point footLeft, Point footRight)
+        {
+            Console.WriteLine("Hip X distance: " + (hipRight.X - hipLeft.X ));
+            Console.WriteLine("Shoulder X distance: " + (shoulderRight.X - shoulderLeft.X ));
+            Console.WriteLine("Foot X distance: " + (footRight.X- footLeft.X ));
+
+            if (hipRight.X - hipLeft.X <= (0.6*(50-10*avgXYZCoordinates[2])) && shoulderRight.X - shoulderLeft.X <= (0.6*(80-14*avgXYZCoordinates[2])))
+            {
+                inProfileRect.Fill = yellowBrush;
+                standingSqaureRect.Fill = whiteBrush;
+            }
+            else
+            {
+                inProfileRect.Fill = whiteBrush;
+                standingSqaureRect.Fill = orangeBrush;
+            }
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            myTS = myTS.Add(TimeSpan.FromSeconds(1));
+            Console.WriteLine(string.Format("{0}:{1}", myTS.Minutes, myTS.Seconds));
+            this.minutes = myTS.Minutes.ToString();
+            this.seconds = myTS.Seconds.ToString();
+
+        }
+
 
         /// <summary>
         /// Handles the event which the sensor becomes unavailable (E.g. paused, closed, unplugged).
