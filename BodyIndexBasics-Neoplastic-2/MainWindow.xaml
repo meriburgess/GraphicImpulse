@@ -1,0 +1,62 @@
+﻿<Window x:Class="Microsoft.Samples.Kinect.BodyIndexBasics.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Mondrian 1" 
+        Height="878.695" Width="1543.792" 
+        Closing="MainWindow_Closing">
+    <Window.Resources>
+        <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
+        <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f" />
+        <SolidColorBrush x:Key="KinectBlueBrush" Color="#ff00BCF2" />
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+
+    </Window.Resources>
+    <Grid Margin="0,0,3.6,2" RenderTransformOrigin="0.479,0.705">
+        <Rectangle x:Name="regionColorRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="360" Margin="18,37,0,0" Stroke="Black" VerticalAlignment="Top" Width="638" StrokeThickness="9"/>
+
+
+
+
+        <TextBox x:Name="statusTitleText" HorizontalAlignment="Left" Height="27" Margin="450,5,0,0" TextWrapping="Wrap" Text="Sensor Status:" VerticalAlignment="Top" Width="109" TextAlignment="Center"/>
+        <TextBox x:Name="statusTextBox" HorizontalAlignment="Left" Height="27" Margin="559,5,0,0" TextWrapping="Wrap" Text="{Binding StatusText}" VerticalAlignment="Top" Width="127" FontSize="10" />
+
+        <TextBox x:Name="regionTitleText" HorizontalAlignment="Left" Height="27" Margin="731,5,0,0" TextWrapping="Wrap" Text="Region X-Y-Z:" VerticalAlignment="Top" Width="116" TextAlignment="Center"/>
+        <TextBox x:Name="regionText" HorizontalAlignment="Left" Height="27" Margin="847,5,0,0" TextWrapping="Wrap" Text="{Binding XYZregion}" VerticalAlignment="Top" Width="131" TextAlignment="Center"/>
+
+        <Rectangle x:Name="sidewaysMvmtRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="95" Margin="647,37,0,0" VerticalAlignment="Top" Width="331" RenderTransformOrigin="1,1" StrokeThickness="20" Stroke="Black"/>
+        <Rectangle x:Name="verticalMvmtRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="310" Margin="1313,36,0,0" VerticalAlignment="Top" Width="207" Stroke="Black" StrokeThickness="17"/>
+
+        <Rectangle x:Name="handLeftSweepRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="329" Margin="647,119,0,0" VerticalAlignment="Top" Width="322" Stroke="Black" StrokeThickness="22"/>
+        <Rectangle x:Name="footLeftSweepRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="310" Margin="969,36,0,0" VerticalAlignment="Top" Width="344" StrokeThickness="20" Stroke="Black"/>
+        <Rectangle x:Name="handRightSweepRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="97" Margin="1128,346,0,0" VerticalAlignment="Top" Width="392" Stroke="Black" StrokeThickness="15"/>
+        <Rectangle x:Name="footRightSweepRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="112" Margin="969,336,0,0" VerticalAlignment="Top" Width="159" Stroke="Black" StrokeThickness="11"/>
+
+        <Rectangle x:Name="rightHandRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="446" Margin="18,391,0,0"  VerticalAlignment="Top" Width="440" StrokeThickness="25" Stroke="Black"/>
+        <Rectangle x:Name="leftHandRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="394" Margin="1066,443,0,0" VerticalAlignment="Top" Width="454" Stroke="Black" StrokeThickness="15"/>
+
+        <Rectangle x:Name="velocityRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="52" Margin="458,391,0,0"  VerticalAlignment="Top" Width="198" StrokeThickness="6" Stroke="Black"/>
+
+        <Rectangle x:Name="orientationRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="394" Margin="450,443,0,0" VerticalAlignment="Top" Width="620" StrokeThickness="13" Stroke="Black"/>
+
+        <TextBox x:Name="timeTitleText" HorizontalAlignment="Left" Height="27" Margin="1015,5,0,0" TextWrapping="Wrap" Text="Timer: " VerticalAlignment="Top" Width="51" TextAlignment="Center"/>
+        <TextBox x:Name="timeText" HorizontalAlignment="Left" Height="26" Margin="1066,5,0,0" TextWrapping="Wrap" Text="{Binding timerValue}" VerticalAlignment="Top" Width="77" TextAlignment="Center"/>
+
+
+
+
+        <Viewbox Grid.Row="1" HorizontalAlignment="Left">
+            <Image Source="{Binding BodyImageSource}" Stretch="UniformToFill" />
+        </Viewbox>
+
+        <Viewbox Grid.Row="1" HorizontalAlignment="Left">
+            <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
+        </Viewbox>
+
+
+
+
+
+    </Grid>
+</Window>
