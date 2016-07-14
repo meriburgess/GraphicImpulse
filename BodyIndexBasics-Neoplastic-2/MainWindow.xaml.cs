@@ -31,7 +31,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// </summary>
         private static readonly uint[] BodyColor =
         {
-           0x33BFBFBF, 0x33BFBFBF, 0x33BFBFBF, 0x33BFBFBF, 0x33BFBFBF, 0x33BFBFBF,
+           0xCCBFBFBF, 0xCCBFBFBF, 0xCCBFBFBF, 0xCCBFBFBF, 0xCCBFBFBF, 0xCCBFBFBF,
         };
 
         /// <summary>
@@ -147,12 +147,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// <summary>
         /// Width of display (depth space)
         /// </summary>
-        private int displayWidth;
+        private double displayWidth;
 
         /// <summary>
         /// Height of display (depth space)
         /// </summary>
-        private int displayHeight;
+        private double displayHeight;
 
         /// <summary>
         /// List of colors for each body tracked
@@ -210,19 +210,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private double[] jointYCoordinates = new double[25];
         private double[] jointZCoordinates = new double[25];
         private double[] avgXYZCoordinates = new double[3];
-
-        private const double maxXRange = 2.5;
-        private const double maxYRange = 1.5;
-        private const double maxZRange = 4.5;
-        private const double minXRange = -2.5;
-        private const double minYRange = -1.5;
-        private const double minZRange = 0;
+        
 
         private Timer myTimer = new Timer();
         private TimeSpan myTS = new TimeSpan();
         private string minutes;
         private string seconds;
-
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
@@ -245,13 +238,13 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             this.bodyIndexFrameDescription = this.kinectSensor.BodyIndexFrameSource.FrameDescription;
 
             // allocate space to put the pixels being converted
-            this.bodyIndexPixels = new uint[this.bodyIndexFrameDescription.Width * this.bodyIndexFrameDescription.Height];
+            this.bodyIndexPixels = new uint[(this.bodyIndexFrameDescription.Width )* this.bodyIndexFrameDescription.Height];
 
             // create the bitmap to display
-            this.bodyIndexBitmap = new WriteableBitmap(this.bodyIndexFrameDescription.Width, this.bodyIndexFrameDescription.Height, 96.0, 96.0, PixelFormats.Bgra32, null);
+            this.bodyIndexBitmap = new WriteableBitmap(this.bodyIndexFrameDescription.Width , this.bodyIndexFrameDescription.Height, 96.0, 96.0, PixelFormats.Bgra32, null);
 
             // get size of joint space
-            this.displayWidth = bodyIndexFrameDescription.Width;
+            this.displayWidth = bodyIndexFrameDescription.Width ;
             this.displayHeight = bodyIndexFrameDescription.Height;
 
             // a bone defined as a line between two joints
@@ -314,9 +307,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             // set the status text
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.NoSensorStatusText;
-
-           // this.leftHandGesture = Properties.Resources.UnavailableDataText;
-           // this.rightHandGesture = Properties.Resources.UnavailableDataText;
+            
 
             // Create the drawing group we'll use for drawing
             this.drawingGroup = new DrawingGroup();
@@ -419,6 +410,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             bool dataReceived = false;
 
             timeText.Text = this.minutes + ":" + this.seconds;
+            if ((this.myTS.Minutes <= 0 && this.myTS.Seconds >= 10 && this.myTS.Seconds <= 30) || (this.myTS.Minutes <= 0 && this.myTS.Seconds >= 40 && this.myTS.Seconds <= 59))
+            {
+              //  testRect.Fill = new BrushConverter().ConvertFromString("#FFFFFF");
+            }
+            else
+            {
+                testRect.Fill = whiteBrush;
+            }
+
 
             if (msf != null)
             {
@@ -474,7 +474,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                                     if (body.IsTracked)
                                     {
-                                        this.DrawClippedEdges(body, dc);
+                                     //   this.DrawClippedEdges(body, dc);
 
                                         IReadOnlyDictionary<JointType, Joint> joints = body.Joints;
 
@@ -521,6 +521,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                         
 
                                         getAvgCoordinates();
+                                        getAvgVelocity();
 
                                         if (XYOriginPoint.X == -10 && XYOriginPoint.Y  == -10)
                                         {
@@ -551,12 +552,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                         }
 
                                         bodyOrientation(jointPoints[JointType.HipLeft], jointPoints[JointType.HipRight], jointPoints[JointType.ShoulderLeft], jointPoints[JointType.ShoulderRight], jointPoints[JointType.FootLeft], jointPoints[JointType.FootRight]);
-                                        getAvgVelocity();
+                                       
                                    //     this.DrawBody(joints, jointPoints, dc, drawPen);
                                         this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc, true);
                                        this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc, false);
                                         //   Console.WriteLine("X: " + avgXYZCoordinates[0] + " Y: " + avgXYZCoordinates[1] + " Z: " + avgXYZCoordinates[2]);
-                                      Console.WriteLine("Z: " + avgXYZCoordinates[2]);
+                                   
                                         getRegionOccupied();
                                     }
                                     
@@ -822,16 +823,16 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             avgVelocity = Math.Abs((total1 + total2) / (length * 2));
 
-            if (avgVelocity < 0.35)
+            if (avgVelocity < 1.0)
             {
                 velocityRect.Fill = whiteBrush;
             }
-            else if (avgVelocity >= 0.35 && avgVelocity < 1.5)
+            else if (avgVelocity >= 1.0 && avgVelocity < 2.0)
             {
                 velocityRect.Fill = yellowBrush;
 
             }
-            else if (avgVelocity >= 1.5 && avgVelocity < 2.75)
+            else if (avgVelocity >= 2.0 && avgVelocity < 2.75)
             {
                 velocityRect.Fill = blueBrush;
 
@@ -848,19 +849,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             {
                 velocityRect.Fill = blackBrush;
             }
+
             
 
         }
-
-        //private void fillVelocityRectangles(Brush noVelBrush, Brush lowVelBrush, Brush medLowBrush, Brush medBrush, Brush medHiBrush, Brush hiBrush)
-        //{
-        //    noVelocityRect.Fill = noVelBrush;
-        //    lowVelocityRect.Fill = lowVelBrush;
-        //    medLowVelocityRect.Fill = medLowBrush;
-        //    mediumVelocityRect.Fill = medBrush;
-        //    medHighVelocityRect.Fill = medHiBrush;
-        //    highVelocityRect.Fill = hiBrush;
-        //}
+        
 
         private void getAvgCoordinates()
         {
@@ -946,109 +939,165 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private void checkLeftRightMovement(Point oldPoint, Point newPoint)
         {
-            //Console.WriteLine("X change: " + (oldPoint.X - newPoint.X));
-
-            if (oldPoint.X - newPoint.X > 0.05)
-            {
-                sidewaysMvmtRect.Fill = yellowBrush;
-            }
-            else if ( oldPoint.X - newPoint.X < -0.05)
-            {
-                sidewaysMvmtRect.Fill = blueBrush;
-            }
-            else
-            {
-                sidewaysMvmtRect.Fill = blackBrush;
-            }
+            
+                if (oldPoint.X - newPoint.X > 0.05)
+                {
+                    if (avgVelocity >= 1.0)
+                    {
+                        sidewaysMvmtRect.Fill = yellowBrush;
+                    }
+                }
+                else if (oldPoint.X - newPoint.X < -0.05)
+                {
+                    if (avgVelocity >= 1.0)
+                    {
+                        sidewaysMvmtRect.Fill = blueBrush;
+                    }
+                }
+                else
+                {
+                    sidewaysMvmtRect.Fill = blackBrush;
+                }
+            
         }
 
         private void checkUpDownMovement(Point oldPoint, Point newPoint)
         {
-           // Console.WriteLine("Y change: " + (oldPoint.Y - newPoint.Y));
-
-            if (oldPoint.Y - newPoint.Y > 0.05)
-            {
-                verticalMvmtRect.Fill = redBrush;
-            }
-            else if (oldPoint.Y - newPoint.Y < -0.05)
-            {
-                verticalMvmtRect.Fill = yellowBrush;
-            }
-            else
-            {
-                verticalMvmtRect.Fill = whiteBrush;
-            }
+            
+                if (oldPoint.Y - newPoint.Y > 0.05)
+                {
+                    if (avgVelocity > 1.5)
+                    {
+                        verticalMvmtRect.Fill = redBrush;
+                    }
+                }
+                else if (oldPoint.Y - newPoint.Y < -0.05)
+                {
+                    if (avgVelocity > 1.5)
+                    {
+                        verticalMvmtRect.Fill = yellowBrush;
+                    }
+                }
+                else
+                {
+                    verticalMvmtRect.Fill = whiteBrush;
+                }
+            
         }
 
         private void checkForSweepMovement(Point handRightOld, Point handRightNew, Point handLeftOld, Point handLeftNew, Point footLeftOld, Point footLeftNew, Point footRightOld, Point footRightNew)
         {
-            //Console.WriteLine("Left X Hand Diff: " + (handLeftOld.X - handLeftNew.X));
-            //Console.WriteLine("Left X Foot Diff: " + (footLeftOld.X - footLeftNew.X));
-            //Console.WriteLine("Left Y Hand Diff: " + (handLeftOld.Y - handLeftNew.Y));
-            //Console.WriteLine("Left Y Foot Diff: " + (footLeftOld.Y - footLeftNew.Y));
-            if (
-                (handRightOld.X - handRightNew.X) > 5.0 || 
-                (handRightOld.X - handRightNew.X) < -5.0 ||
-                (handRightOld.Y - handRightNew.Y) > 5.0 ||
-                (handRightOld.Y - handRightNew.Y) < -5.0)
-            {
-                handRightSweepRect.Fill = redBrush;
 
-            }
-            else
+            double significantChange = 15.0;
+
+            if (avgVelocity < 2.0)
             {
-                handRightSweepRect.Fill = whiteBrush;
+                if ( Math.Abs(handRightOld.X - handRightNew.X) > significantChange)
+                {
+                    handRightSweepXRect.Fill = redBrush;
+
+                }
+                else
+                {
+                    handRightSweepXRect.Fill = whiteBrush;
+                }
+
+                //
+                //
+
+                if (Math.Abs(handRightOld.Y - handRightNew.Y) > significantChange) 
+                {
+                    handRightSweepYRect.Fill = yellowBrush;
+                }
+                else
+                {
+                    handRightSweepYRect.Fill = whiteBrush;
+                }
+
+                //
+                //
+
+                if ( Math.Abs(handLeftOld.X - handLeftNew.X) > significantChange)
+                {
+                    handLeftSweepXRect.Fill = blueBrush;
+
+                }
+                else
+                {
+                    handLeftSweepXRect.Fill = whiteBrush;
+                }
+
+                if (Math.Abs(handLeftOld.Y - handLeftNew.Y) > significantChange)
+                {
+                    handLeftSweepYRect.Fill = redBrush;
+
+                }
+                else
+                {
+                    handLeftSweepYRect.Fill = whiteBrush;
+                }
             }
 
-            if (
-               (handLeftOld.X - handLeftNew.X) > 5.0 ||
-               (handLeftOld.X - handLeftNew.X) < -5.0 ||
-               (handLeftOld.Y - handLeftNew.Y) > 5.0 ||
-               (handLeftOld.Y - handLeftNew.Y) < -5.0)
-            {
-                handLeftSweepRect.Fill = blueBrush;
+            
+                if (Math.Abs(footRightOld.X - footRightNew.X) > significantChange)
+                {
+                 if (avgVelocity < 1.0)
+                    {
+                     footRightXSweepRect.Fill = redBrush;
+                    }
+                 }
+                else
+                {
+                    footRightXSweepRect.Fill = whiteBrush;
+                }
 
-            }
-            else
-            {
-                handLeftSweepRect.Fill = whiteBrush;
-            }
 
-            if (
-               (footRightOld.X - footRightNew.X) > 5.0 ||
-               (footRightOld.X - footRightNew.X) < -5.0 ||
-               (footRightOld.Y - footRightNew.Y) > 5.0 ||
-               (footRightOld.Y - footRightNew.Y) < -5.0)
-            {
-                footRightSweepRect.Fill = redBrush;
 
-            }
-            else
-            {
-                footRightSweepRect.Fill = whiteBrush;
-            }
+                if (Math.Abs(footRightOld.Y - footRightNew.Y) > significantChange)
+                {
+                    if (avgVelocity < 1.0)
+                    {
+                        footRightYSweepRect.Fill = blueBrush;
+                    }
 
-            if (
-               (footLeftOld.X - footLeftNew.X) > 5.0 ||
-               (footLeftOld.X - footLeftNew.X) < -5.0 ||
-               (footLeftOld.Y - footLeftNew.Y) > 5.0 ||
-               (footLeftOld.Y - footLeftNew.Y) < -5.0)
-            {
-                footLeftSweepRect.Fill = yellowBrush ;
+                }
+                else
+                {
+                    footRightYSweepRect.Fill = whiteBrush;
+                }
 
-            }
-            else
-            {
-                footLeftSweepRect.Fill = whiteBrush;
-            }
+
+
+                if (Math.Abs(footLeftOld.X - footLeftNew.X) > significantChange)
+                {
+                    if (avgVelocity < 1.0)
+                    {
+                     footLeftSweepXRect.Fill = yellowBrush;
+                    }
+                }
+                else
+                {
+                    footLeftSweepXRect.Fill = whiteBrush;
+                }
+
+                if (Math.Abs(footLeftOld.Y - footLeftNew.Y) > significantChange)
+                {
+                    if (avgVelocity < 1.0)
+                    {
+                        footLeftSweepYRect.Fill = redBrush;
+                    }
+                }
+                else
+                {
+                    footLeftSweepYRect.Fill = whiteBrush;
+                }
+
 
         }
 
         private void bodyOrientation(Point hipLeft, Point hipRight, Point shoulderLeft, Point shoulderRight, Point footLeft, Point footRight)
         {
-            Console.WriteLine("Hip X distance: " + (hipRight.X - hipLeft.X ));
-            Console.WriteLine("Shoulder X distance: " + (shoulderRight.X - shoulderLeft.X ));
-            Console.WriteLine("Foot X distance: " + (footRight.X- footLeft.X ));
+            
 
             if (hipRight.X - hipLeft.X <= (0.6*(50-10*avgXYZCoordinates[2])) && shoulderRight.X - shoulderLeft.X <= (0.6*(80-14*avgXYZCoordinates[2])))
             {
@@ -1063,10 +1112,14 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private void timer_Tick(object sender, EventArgs e)
         {
             myTS = myTS.Add(TimeSpan.FromSeconds(1));
-            Console.WriteLine(string.Format("{0}:{1}", myTS.Minutes, myTS.Seconds));
+          //  Console.WriteLine(string.Format("{0}:{1}", myTS.Minutes, myTS.Seconds));
             this.minutes = myTS.Minutes.ToString();
             this.seconds = myTS.Seconds.ToString();
+        }
 
+        private void timerResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            myTS = TimeSpan.Zero;
         }
 
 
@@ -1081,6 +1134,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.SensorNotAvailableStatusText;
         }
-        
+
+       
     }
 }
