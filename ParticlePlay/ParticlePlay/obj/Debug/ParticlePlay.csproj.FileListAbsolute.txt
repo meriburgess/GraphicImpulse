@@ -1,0 +1,27 @@
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\bin\Debug\ParticlePlay.exe.config
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\bin\Debug\ParticlePlay.exe
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\bin\Debug\ParticlePlay.pdb
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\obj\Debug\MainWindow.g.cs
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\obj\Debug\App.g.cs
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay_MarkupCompile.cache
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay_MarkupCompile.lref
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\obj\Debug\MainWindow.baml
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay.g.resources
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay.Properties.Resources.resources
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay.csproj.GenerateResource.Cache
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay.exe
+C:\Users\meri_\Documents\Visual Studio 2015\Projects\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay.pdb
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\bin\Debug\ParticlePlay.exe.config
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay.exe
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay.pdb
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\bin\Debug\ParticlePlay.exe
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\bin\Debug\ParticlePlay.pdb
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay.csprojResolveAssemblyReference.cache
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\obj\Debug\MainWindow.g.cs
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\obj\Debug\App.g.cs
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay_MarkupCompile.cache
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay_MarkupCompile.lref
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\obj\Debug\MainWindow.baml
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay.g.resources
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay.Properties.Resources.resources
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\ParticlePlay\ParticlePlay\obj\Debug\ParticlePlay.csproj.GenerateResource.Cache
