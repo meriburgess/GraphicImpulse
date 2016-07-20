@@ -12,3 +12,17 @@ C:\Users\meri_\Documents\Visual Studio 2015\Projects\rectangleRainbowFill\rectan
 C:\Users\meri_\Documents\Visual Studio 2015\Projects\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\rectangleRainbowFill.csproj.GenerateResource.Cache
 C:\Users\meri_\Documents\Visual Studio 2015\Projects\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\rectangleRainbowFill.exe
 C:\Users\meri_\Documents\Visual Studio 2015\Projects\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\rectangleRainbowFill.pdb
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\bin\Debug\rectangleRainbowFill.exe.config
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\rectangleRainbowFill.exe
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\rectangleRainbowFill.pdb
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\bin\Debug\rectangleRainbowFill.exe
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\bin\Debug\rectangleRainbowFill.pdb
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\rectangleRainbowFill.csprojResolveAssemblyReference.cache
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\MainWindow.g.cs
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\App.g.cs
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\rectangleRainbowFill_MarkupCompile.cache
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\rectangleRainbowFill_MarkupCompile.lref
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\MainWindow.baml
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\rectangleRainbowFill.g.resources
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\rectangleRainbowFill.Properties.Resources.resources
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\rectangleRainbowFill\rectangleRainbowFill\obj\Debug\rectangleRainbowFill.csproj.GenerateResource.Cache

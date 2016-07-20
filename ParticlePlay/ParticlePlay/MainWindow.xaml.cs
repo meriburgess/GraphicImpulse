@@ -57,11 +57,9 @@ namespace ParticlePlay
 
         void CreateParticle()
         {
-            var speed = rand.Next(800) + 140;
+            var speed = rand.Next(20) + 140;
             var angle = (2 * Math.PI * rand.NextDouble());
-
-
-
+            
             //triangle
             //var angle = (2 * Math.PI * (rand.NextDouble() / 8)) + 1.1;
 
@@ -79,13 +77,13 @@ namespace ParticlePlay
                         Math.Sin(angle) * speed,
                         Math.Cos(angle) * speed),
                     Color = Color.FromRgb(0, 255, 0),
-                    Lifespan = 0.5 + rand.Next(20) / 1000d
+                    Lifespan = 0.5 + rand.Next(200) / 1000d
                 });
         }
 
         public void Update()
         {
-            var updateInterval = .001;
+            var updateInterval = .003;
 
             CreateParticle();
 
@@ -138,11 +136,9 @@ namespace ParticlePlay
 
                         c.A /= 2;
 
-                    //dc.DrawLine(new Pen(new SolidColorBrush(c),1),  p.Position, new Point(p.Position.X , p.Position.Y + rnd.Next(-100, 100) )
-                    //        );
-
+                        //dc.DrawLine(new Pen(new SolidColorBrush(c),1),  p.Position, new Point(p.Position.X , p.Position.Y + rnd.Next(-100, 100) )
+                        //        );
                     
-
                         dc.DrawEllipse(
                            new SolidColorBrush(c),
                             null, p.Position, 7, 7);
@@ -156,7 +152,10 @@ namespace ParticlePlay
                 canvas.Children.Add(element);
             };
 
-            MouseMove += (s, e) => emitter.Center = e.GetPosition(canvas);
+              MouseMove += (s, e) => emitter.Center = e.GetPosition(canvas);
+            
         }
+
+        
     }
 }

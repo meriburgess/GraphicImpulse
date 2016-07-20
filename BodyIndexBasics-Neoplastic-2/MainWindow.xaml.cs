@@ -15,12 +15,16 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
     using System.Windows.Shapes;
     using Microsoft.Kinect;
     using System.Timers;
+    using System.Windows.Controls;
+    using System.Diagnostics;
 
+    #region Main window class
     /// <summary>
     /// Interaction logic for the MainWindow
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        #region Mainwindow private variables
         /// <summary>
         /// Size of the RGB pixel in the bitmap
         /// </summary>
@@ -31,7 +35,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// </summary>
         private static readonly uint[] BodyColor =
         {
-           0xCCBFBFBF, 0xCCBFBFBF, 0xCCBFBFBF, 0xCCBFBFBF, 0xCCBFBFBF, 0xCCBFBFBF,
+           0xFFBFBFBF, 0xFFBFBFBF, 0xFFBFBFBF, 0xFFBFBFBF, 0xFFBFBFBF, 0xFFBFBFBF,
         };
 
         /// <summary>
@@ -54,30 +58,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// </summary>
         private const float InferredZPositionClamp = 0.1f;
 
+        //Various brushes for use
         private readonly Brush transparentBrush = new SolidColorBrush(Color.FromArgb(00, 0, 0, 0));
         private readonly Brush whiteBrush = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
         private readonly Brush blueBrush = new SolidColorBrush(Color.FromArgb(255, 0, 0, 255));
         private readonly Brush yellowBrush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
         private readonly Brush redBrush = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-        private readonly Brush blackBrush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-        private readonly Brush greyBrush = new SolidColorBrush(Color.FromArgb(255, 125, 125, 125));
-
+        private readonly Brush blackBrush = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+        private readonly Brush greyBrush = new SolidColorBrush(Color.FromArgb(255, 127, 127, 127));
         
-
-        /// <summary>
-        /// Brush used for drawing hands that are currently tracked as closed
-        /// </summary>
-        private readonly Brush handClosedBrush = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-
-        /// <summary>
-        /// Brush used for drawing hands that are currently tracked as opened
-        /// </summary>
-        private readonly Brush handOpenBrush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
-
-        /// <summary>
-        /// Brush used for drawing hands that are currently tracked as in lasso (pointer) position
-        /// </summary>
-        private readonly Brush handLassoBrush = new SolidColorBrush(Color.FromArgb(255, 0, 0, 255));
 
         /// <summary>
         /// Brush used for drawing joints that are currently tracked
@@ -153,70 +142,78 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// Height of display (depth space)
         /// </summary>
         private double displayHeight;
-
-        /// <summary>
-        /// List of colors for each body tracked
-        /// </summary>
-        private List<Pen> bodyColors;
-
+        
         /// <summary>
         /// Current status text to display
         /// </summary>
         private string statusText = null;
 
+        //list of joint positions for comparison (to calculate velocity)
         private Dictionary<JointType, Point> oldPositions = new Dictionary<JointType, Point>()
             {
-            { JointType.Head, new Point(-1, -1) },
-            { JointType.Neck,  new Point(-1, -1) },
-            { JointType.SpineShoulder, new Point(-1, -1) },
-            { JointType.SpineMid, new Point(-1, -1) },
-            { JointType.SpineBase, new Point(-1, -1) },
-            { JointType.ShoulderRight, new Point(-1, -1) },
-            { JointType.ElbowRight, new Point(-1, -1) } ,
-            { JointType.WristRight, new Point(-1, -1) } ,
-            { JointType.HandRight, new Point(-1, -1) },
-            { JointType.HandTipRight, new Point(-1, -1) },
-            { JointType.ThumbRight, new Point(-1, -1) },
-            { JointType.ShoulderLeft, new Point(-1, -1) },
-            { JointType.ElbowLeft, new Point(-1, -1) },
-            { JointType.WristLeft, new Point(-1, -1) } ,
-            { JointType.HandLeft, new Point(-1, -1) },
-            { JointType.HandTipLeft, new Point(-1, -1) },
-            { JointType.ThumbLeft, new Point(-1, -1) },
-            { JointType.HipLeft, new Point(-1, -1) } ,
-            { JointType.KneeLeft, new Point(-1, -1) } ,
-            { JointType.AnkleLeft, new Point(-1, -1) } ,
-            { JointType.FootLeft, new Point(-1, -1) },
-            { JointType.HipRight, new Point(-1, -1) },
-            { JointType.KneeRight, new Point(-1, -1) },
-            { JointType.AnkleRight, new Point(-1, -1) },
-            { JointType.FootRight, new Point(-1, -1) }
+            { JointType.Head, new Point(-10, -10) },
+            { JointType.Neck,  new Point(-10, -10) },
+            { JointType.SpineShoulder, new Point(-10, -10) },
+            { JointType.SpineMid, new Point(-10, -10) },
+            { JointType.SpineBase, new Point(-10, -10) },
+            { JointType.ShoulderRight, new Point(-10, -10) },
+            { JointType.ElbowRight, new Point(-10, -10) } ,
+            { JointType.WristRight, new Point(-10, -10) } ,
+            { JointType.HandRight, new Point(-10, -10) },
+            { JointType.HandTipRight, new Point(-10, -10) },
+            { JointType.ThumbRight, new Point(-10, -10) },
+            { JointType.ShoulderLeft, new Point(-10, -10) },
+            { JointType.ElbowLeft, new Point(-10, -10) },
+            { JointType.WristLeft, new Point(-10, -10) } ,
+            { JointType.HandLeft, new Point(-10, -10) },
+            { JointType.HandTipLeft, new Point(-10, -10) },
+            { JointType.ThumbLeft, new Point(-10, -10) },
+            { JointType.HipLeft, new Point(-10, -10) } ,
+            { JointType.KneeLeft, new Point(-10, -10) } ,
+            { JointType.AnkleLeft, new Point(-10, -10) } ,
+            { JointType.FootLeft, new Point(-10, -10) },
+            { JointType.HipRight, new Point(-10, -10) },
+            { JointType.KneeRight, new Point(-10, -10) },
+            { JointType.AnkleRight, new Point(-10, -10) },
+            { JointType.FootRight, new Point(-10, -10) }
             };
 
+        //More joint points for comparison
         private Point notFoundPt = new Point(-10, -10);
         private Point handLeftOriginPt = new Point(-10, -10);
         private Point handRightOriginPt = new Point(-10, -10);
         private Point footLeftOriginPt = new Point(-10, -10);
         private Point footRightOriginPt = new Point(-10, -10);
-
         private Point XYOriginPoint = new Point(-10, -10);
 
+        //Variable arrays for velocity calculations
         private double[] velocitiesX = new double[25];
         private double[] velocitiesY = new double[25];
         private double avgVelocity = 0;
 
-
+        //Arrays for X,Y, and Z coordinates of each joint
         private double[] jointXCoordinates = new double[25];
         private double[] jointYCoordinates = new double[25];
         private double[] jointZCoordinates = new double[25];
         private double[] avgXYZCoordinates = new double[3];
         
-
+        //Timer variables
         private Timer myTimer = new Timer();
         private TimeSpan myTS = new TimeSpan();
+        private Stopwatch mySW = new Stopwatch();
         private string minutes;
         private string seconds;
 
+        //Particle emmitter variables 
+        private ParticleEmitter rightEmitter = new ParticleEmitter();
+        private ParticleEmitter leftEmitter = new ParticleEmitter();
+        private DrawingVisualElement element = new DrawingVisualElement();
+
+        //Random variable 
+        private Random rnd = new Random();
+        #endregion
+
+        #region MainWindow initialize
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
@@ -284,19 +281,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             this.bones.Add(new Tuple<JointType, JointType>(JointType.KneeLeft, JointType.AnkleLeft));
             this.bones.Add(new Tuple<JointType, JointType>(JointType.AnkleLeft, JointType.FootLeft));
 
-            // populate body colors, one for each BodyIndex
-            this.bodyColors = new List<Pen>();
-
-            this.bodyColors.Add(new Pen(Brushes.Red, 3));
-            this.bodyColors.Add(new Pen(Brushes.Orange, 3));
-            this.bodyColors.Add(new Pen(Brushes.Green, 3));
-            this.bodyColors.Add(new Pen(Brushes.Blue, 3));
-            this.bodyColors.Add(new Pen(Brushes.Indigo, 3));
-            this.bodyColors.Add(new Pen(Brushes.Violet, 3));
-
+            //Update/Initialize timer info
             this.myTimer.Elapsed += new ElapsedEventHandler(timer_Tick);
             this.myTimer.Interval = 1000;
             this.myTimer.Enabled = true;
+            this.mySW.Start(); 
 
             // set IsAvailableChanged event notifier
             this.kinectSensor.IsAvailableChanged += this.Sensor_IsAvailableChanged;
@@ -308,7 +297,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.NoSensorStatusText;
             
-
             // Create the drawing group we'll use for drawing
             this.drawingGroup = new DrawingGroup();
 
@@ -317,16 +305,18 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             // use the window object as the view model in this simple example
             this.DataContext = this;
-
+            
             // initialize the components (controls) of the window
             this.InitializeComponent();
         }
+        #endregion
 
         /// <summary>
         /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        #region ImageSource and bitmap getters
         /// <summary>
         /// Gets the bitmap to display
         /// </summary>
@@ -344,7 +334,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 return this.imageSource;
             }
         }
+        #endregion
 
+        #region Status text update
         /// <summary>
         /// Gets or sets the current status text to display
         /// </summary>
@@ -369,7 +361,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 }
             }
         }
+        #endregion
 
+        #region MainWindow Closing
         /// <summary>
         /// Execute shutdown tasks
         /// </summary>
@@ -395,9 +389,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 this.kinectSensor = null;
             }
         }
+        #endregion
 
 
-
+        #region frame arrived event handler
         /// <summary>
         /// Handles the body index frame data arriving from the sensor
         /// </summary>
@@ -405,6 +400,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// <param name="e">event arguments</param>
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
+            double millisecondsElapsed = mySW.ElapsedMilliseconds;
+            //Console.WriteLine(millisecondsElapsed);
+            mySW.Restart();
+
             MultiSourceFrame msf = e.FrameReference.AcquireFrame();
             bool bodyIndexFrameProcessed = false;
             bool dataReceived = false;
@@ -412,7 +411,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             timeText.Text = this.minutes + ":" + this.seconds;
             if ((this.myTS.Minutes <= 0 && this.myTS.Seconds >= 10 && this.myTS.Seconds <= 30) || (this.myTS.Minutes <= 0 && this.myTS.Seconds >= 40 && this.myTS.Seconds <= 59))
             {
-              //  testRect.Fill = new BrushConverter().ConvertFromString("#FFFFFF");
+                testRect.Fill = greyBrush;
             }
             else
             {
@@ -461,16 +460,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         if (dataReceived)
                         {
                             int jointCount = 0;
-
+                            
                             using (DrawingContext dc = this.drawingGroup.Open())
                             {
                                 // Draw a transparent background to set the render size
                                 dc.DrawRectangle(new SolidColorBrush(Color.FromArgb(00, 00, 00, 00)), null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
-
-                                int penIndex = 0;
+                                
                                 foreach (Body body in this.bodies)
                                 {
-                                    Pen drawPen = this.bodyColors[penIndex++];
+                                    Pen drawPen = new Pen(greyBrush, 2);
 
                                     if (body.IsTracked)
                                     {
@@ -496,15 +494,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                             jointPoints[jointType] = new Point(depthSpacePoint.X, depthSpacePoint.Y);
 
                                             //If first coordinates for velocity have not been established yet, assign current coordinates 
-                                            if (oldPositions[jointType].X == -1 && oldPositions[jointType].Y == -1)
+                                            if (oldPositions[jointType].X == -10 && oldPositions[jointType].Y == -10)
                                             {
                                                 oldPositions[jointType] = new Point(jointPoints[jointType].X, jointPoints[jointType].Y);
                                             }
                                             else
                                             {
-                                                //calculate the velocity of current joint, comparing old position to new position
-                                                //velocitiesX[jointCount] = getVelocity(oldPositions[jointType].X, jointPoints[jointType].X);
-                                                velocitiesY[jointCount] = getVelocity(oldPositions[jointType].Y, jointPoints[jointType].Y);
+                                                //calculate the velocity of current joint, comparing old position to new position, divide by milliseconds elapsed
+                                                velocitiesX[jointCount] = getVelocity(oldPositions[jointType].X, jointPoints[jointType].X, millisecondsElapsed, joints[jointType].Position.Z);
+                                                velocitiesY[jointCount] = getVelocity(oldPositions[jointType].Y, jointPoints[jointType].Y, millisecondsElapsed, joints[jointType].Position.Z);
 
                                                 //update old position
                                                 oldPositions[jointType] = new Point(jointPoints[jointType].X, jointPoints[jointType].Y);
@@ -522,6 +520,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                                         getAvgCoordinates();
                                         getAvgVelocity();
+                                        Console.WriteLine(avgVelocity);
 
                                         if (XYOriginPoint.X == -10 && XYOriginPoint.Y  == -10)
                                         {
@@ -559,6 +558,45 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                         //   Console.WriteLine("X: " + avgXYZCoordinates[0] + " Y: " + avgXYZCoordinates[1] + " Z: " + avgXYZCoordinates[2]);
                                    
                                         getRegionOccupied();
+
+                                        rightEmitter.Update();
+                                        leftEmitter.Update();
+
+                                        canvas.Children.Clear();
+
+                                        rightEmitter.particles.ForEach(p =>
+                                        {
+                                           var c = p.Color;
+
+                                           c.A /= 2;
+
+                                           dc.DrawEllipse(
+                                                new SolidColorBrush(c),
+                                                null, p.Position, 4,4 );
+
+                                           dc.DrawEllipse(
+                                                new SolidColorBrush(p.Color),
+                                                null, p.Position, 2, 2);
+                                            });
+
+                                        leftEmitter.particles.ForEach(p =>
+                                        {
+                                            var c = p.Color;
+                                            
+                                            c.A /= 2;
+
+                                            dc.DrawEllipse(
+                                                 new SolidColorBrush(c),
+                                                 null, p.Position, 4, 4);
+
+                                            dc.DrawEllipse(
+                                                 new SolidColorBrush(p.Color),
+                                                 null, p.Position, 1, 1);
+                                        });
+
+                                        canvas.Children.Add(element);
+                                        rightEmitter.Center = jointPoints[JointType.HandRight];
+                                        leftEmitter.Center = jointPoints[JointType.HandLeft];
                                     }
                                     
                                 }
@@ -570,7 +608,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 }
             }
         }
+        #endregion
 
+        #region Process and Render body index pixels
         /// <summary>
         /// Directly accesses the underlying image buffer of the BodyIndexFrame to 
         /// create a displayable bitmap.
@@ -614,7 +654,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 this.bodyIndexBitmap.PixelWidth * (int)BytesPerPixel,
                 0);
         }
+        #endregion
 
+        #region Draw body, bones, hands, and clipped edges
         /// <summary>
         /// Draws a body
         /// </summary>
@@ -754,6 +796,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     break;
             }
         }
+        
 
         /// <summary>
         /// Draws indicators to show which edges are clipping body data
@@ -796,16 +839,20 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     new Rect(this.displayWidth - ClipBoundsThickness, 0, ClipBoundsThickness, this.displayHeight));
             }
         }
+        #endregion
 
-        private double getVelocity(double oldPoint, double newPoint)
+        #region Velocity Functions
+        //get 
+        private double getVelocity(double oldPoint, double newPoint, double seconds, double distance)
         {
-            double velocity = newPoint - oldPoint;
-            return velocity;
+            double relativeDistance = distance*(-0.6); 
+
+            double velocity = ((newPoint - oldPoint)/relativeDistance)/ seconds;
+            return Math.Abs(velocity);
         }
 
         private void getAvgVelocity()
         {
-
             double total1 = 0;
             double total2 = 0;
             int length = 0;
@@ -821,40 +868,49 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 total2 += v;
             }
 
-            avgVelocity = Math.Abs((total1 + total2) / (length * 2));
+            avgVelocity = 100*Math.Abs((total1 + total2) / (length * 2));
+            
+            if (avgVelocity >= 0.0 && avgVelocity < 1000)
+            {
+                byte alphaByte = Convert.ToByte(avgVelocity % 255);
+                // byte colorByte = Convert.ToByte((255 - (avgVelocity % 255)));
 
-            if (avgVelocity < 1.0)
-            {
-                velocityRect.Fill = whiteBrush;
+                velocityRect.Fill = new SolidColorBrush(Color.FromArgb(alphaByte, 255, 0, 0));
             }
-            else if (avgVelocity >= 1.0 && avgVelocity < 2.0)
-            {
-                velocityRect.Fill = yellowBrush;
 
-            }
-            else if (avgVelocity >= 2.0 && avgVelocity < 2.75)
-            {
-                velocityRect.Fill = blueBrush;
+            //if (avgVelocity < 3.0)
+            //{
+            //    velocityRect.Fill = whiteBrush;
+            //}
+            //else if (avgVelocity >= 3.0 && avgVelocity < 10.0)
+            //{
+            //    velocityRect.Fill = yellowBrush;
 
-            }
-            else if (avgVelocity >= 2.75 && avgVelocity < 3.75)
-            {
-                velocityRect.Fill = redBrush;
-            }
-            else if (avgVelocity >= 3.75 && avgVelocity < 4.85)
-            {
-                velocityRect.Fill = greyBrush;
-            }
-            else
-            {
-                velocityRect.Fill = blackBrush;
-            }
+            //}
+            //else if (avgVelocity >= 10.0 && avgVelocity < 20)
+            //{
+            //    velocityRect.Fill = blueBrush;
+
+            //}
+            //else if (avgVelocity >= 20 && avgVelocity < 30)
+            //{
+            //    velocityRect.Fill = redBrush;
+            //}
+            //else if (avgVelocity >= 30 && avgVelocity < 40)
+            //{
+            //    velocityRect.Fill = greyBrush;
+            //}
+            //else if (avgVelocity >= 40)
+            //{
+            //    velocityRect.Fill = blackBrush;
+            //}
 
             
 
         }
-        
+        #endregion
 
+        #region getAvgCoordinates
         private void getAvgCoordinates()
         {
             double totalX = 0;
@@ -873,7 +929,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             avgXYZCoordinates[2] = totalZ / jointZCoordinates.Length;
 
         }
+        #endregion
 
+        #region getRegionOccupied
         private void getRegionOccupied()
         {
             int xRegion = 0;
@@ -925,18 +983,52 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
           //  regionColorRect.Fill = regionBrushes[xRegion-1, yRegion-1, zRegion-1];
           if (zRegion == 1)
             {
-                regionColorRect.Fill = redBrush;
+                zregionColorRect.Fill = redBrush;
+                
             }
           else if (zRegion == 2)
             {
-                regionColorRect.Fill = whiteBrush;
+                zregionColorRect.Fill = whiteBrush;
             }
             else
             {
-                regionColorRect.Fill = yellowBrush;
+                zregionColorRect.Fill = yellowBrush;
+            }
+
+
+
+            if (yRegion == 1)
+            {
+                yregionColorRect.Fill = redBrush;
+
+            }
+            else if (yRegion == 2)
+            {
+                yregionColorRect.Fill = whiteBrush;
+            }
+            else
+            {
+                yregionColorRect.Fill = blueBrush;
+            }
+
+
+            if (xRegion == 1)
+            {
+                xregionColorRect.Fill = blueBrush;
+
+            }
+            else if (xRegion == 2)
+            {
+                xregionColorRect.Fill = whiteBrush;
+            }
+            else
+            {
+                xregionColorRect.Fill = yellowBrush;
             }
         }
+        #endregion
 
+        #region check for various movements
         private void checkLeftRightMovement(Point oldPoint, Point newPoint)
         {
             
@@ -1039,66 +1131,39 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             }
 
             
-                if (Math.Abs(footRightOld.X - footRightNew.X) > significantChange)
+                if (Math.Abs(footRightOld.X - footRightNew.X) > significantChange || Math.Abs(footRightOld.Y - footRightNew.Y) > significantChange)
                 {
                  if (avgVelocity < 1.0)
                     {
-                     footRightXSweepRect.Fill = redBrush;
+                     footRightSweepRect.Fill = redBrush;
                     }
                  }
                 else
                 {
-                    footRightXSweepRect.Fill = whiteBrush;
+                    footRightSweepRect.Fill = whiteBrush;
                 }
 
+                
 
-
-                if (Math.Abs(footRightOld.Y - footRightNew.Y) > significantChange)
+                if (Math.Abs(footLeftOld.X - footLeftNew.X) > significantChange || Math.Abs(footLeftOld.Y - footLeftNew.Y) > significantChange)
                 {
                     if (avgVelocity < 1.0)
                     {
-                        footRightYSweepRect.Fill = blueBrush;
-                    }
-
-                }
-                else
-                {
-                    footRightYSweepRect.Fill = whiteBrush;
-                }
-
-
-
-                if (Math.Abs(footLeftOld.X - footLeftNew.X) > significantChange)
-                {
-                    if (avgVelocity < 1.0)
-                    {
-                     footLeftSweepXRect.Fill = yellowBrush;
+                     footLeftSweepRect.Fill = yellowBrush;
                     }
                 }
                 else
                 {
-                    footLeftSweepXRect.Fill = whiteBrush;
+                    footLeftSweepRect.Fill = whiteBrush;
                 }
-
-                if (Math.Abs(footLeftOld.Y - footLeftNew.Y) > significantChange)
-                {
-                    if (avgVelocity < 1.0)
-                    {
-                        footLeftSweepYRect.Fill = redBrush;
-                    }
-                }
-                else
-                {
-                    footLeftSweepYRect.Fill = whiteBrush;
-                }
-
+                
 
         }
+        #endregion
 
+        #region body orientation
         private void bodyOrientation(Point hipLeft, Point hipRight, Point shoulderLeft, Point shoulderRight, Point footLeft, Point footRight)
         {
-            
-
             if (hipRight.X - hipLeft.X <= (0.6*(50-10*avgXYZCoordinates[2])) && shoulderRight.X - shoulderLeft.X <= (0.6*(80-14*avgXYZCoordinates[2])))
             {
                 orientationRect.Fill = yellowBrush;
@@ -1108,7 +1173,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 orientationRect.Fill = whiteBrush;
             }
         }
+        #endregion
 
+        #region timer functions
         private void timer_Tick(object sender, EventArgs e)
         {
             myTS = myTS.Add(TimeSpan.FromSeconds(1));
@@ -1121,8 +1188,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         {
             myTS = TimeSpan.Zero;
         }
+        #endregion
 
-
+        #region Sensor change event handler
         /// <summary>
         /// Handles the event which the sensor becomes unavailable (E.g. paused, closed, unplugged).
         /// </summary>
@@ -1134,7 +1202,92 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.SensorNotAvailableStatusText;
         }
-
-       
+        #endregion
     }
+    #endregion
+
+
+    #region Particle Emitter classes
+    class DrawingVisualElement : FrameworkElement
+    {
+        public DrawingVisual visual;
+
+        public DrawingVisualElement() { visual = new DrawingVisual(); }
+
+        protected override int VisualChildrenCount { get { return 1; } }
+
+        protected override Visual GetVisualChild(int index) { return visual; }
+    }
+
+    public class Particle
+    {
+        public Point Position;
+        public Point Velocity;
+        public Color Color;
+        public double Lifespan;
+        public double Elapsed;
+
+        public void Update(double elapsedSeconds)
+        {
+            Elapsed += elapsedSeconds;
+            if (Elapsed > Lifespan)
+            {
+                Color.A = 0;
+                return;
+            }
+            Color.A = (byte)(255 - ((255 * Elapsed)) / Lifespan);
+            Position.X += Velocity.X * elapsedSeconds;
+            Position.Y += Velocity.Y * elapsedSeconds;
+        }
+    }
+
+    public class ParticleEmitter
+    {
+        public Point Center { get; set; }
+        public List<Particle> particles = new List<Particle>();
+        Random rand = new Random();
+        public WriteableBitmap TargetBitmap;
+        public WriteableBitmap ParticleBitmap;
+
+        void CreateParticle()
+        {
+            var speed = rand.Next(20) + 140;
+            var angle = (2 * Math.PI * rand.NextDouble());
+            
+            //triangle
+            //var angle = (2 * Math.PI * (rand.NextDouble() / 8)) + 1.1;
+
+            // straight down
+            //var angle = 6.25;
+
+            //straight up
+            // var angle = 3.1;
+
+            particles.Add(
+                new Particle()
+                {
+                    Position = new Point(Center.X, Center.Y),
+                    Velocity = new Point(
+                        Math.Sin(angle) * speed,
+                        Math.Cos(angle) * speed),
+                    Color = Color.FromRgb(0, 255, 0),
+                    Lifespan = 0.5 + rand.Next(2) / 1000d
+                });
+        }
+
+        public void Update()
+        {
+            var updateInterval = .003;
+
+            CreateParticle();
+
+            particles.RemoveAll(p =>
+            {
+                p.Update(updateInterval);
+                return p.Color.A == 0;
+            });
+        }
+    }
+    #endregion
+
 }

@@ -29,6 +29,7 @@ namespace rectangleRainbowFill
         private int redCtr = 0;
         private int greenCtr = 0;
         private int blueCtr = 0;
+        int colorChangeCtr = 0;
 
         public MainWindow()
         {
@@ -42,23 +43,34 @@ namespace rectangleRainbowFill
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            // System.Drawing.Color c = ColorTranslator.FromHtml("#FFCCDD");
-            //  System.Windows.Media.Color color = System.Windows.Media.Color.FromRgb(c.R, c.G, c.B);
-            //rectangleColor.Color = color;
+            Console.WriteLine("Red: " + redCtr + " Blue: " + blueCtr + " Green: " + greenCtr + " Counter: " + colorChangeCtr);
             byte myByte1 = Convert.ToByte(redCtr % 255);
             byte myByte2 = Convert.ToByte(greenCtr % 255);
             byte myByte3 = Convert.ToByte(blueCtr % 255);
-
-            byte c_R = myByte1;
-            byte c_G = myByte2;
-            byte c_B = myByte3;
-            SolidColorBrush myBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, c_R, c_G, c_B));
-            myRectangle.Fill = myBrush;
             
+            SolidColorBrush myBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, myByte1, myByte2, myByte3));
+            myRectangle.Fill = myBrush;
+
+            if ((redCtr >= 250 && blueCtr >= 250 && greenCtr >= 250) || ((redCtr <= 0 && blueCtr <= 0 && greenCtr <= 0) && colorChangeCtr > 0))
+            {
+                colorChangeCtr += 1;
+            }
+
+            if (colorChangeCtr % 2 == 0)
+            {
                 redCtr += 10;
                 greenCtr += 10;
-                // blueCtr += 10;
-           
+                blueCtr += 10;
+            }
+            else if (colorChangeCtr % 2 == 1)
+            {
+                redCtr -= 10;
+                greenCtr -= 10;
+                blueCtr -= 10;
+            }
+
+            
+
         }
         
 
