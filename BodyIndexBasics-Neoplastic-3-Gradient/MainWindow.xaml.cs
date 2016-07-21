@@ -405,7 +405,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             //Stopwatch update
             double millisecondsElapsed = mySW.ElapsedMilliseconds;
             mySW.Restart();
-          //  Console.WriteLine(overallSW.ElapsedMilliseconds);
+            //  Console.WriteLine(overallSW.ElapsedMilliseconds);
+            timeText.Text = this.minutes + ":" + this.seconds; 
 
             updateMondrianSquares(overallSW.ElapsedMilliseconds);
 
@@ -557,19 +558,22 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                        getRegionOccupied();
                                        updateRegionSquares();
 
-                                       #region particle emitters
-                                        rightEmitter.Update();
-                                       leftEmitter.Update();
+                                        if (this.overallSW.ElapsedMilliseconds >= 67552)
+                                        {
+                                            #region particle emitters
+                                            rightEmitter.Update();
+                                            leftEmitter.Update();
 
-                                       updateParticles(rightEmitter, dc);
-                                       updateParticles(leftEmitter, dc);
+                                            updateParticles(rightEmitter, dc);
+                                            updateParticles(leftEmitter, dc);
 
-                                       canvas.Children.Clear();
-                                       canvas.Children.Add(element);
+                                            canvas.Children.Clear();
+                                            canvas.Children.Add(element);
 
-                                       rightEmitter.Center = jointPoints[JointType.HandRight];
-                                       leftEmitter.Center = jointPoints[JointType.HandLeft];
-                                        #endregion
+                                            rightEmitter.Center = jointPoints[JointType.HandRight];
+                                            leftEmitter.Center = jointPoints[JointType.HandLeft];
+                                            #endregion
+                                        }
                                     }
 
                                 }
@@ -737,7 +741,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             {
                 leftHandRect.Fill = whiteBrush;
                 rightHandRect.Fill = whiteBrush;
-
             }
             else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds < 36500)
             {
@@ -761,10 +764,16 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     rightHandRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, gradientByte));
                 }
             }
-            else
+            else if (overallSW.ElapsedMilliseconds >= 53500 && overallSW.ElapsedMilliseconds < 62758)
             {
                 leftHandRect.Fill = blueBrush;
                 rightHandRect.Fill = yellowBrush;
+            }
+            else
+            {
+
+                leftHandRect.Fill = whiteBrush;
+                rightHandRect.Fill = whiteBrush;
             }
 
         }
@@ -842,9 +851,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             }
 
             avgVelocity = 100*Math.Abs((total1 + total2) / (length * 2));
-
-            Console.WriteLine(avgVelocity);
-
+            
             double toBecomeByte = checkDoubleForByteConversion(255 - (avgVelocity/2));
           
             byte colorByte = Convert.ToByte(toBecomeByte);
@@ -861,9 +868,13 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             {
                 velocityRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, colorByte, colorByte));
             }
-            else
+            else if (overallSW.ElapsedMilliseconds >= 53500 && overallSW.ElapsedMilliseconds < 62758)
             {
                 velocityRect.Fill = redBrush;
+            }
+            else
+            {
+                velocityRect.Fill = whiteBrush;
             }
         }
         #endregion
@@ -974,11 +985,17 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 yregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, yByte));
                 zregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, zByte, zByte, 255));
             }
-            else
+            else if (this.overallSW.ElapsedMilliseconds >= 53500 && this.overallSW.ElapsedMilliseconds < 62758)
             {
                 xregionColorRect.Fill = redBrush;
                 yregionColorRect.Fill = yellowBrush;
                 zregionColorRect.Fill = blueBrush;
+            }
+            else
+            {
+                xregionColorRect.Fill = whiteBrush;
+                yregionColorRect.Fill = whiteBrush;
+                zregionColorRect.Fill = whiteBrush;
             }
         }
         #endregion
@@ -1009,7 +1026,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             byte gradientByte = Convert.ToByte(checkDoubleForByteConversion(255 - (Math.Abs(displacement)*100)));
 
-            if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
+            if (this.overallSW.ElapsedMilliseconds < 12050)
+            {
+                sidewaysMvmtRect.Fill = whiteBrush;
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
             {
                 sidewaysMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
             }
@@ -1018,9 +1039,13 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 sidewaysMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, gradientByte));
 
             }
-            else
+            else if (this.overallSW.ElapsedMilliseconds > 53500 && this.overallSW.ElapsedMilliseconds < 62758)
             {
                 sidewaysMvmtRect.Fill = yellowBrush;
+            }
+            else
+            {
+                sidewaysMvmtRect.Fill = whiteBrush;
             }
 
 
@@ -1053,7 +1078,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             byte gradientByte = Convert.ToByte(toBecomeByte);
 
-            if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
+            if(this.overallSW.ElapsedMilliseconds < 12050)
+            {
+                verticalMvmtRect.Fill = whiteBrush;
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
             {
                 verticalMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
             }
@@ -1061,9 +1090,13 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             {
                 verticalMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, gradientByte, gradientByte));
             }
-            else
+            else if (this.overallSW.ElapsedMilliseconds > 53500 && this.overallSW.ElapsedMilliseconds < 62758)
             {
                 verticalMvmtRect.Fill = redBrush;
+            }
+            else
+            {
+                verticalMvmtRect.Fill = whiteBrush;
             }
         }
 
@@ -1091,7 +1124,16 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             byte LFByte = Convert.ToByte(toBecomeLFByte);
             byte RFByte = Convert.ToByte(toBecomeRFByte);
 
-            if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
+            if(this.overallSW.ElapsedMilliseconds < 12050)
+            {
+                handLeftSweepXRect.Fill = whiteBrush;
+                handLeftSweepYRect.Fill = whiteBrush;
+                handRightSweepXRect.Fill = whiteBrush;
+                handRightSweepYRect.Fill = whiteBrush;
+                footLeftSweepRect.Fill = whiteBrush;
+                footRightSweepRect.Fill = whiteBrush;
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
             {
                 handLeftSweepXRect.Fill = new SolidColorBrush(Color.FromArgb(255, LHXByte, LHXByte, LHXByte));
                 handLeftSweepYRect.Fill = new SolidColorBrush(Color.FromArgb(255, LHYByte, LHYByte, LHYByte));
@@ -1109,7 +1151,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 footLeftSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, LFByte, LFByte, 255));
                 footRightSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, RFByte));
             }
-            else
+            else if (this.overallSW.ElapsedMilliseconds > 53500 && this.overallSW.ElapsedMilliseconds < 62758)
             {
                 handLeftSweepXRect.Fill = blueBrush;
                 handLeftSweepYRect.Fill = redBrush;
@@ -1117,6 +1159,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 handRightSweepYRect.Fill = redBrush;
                 footLeftSweepRect.Fill = blueBrush;
                 footRightSweepRect.Fill = yellowBrush;
+            }
+            else
+            {
+                handLeftSweepXRect.Fill = whiteBrush;
+                handLeftSweepYRect.Fill = whiteBrush;
+                handRightSweepXRect.Fill = whiteBrush;
+                handRightSweepYRect.Fill = whiteBrush;
+                footLeftSweepRect.Fill = whiteBrush;
+                footRightSweepRect.Fill = whiteBrush;
             }
 
 
@@ -1132,19 +1183,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             double displacement = ((hipDist * 2) + shoulderDist) / 2;
  
-            double toBecomeByte = (Math.Abs(displacement) * 4.0);
-
-            if (toBecomeByte < 0)
-            {
-                toBecomeByte = 0;
-            }
-            if (toBecomeByte > 255)
-            {
-                toBecomeByte = 255;
-            }
+            double toBecomeByte = checkDoubleForByteConversion((Math.Abs(displacement) * 4.0));
+            
 
             byte gradientByte = Convert.ToByte(toBecomeByte);
 
+            if (this.overallSW.ElapsedMilliseconds < 12050)
+            {
+                orientationRect.Fill = whiteBrush;
+            }
             if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
             {
                 orientationRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
@@ -1153,9 +1200,13 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             {
                 orientationRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, 255));
             }
-            else
+            else if (this.overallSW.ElapsedMilliseconds > 53500 && this.overallSW.ElapsedMilliseconds < 62758)
             {
                 orientationRect.Fill = yellowBrush;
+            }
+            else
+            {
+                orientationRect.Fill = whiteBrush;
             }
         }
         #endregion
@@ -1182,7 +1233,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         private void updateMondrianSquares(double milliseconds)
         {
-            #region fill in squares to music
+            #region stroke
             if (milliseconds < 507)
             {
                 xregionColorRect.Stroke = whiteBrush;
@@ -1453,7 +1504,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = blackBrush;
                 orientationRect.Stroke = blackBrush;
             }
-            else if (milliseconds >= 11781 && milliseconds < 12421)
+            else if (milliseconds >= 11781 && milliseconds < 62758)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -1470,6 +1521,296 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 leftHandRect.Stroke = blackBrush;
                 velocityRect.Stroke = blackBrush;
                 orientationRect.Stroke = blackBrush;
+            }
+            else if (milliseconds >= 62758)
+            {
+                xregionColorRect.Stroke = whiteBrush;
+                yregionColorRect.Stroke = whiteBrush;
+                zregionColorRect.Stroke = whiteBrush;
+                sidewaysMvmtRect.Stroke = whiteBrush;
+                verticalMvmtRect.Stroke = whiteBrush;
+                handLeftSweepXRect.Stroke = whiteBrush;
+                handLeftSweepYRect.Stroke = whiteBrush;
+                handRightSweepXRect.Stroke = whiteBrush;
+                handRightSweepYRect.Stroke = whiteBrush;
+                footLeftSweepRect.Stroke = whiteBrush;
+                footRightSweepRect.Stroke = whiteBrush;
+                rightHandRect.Stroke = whiteBrush;
+                leftHandRect.Stroke = whiteBrush;
+                velocityRect.Stroke = whiteBrush;
+                orientationRect.Stroke = whiteBrush;
+                
+            }
+            #endregion
+
+            #region height and widths
+            double[] startingHeights = { 248, 485, 107, 95, 172, 212, 112, 310, 137, 97, 112, 209, 394, 399, 164 };
+            double[] heights = new double[15];
+            double[] startingWidths = { 197, 440, 432, 331, 301, 322, 322, 254, 301, 187, 364, 440, 454, 616, 214 };
+            double[] widths = new double[15];
+            double[] heightChanges = { 41, 80, 17, 15, 28, 35, 18, 51, 22, 16,18, 34, 65, 66, 27};
+            double[] widthChanges = { 32, 73, 72, 55, 50, 53, 53, 42, 50, 31, 60, 73, 75, 102, 35 };
+
+            if (this.overallSW.ElapsedMilliseconds < 54512)
+            { 
+                xregionColorRect.Height = startingHeights[0];
+                yregionColorRect.Height = startingHeights[1];
+                zregionColorRect.Height = startingHeights[2];
+                sidewaysMvmtRect.Height = startingHeights[3];
+                verticalMvmtRect.Height = startingHeights[4];
+                handLeftSweepXRect.Height = startingHeights[5];
+                handLeftSweepYRect.Height = startingHeights[6];
+                footLeftSweepRect.Height = startingHeights[7];
+                handRightSweepXRect.Height = startingHeights[8];
+                handRightSweepYRect.Height = startingHeights[9];
+                footRightSweepRect.Height = startingHeights[10];
+                rightHandRect.Height = startingHeights[11];
+                leftHandRect.Height = startingHeights[12];
+                velocityRect.Height = startingHeights[13];
+                orientationRect.Height = startingHeights[14];
+
+                xregionColorRect.Width = startingWidths[0];
+                yregionColorRect.Width = startingWidths[1];
+                zregionColorRect.Width = startingWidths[2];
+                sidewaysMvmtRect.Width = startingWidths[3];
+                verticalMvmtRect.Width = startingWidths[4];
+                handLeftSweepXRect.Width = startingWidths[5];
+                handLeftSweepYRect.Width = startingWidths[6];
+                footLeftSweepRect.Width = startingWidths[7];
+                handRightSweepXRect.Width = startingWidths[8];
+                handRightSweepYRect.Width = startingWidths[9];
+                footRightSweepRect.Width = startingWidths[10];
+                rightHandRect.Width = startingWidths[11];
+                leftHandRect.Width = startingWidths[12];
+                velocityRect.Width = startingWidths[13];
+                orientationRect.Width = startingWidths[14];
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 54512 && this.overallSW.ElapsedMilliseconds < 55224)
+            {
+                for (int i = 0; i < heights.Length; i++)
+                {
+                    heights[i] = startingHeights[i] - (heightChanges[i] * 1);
+                }
+                xregionColorRect.Height = heights[0];
+                yregionColorRect.Height = heights[1];
+                zregionColorRect.Height = heights[2];
+                sidewaysMvmtRect.Height = heights[3];
+                verticalMvmtRect.Height = heights[4];
+                handLeftSweepXRect.Height = heights[5];
+                handLeftSweepYRect.Height = heights[6];
+                footLeftSweepRect.Height = heights[7];
+                handRightSweepXRect.Height = heights[8];
+                handRightSweepYRect.Height = heights[9];
+                footRightSweepRect.Height = heights[10];
+                rightHandRect.Height = heights[11];
+                leftHandRect.Height = heights[12];
+                velocityRect.Height = heights[13];
+                orientationRect.Height = heights[14];
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 55224 && this.overallSW.ElapsedMilliseconds < 56105)
+            {
+                for (int i = 0; i < widths.Length; i++)
+                {
+                    widths[i] = startingWidths[i] - (widthChanges[i] * 1);
+                }
+
+                xregionColorRect.Width = widths[0];
+                yregionColorRect.Width = widths[1];
+                zregionColorRect.Width = widths[2];
+                sidewaysMvmtRect.Width = widths[3];
+                verticalMvmtRect.Width = widths[4];
+                handLeftSweepXRect.Width = widths[5];
+                handLeftSweepYRect.Width = widths[6];
+                footLeftSweepRect.Width = widths[7];
+                handRightSweepXRect.Width = widths[8];
+                handRightSweepYRect.Width = widths[9];
+                footRightSweepRect.Width = widths[10];
+                rightHandRect.Width = widths[11];
+                leftHandRect.Width = widths[12];
+                velocityRect.Width = widths[13];
+                orientationRect.Width = widths[14];
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 56105 && this.overallSW.ElapsedMilliseconds < 56766)
+            {
+                for (int i = 0; i < heights.Length; i++)
+                {
+                    heights[i] = startingHeights[i] - (heightChanges[i] * 2);
+                }
+                xregionColorRect.Height = heights[0];
+                yregionColorRect.Height = heights[1];
+                zregionColorRect.Height = heights[2];
+                sidewaysMvmtRect.Height = heights[3];
+                verticalMvmtRect.Height = heights[4];
+                handLeftSweepXRect.Height = heights[5];
+                handLeftSweepYRect.Height = heights[6];
+                footLeftSweepRect.Height = heights[7];
+                handRightSweepXRect.Height = heights[8];
+                handRightSweepYRect.Height = heights[9];
+                footRightSweepRect.Height = heights[10];
+                rightHandRect.Height = heights[11];
+                leftHandRect.Height = heights[12];
+                velocityRect.Height = heights[13];
+                orientationRect.Height = heights[14];
+                
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 56766 && this.overallSW.ElapsedMilliseconds < 58496)
+            {
+                for (int i = 0; i < widths.Length; i++)
+                {
+                    widths[i] = startingWidths[i] - (widthChanges[i] * 2);
+                }
+
+                xregionColorRect.Width = widths[0];
+                yregionColorRect.Width = widths[1];
+                zregionColorRect.Width = widths[2];
+                sidewaysMvmtRect.Width = widths[3];
+                verticalMvmtRect.Width = widths[4];
+                handLeftSweepXRect.Width = widths[5];
+                handLeftSweepYRect.Width = widths[6];
+                footLeftSweepRect.Width = widths[7];
+                handRightSweepXRect.Width = widths[8];
+                handRightSweepYRect.Width = widths[9];
+                footRightSweepRect.Width = widths[10];
+                rightHandRect.Width = widths[11];
+                leftHandRect.Width = widths[12];
+                velocityRect.Width = widths[13];
+                orientationRect.Width = widths[14];
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 58496 && this.overallSW.ElapsedMilliseconds < 59616)
+            {
+                for (int i = 0; i < heights.Length; i++)
+                {
+                    heights[i] = startingHeights[i] - (heightChanges[i] * 3);
+                }
+                xregionColorRect.Height = heights[0];
+                yregionColorRect.Height = heights[1];
+                zregionColorRect.Height = heights[2];
+                sidewaysMvmtRect.Height = heights[3];
+                verticalMvmtRect.Height = heights[4];
+                handLeftSweepXRect.Height = heights[5];
+                handLeftSweepYRect.Height = heights[6];
+                footLeftSweepRect.Height = heights[7];
+                handRightSweepXRect.Height = heights[8];
+                handRightSweepYRect.Height = heights[9];
+                footRightSweepRect.Height = heights[10];
+                rightHandRect.Height = heights[11];
+                leftHandRect.Height = heights[12];
+                velocityRect.Height = heights[13];
+                orientationRect.Height = heights[14];
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 59616 && this.overallSW.ElapsedMilliseconds < 59765)
+            {
+                for (int i = 0; i < widths.Length; i++)
+                {
+                    widths[i] = startingWidths[i] - (widthChanges[i] * 3);
+                }
+
+                xregionColorRect.Width = widths[0];
+                yregionColorRect.Width = widths[1];
+                zregionColorRect.Width = widths[2];
+                sidewaysMvmtRect.Width = widths[3];
+                verticalMvmtRect.Width = widths[4];
+                handLeftSweepXRect.Width = widths[5];
+                handLeftSweepYRect.Width = widths[6];
+                footLeftSweepRect.Width = widths[7];
+                handRightSweepXRect.Width = widths[8];
+                handRightSweepYRect.Width = widths[9];
+                footRightSweepRect.Width = widths[10];
+                rightHandRect.Width = widths[11];
+                leftHandRect.Width = widths[12];
+                velocityRect.Width = widths[13];
+                orientationRect.Width = widths[14];
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 59765 && this.overallSW.ElapsedMilliseconds < 60523)
+            {
+                for (int i = 0; i < heights.Length; i++)
+                {
+                    heights[i] = startingHeights[i] - (heightChanges[i] * 4);
+                }
+                xregionColorRect.Height = heights[0];
+                yregionColorRect.Height = heights[1];
+                zregionColorRect.Height = heights[2];
+                sidewaysMvmtRect.Height = heights[3];
+                verticalMvmtRect.Height = heights[4];
+                handLeftSweepXRect.Height = heights[5];
+                handLeftSweepYRect.Height = heights[6];
+                footLeftSweepRect.Height = heights[7];
+                handRightSweepXRect.Height = heights[8];
+                handRightSweepYRect.Height = heights[9];
+                footRightSweepRect.Height = heights[10];
+                rightHandRect.Height = heights[11];
+                leftHandRect.Height = heights[12];
+                velocityRect.Height = heights[13];
+                orientationRect.Height = heights[14];
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 60523 && this.overallSW.ElapsedMilliseconds < 61294)
+            {
+                for (int i = 0; i < widths.Length; i++)
+                {
+                    widths[i] = startingWidths[i] - (widthChanges[i] * 4);
+                }
+
+                xregionColorRect.Width = widths[0];
+                yregionColorRect.Width = widths[1];
+                zregionColorRect.Width = widths[2];
+                sidewaysMvmtRect.Width = widths[3];
+                verticalMvmtRect.Width = widths[4];
+                handLeftSweepXRect.Width = widths[5];
+                handLeftSweepYRect.Width = widths[6];
+                footLeftSweepRect.Width = widths[7];
+                handRightSweepXRect.Width = widths[8];
+                handRightSweepYRect.Width = widths[9];
+                footRightSweepRect.Width = widths[10];
+                rightHandRect.Width = widths[11];
+                leftHandRect.Width = widths[12];
+                velocityRect.Width = widths[13];
+                orientationRect.Width = widths[14];
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 61294 && this.overallSW.ElapsedMilliseconds < 62020)
+            {
+                for (int i = 0; i < heights.Length; i++)
+                {
+                    heights[i] = startingHeights[i] - (heightChanges[i] * 5);
+                }
+                xregionColorRect.Height = heights[0];
+                yregionColorRect.Height = heights[1];
+                zregionColorRect.Height = heights[2];
+                sidewaysMvmtRect.Height = heights[3];
+                verticalMvmtRect.Height = heights[4];
+                handLeftSweepXRect.Height = heights[5];
+                handLeftSweepYRect.Height = heights[6];
+                footLeftSweepRect.Height = heights[7];
+                handRightSweepXRect.Height = heights[8];
+                handRightSweepYRect.Height = heights[9];
+                footRightSweepRect.Height = heights[10];
+                rightHandRect.Height = heights[11];
+                leftHandRect.Height = heights[12];
+                velocityRect.Height = heights[13];
+                orientationRect.Height = heights[14];
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 62020 && this.overallSW.ElapsedMilliseconds < 62758)
+            {
+                for (int i = 0; i < widths.Length; i++)
+                {
+                    widths[i] = startingWidths[i] - (widthChanges[i] * 5);
+                }
+
+                xregionColorRect.Width = widths[0];
+                yregionColorRect.Width = widths[1];
+                zregionColorRect.Width = widths[2];
+                sidewaysMvmtRect.Width = widths[3];
+                verticalMvmtRect.Width = widths[4];
+                handLeftSweepXRect.Width = widths[5];
+                handLeftSweepYRect.Width = widths[6];
+                footLeftSweepRect.Width = widths[7];
+                handRightSweepXRect.Width = widths[8];
+                handRightSweepYRect.Width = widths[9];
+                footRightSweepRect.Width = widths[10];
+                rightHandRect.Width = widths[11];
+                leftHandRect.Width = widths[12];
+                velocityRect.Width = widths[13];
+                orientationRect.Width = widths[14];
+                
             }
             #endregion
 

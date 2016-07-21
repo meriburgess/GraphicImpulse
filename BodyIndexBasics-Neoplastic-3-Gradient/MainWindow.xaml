@@ -45,7 +45,6 @@
         <Rectangle x:Name="handLeftSweepXRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="212" Margin="647,124,0,0" VerticalAlignment="Top" Width="322" Stroke="Black" StrokeThickness="22"/>
         <Rectangle x:Name="handLeftSweepYRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="112" Margin="652,336,0,0" VerticalAlignment="Top" Width="322" Stroke="Black" StrokeThickness="22"/>
         <TextBox x:Name="handLeftSweepYtextBox" HorizontalAlignment="Left" Height="69" Margin="688,369,0,0" TextWrapping="Wrap" Text="Left Hand Y Sweep" VerticalAlignment="Top" Width="248" FontSize="28" TextAlignment="Center" Foreground="#FFB2ACAC" Background="#00FFFFFF" BorderThickness="0"/>
-
         <TextBox x:Name="handLeftSweepXtextBox" HorizontalAlignment="Left" Height="112" Margin="716,159,0,0" TextWrapping="Wrap" Text="Left Hand X Sweep" VerticalAlignment="Top" Width="200" FontSize="40" TextAlignment="Center" Foreground="#FFB2ACAC" Background="#00FFFFFF" BorderThickness="0"/>
 
 
