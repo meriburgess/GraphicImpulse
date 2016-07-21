@@ -181,6 +181,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         //points for comparison
         private Point notFoundPt = new Point(-10, -10);
         private Point XYOriginPoint = new Point(-10, -10);
+        private Point handLeftOriginPt = new Point(-10, -10);
+        private Point handRightOriginPt = new Point(-10, -10);
+        private Point footLeftOriginPt = new Point(-10, -10);
+        private Point footRightOriginPt = new Point(-10, -10);
 
         //Variable arrays for velocity calculations
         private double[] velocitiesX = new double[25];
@@ -526,13 +530,26 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                             XYOriginPoint = new Point(updatedPoint.X, updatedPoint.Y);
                                         }
                                         #endregion
-                                        
-                                       checkForSweepMovement(oldPositions[JointType.HandRight], jointPoints[JointType.HandRight],
-                                           oldPositions[JointType.HandLeft], jointPoints[JointType.HandLeft],
-                                           oldPositions[JointType.FootLeft], jointPoints[JointType.FootLeft], 
-                                           oldPositions[JointType.FootRight], jointPoints[JointType.FootRight]);
-                                          
-                                       bodyOrientation(jointPoints[JointType.HipLeft], jointPoints[JointType.HipRight], jointPoints[JointType.ShoulderLeft], jointPoints[JointType.ShoulderRight], jointPoints[JointType.FootLeft], jointPoints[JointType.FootRight]);
+
+                                        #region check for sweep movements
+                                        if (handRightOriginPt == notFoundPt || handLeftOriginPt == notFoundPt || footLeftOriginPt == notFoundPt || footRightOriginPt == notFoundPt)
+                                        {
+                                            handRightOriginPt = jointPoints[JointType.HandRight];
+                                            handLeftOriginPt = jointPoints[JointType.HandLeft];
+                                            footLeftOriginPt = jointPoints[JointType.FootLeft];
+                                            footRightOriginPt = jointPoints[JointType.FootRight];
+                                        }
+                                        else
+                                        {
+                                            checkForSweepMovement(handRightOriginPt, jointPoints[JointType.HandRight], handLeftOriginPt, jointPoints[JointType.HandLeft], footLeftOriginPt, jointPoints[JointType.FootLeft], footRightOriginPt, jointPoints[JointType.FootRight]);
+                                            handRightOriginPt = jointPoints[JointType.HandRight];
+                                            handLeftOriginPt = jointPoints[JointType.HandLeft];
+                                            footLeftOriginPt = jointPoints[JointType.FootLeft];
+                                            footRightOriginPt = jointPoints[JointType.FootRight];
+                                        }
+                                        #endregion 
+
+                                        bodyOrientation(jointPoints[JointType.HipLeft], jointPoints[JointType.HipRight], jointPoints[JointType.ShoulderLeft], jointPoints[JointType.ShoulderRight], jointPoints[JointType.FootLeft], jointPoints[JointType.FootRight]);
                                        
                                        this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc, true);
                                        this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc, false);
@@ -689,67 +706,67 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// <param name="drawingContext">drawing context to draw to</param>
         private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext, bool leftHand)
         {
-   
+            int level = 255;
+
             switch (handState)
             {
-                case HandState.Closed:
-                  //  drawingContext.DrawEllipse(this.handClosedBrush, null, handPosition, HandSize, HandSize);
-                    if (leftHand)
-                    {
-                        leftHandRect.Fill = redBrush;
-                    }
-                    else
-                    {
-                        rightHandRect.Fill = redBrush;
-                    }
-                    break;
-
-                case HandState.Open:
-                //    drawingContext.DrawEllipse(this.handOpenBrush, null, handPosition, HandSize, HandSize);
-                    if (leftHand)
-                    {
-                        leftHandRect.Fill = blueBrush;
-                    }
-                    else
-                    {
-                        rightHandRect.Fill = blueBrush;
-                    }
-                    break;
-
-                case HandState.Lasso:
-                  //  drawingContext.DrawEllipse(this.handLassoBrush, null, handPosition, HandSize, HandSize);
-                    if (leftHand)
-                    {
-                        leftHandRect.Fill = yellowBrush;
-                    }
-                    else
-                    {
-                        rightHandRect.Fill = yellowBrush;
-                    }
-                    break;
-
                 case HandState.NotTracked:
-                    if(leftHand)
-                    {
-                        leftHandRect.Fill = blackBrush;
-                    }
-                    else
-                    {
-                        rightHandRect.Fill = blackBrush;
-                    }
+                    level = 255;
                     break;
 
                 case HandState.Unknown:
-                    if (leftHand)
-                    {
-                        leftHandRect.Fill = greyBrush;
-                    }
-                    else
-                    {
-                        rightHandRect.Fill = greyBrush;
-                    }
+                    level = 255;
+                    break;
+
+                case HandState.Open:
+                    level = 230;
+                    break;
+
+                case HandState.Lasso:
+                    level = 215;
+                    break;
+
+                case HandState.Closed:
+                    level = 200;
                     break;
             }
+            byte gradientByte = Convert.ToByte(level);
+
+
+            if (this.overallSW.ElapsedMilliseconds < 12050)
+            {
+                leftHandRect.Fill = whiteBrush;
+                rightHandRect.Fill = whiteBrush;
+
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds < 36500)
+            {
+                if (leftHand)
+                {
+                    leftHandRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
+                }
+                else
+                {
+                    rightHandRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
+                }
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            {
+                if (leftHand)
+                {
+                    leftHandRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, 255));
+                }
+                else
+                {
+                    rightHandRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, gradientByte));
+                }
+            }
+            else
+            {
+                leftHandRect.Fill = blueBrush;
+                rightHandRect.Fill = yellowBrush;
+            }
+
         }
         
 
@@ -797,7 +814,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         #endregion
 
         #region Velocity Functions
-        //get 
         private double getVelocity(double oldPoint, double newPoint, double seconds, double distance)
         {
             //Get inverse value of joint distance from camera
@@ -826,15 +842,29 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             }
 
             avgVelocity = 100*Math.Abs((total1 + total2) / (length * 2));
-            
-            if (avgVelocity >= 0.0 && avgVelocity < 1000)
-            {
-                byte alphaByte = Convert.ToByte(avgVelocity % 255);
-                // byte colorByte = Convert.ToByte((255 - (avgVelocity % 255)));
 
-                velocityRect.Fill = new SolidColorBrush(Color.FromArgb(alphaByte, 255, 0, 0));
+            Console.WriteLine(avgVelocity);
+
+            double toBecomeByte = checkDoubleForByteConversion(255 - (avgVelocity/2));
+          
+            byte colorByte = Convert.ToByte(toBecomeByte);
+
+            if (this.overallSW.ElapsedMilliseconds < 12050)
+            {
+                velocityRect.Fill = whiteBrush;
             }
-            
+            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds < 36500)
+            {
+                velocityRect.Fill = new SolidColorBrush(Color.FromArgb(255, colorByte, colorByte, colorByte));
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            {
+                velocityRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, colorByte, colorByte));
+            }
+            else
+            {
+                velocityRect.Fill = redBrush;
+            }
         }
         #endregion
 
@@ -922,26 +952,34 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         
         private void updateRegionSquares()
         {
-            byte xByte = Convert.ToByte(255 - Math.Abs(avgXYZCoordinates[0] * 92.3));
-            byte yByte = Convert.ToByte(255 - Math.Abs(avgXYZCoordinates[1] * 122.5));
-            byte zByte = Convert.ToByte(255 - Math.Abs(avgXYZCoordinates[2] * 56.6));
-            
-            if (xByte > 255)
-            {
-                xByte = 255;
-            }
-            if (yByte > 255)
-            {
-                yByte = 255;
-            }
-            if (zByte > 255)
-            {
-                zByte = 255;
-            }
+            byte xByte = Convert.ToByte(checkDoubleForByteConversion(255 - Math.Abs(avgXYZCoordinates[0] * 92.3)));
+            byte yByte = Convert.ToByte(checkDoubleForByteConversion(255 - Math.Abs(avgXYZCoordinates[1] * 122.5)));
+            byte zByte = Convert.ToByte(checkDoubleForByteConversion(255 - Math.Abs(avgXYZCoordinates[2] * 56.6)));
 
-            xregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, xByte, yByte, zByte));
-            yregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, xByte, yByte, zByte));
-            zregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, xByte, yByte, zByte));
+            if (this.overallSW.ElapsedMilliseconds < 12050)
+            {
+                xregionColorRect.Fill = whiteBrush;
+                yregionColorRect.Fill = whiteBrush;
+                zregionColorRect.Fill = whiteBrush;
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds < 36500)
+            {
+                xregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, xByte, xByte, xByte));
+                yregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, yByte, yByte, yByte));
+                zregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, zByte, zByte, zByte));
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            {
+                xregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, xByte, xByte));
+                yregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, yByte));
+                zregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, zByte, zByte, 255));
+            }
+            else
+            {
+                xregionColorRect.Fill = redBrush;
+                yregionColorRect.Fill = yellowBrush;
+                zregionColorRect.Fill = blueBrush;
+            }
         }
         #endregion
 
@@ -969,19 +1007,23 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 right = false;
             }
 
-            byte gradientByte = Convert.ToByte(255 - (Math.Abs(displacement)*100));
+            byte gradientByte = Convert.ToByte(checkDoubleForByteConversion(255 - (Math.Abs(displacement)*100)));
 
-            if (gradientByte < 0)
+            if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
             {
-                gradientByte = 0;
+                sidewaysMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
             }
-            if(gradientByte > 255)
+            else if (this.overallSW.ElapsedMilliseconds > 36500 && this.overallSW.ElapsedMilliseconds < 53500)
             {
-                gradientByte = 255;
+                sidewaysMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, gradientByte));
+
             }
-            
-            sidewaysMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
-           
+            else
+            {
+                sidewaysMvmtRect.Fill = yellowBrush;
+            }
+
+
         }
 
         private void checkUpDownMovement(Point oldPoint, Point newPoint, double distance)
@@ -990,13 +1032,13 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             double displacement = oldPoint.Y - newPoint.Y;
             bool up;
             bool down;
-            
-            if (displacement > yRange/10)
+
+            if (displacement > yRange / 10)
             {
                 up = true;
                 down = false;
             }
-            else if (displacement < -(yRange/10))
+            else if (displacement < -(yRange / 10))
             {
                 up = false;
                 down = true;
@@ -1007,7 +1049,90 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 down = false;
             }
 
-            double toBecomeByte = 255 - (Math.Abs(displacement) * 1000);
+            double toBecomeByte = checkDoubleForByteConversion(255 - (Math.Abs(displacement) * 1000));
+
+            byte gradientByte = Convert.ToByte(toBecomeByte);
+
+            if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
+            {
+                verticalMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
+            }
+            else if (this.overallSW.ElapsedMilliseconds > 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            {
+                verticalMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, gradientByte, gradientByte));
+            }
+            else
+            {
+                verticalMvmtRect.Fill = redBrush;
+            }
+        }
+
+        private void checkForSweepMovement(Point handRightOld, Point handRightNew, Point handLeftOld, Point handLeftNew, Point footLeftOld, Point footLeftNew, Point footRightOld, Point footRightNew)
+        {
+            double leftHandXDisplace = 0.6 *( Math.Abs(handLeftOld.X - handLeftNew.X) * avgXYZCoordinates[2]);
+            double leftHandYDisplace = 0.4 * (Math.Abs(handLeftOld.Y - handLeftNew.Y) * avgXYZCoordinates[2]);
+            double rightHandXDisplace = 0.6 * (Math.Abs(handRightOld.X - handRightNew.X)  * avgXYZCoordinates[2]);
+            double rightHandYDisplace = 0.6 * (Math.Abs(handRightOld.Y - handRightNew.Y) * avgXYZCoordinates[2]);
+            double leftFootDisplace = 0.6 * ( Math.Abs(footLeftOld.X - footLeftNew.X) * avgXYZCoordinates[2]);
+            double rightFootDisplace = 0.6 * ( Math.Abs(footRightOld.X - footRightNew.X) * avgXYZCoordinates[2]);
+
+
+            double toBecomeLHXByte = checkDoubleForByteConversion(255 - (leftHandXDisplace * 2));
+            double toBecomeLHYByte = checkDoubleForByteConversion(255 - (leftHandYDisplace * 2));
+            double toBecomeRHXByte = checkDoubleForByteConversion(255 - (rightHandXDisplace * 2));
+            double toBecomeRHYByte = checkDoubleForByteConversion(255 - (rightHandYDisplace * 2));
+            double toBecomeLFByte = checkDoubleForByteConversion(255 - (leftFootDisplace * 2));
+            double toBecomeRFByte = checkDoubleForByteConversion(255 - (rightFootDisplace * 2));
+            
+            byte LHXByte = Convert.ToByte(toBecomeLHXByte);
+            byte LHYByte = Convert.ToByte(toBecomeLHYByte);
+            byte RHXByte = Convert.ToByte(toBecomeRHXByte);
+            byte RHYByte = Convert.ToByte(toBecomeRHYByte);
+            byte LFByte = Convert.ToByte(toBecomeLFByte);
+            byte RFByte = Convert.ToByte(toBecomeRFByte);
+
+            if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
+            {
+                handLeftSweepXRect.Fill = new SolidColorBrush(Color.FromArgb(255, LHXByte, LHXByte, LHXByte));
+                handLeftSweepYRect.Fill = new SolidColorBrush(Color.FromArgb(255, LHYByte, LHYByte, LHYByte));
+                handRightSweepXRect.Fill = new SolidColorBrush(Color.FromArgb(255, RHXByte, RHXByte, RHXByte));
+                handRightSweepYRect.Fill = new SolidColorBrush(Color.FromArgb(255, RHYByte, RHYByte, RHYByte));
+                footLeftSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, LFByte, LFByte, LFByte));
+                footRightSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, RFByte, RFByte, RFByte));
+            }
+            else if (this.overallSW.ElapsedMilliseconds > 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            {
+                handLeftSweepXRect.Fill = new SolidColorBrush(Color.FromArgb(255, LHXByte, LHXByte, 255));
+                handLeftSweepYRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, LHYByte, LHYByte ));
+                handRightSweepXRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, RHXByte));
+                handRightSweepYRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, RHYByte, RHYByte));
+                footLeftSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, LFByte, LFByte, 255));
+                footRightSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, RFByte));
+            }
+            else
+            {
+                handLeftSweepXRect.Fill = blueBrush;
+                handLeftSweepYRect.Fill = redBrush;
+                handRightSweepXRect.Fill = yellowBrush;
+                handRightSweepYRect.Fill = redBrush;
+                footLeftSweepRect.Fill = blueBrush;
+                footRightSweepRect.Fill = yellowBrush;
+            }
+
+
+        }
+        #endregion
+
+        #region body orientation
+        private void bodyOrientation(Point hipLeft, Point hipRight, Point shoulderLeft, Point shoulderRight, Point footLeft, Point footRight)
+        {
+
+            double hipDist = 0.6 * ((hipRight.X - hipLeft.X) * avgXYZCoordinates[2]);
+            double shoulderDist = 0.6 * ((shoulderRight.X - shoulderLeft.X) * avgXYZCoordinates[2]);
+
+            double displacement = ((hipDist * 2) + shoulderDist) / 2;
+ 
+            double toBecomeByte = (Math.Abs(displacement) * 4.0);
 
             if (toBecomeByte < 0)
             {
@@ -1019,107 +1144,18 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             }
 
             byte gradientByte = Convert.ToByte(toBecomeByte);
-            
-            Console.WriteLine("displacement: " + displacement + " gradientByte: " + gradientByte);
 
-            verticalMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
-
-        }
-
-        private void checkForSweepMovement(Point handRightOld, Point handRightNew, Point handLeftOld, Point handLeftNew, Point footLeftOld, Point footLeftNew, Point footRightOld, Point footRightNew)
-        {
-
-            double significantChange = 15.0;
-
-            if (avgVelocity < 2.0)
+            if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
             {
-                if ( Math.Abs(handRightOld.X - handRightNew.X) > significantChange)
-                {
-                    handRightSweepXRect.Fill = redBrush;
-
-                }
-                else
-                {
-                    handRightSweepXRect.Fill = whiteBrush;
-                }
-
-                //
-                //
-
-                if (Math.Abs(handRightOld.Y - handRightNew.Y) > significantChange) 
-                {
-                    handRightSweepYRect.Fill = yellowBrush;
-                }
-                else
-                {
-                    handRightSweepYRect.Fill = whiteBrush;
-                }
-
-                //
-                //
-
-                if ( Math.Abs(handLeftOld.X - handLeftNew.X) > significantChange)
-                {
-                    handLeftSweepXRect.Fill = blueBrush;
-
-                }
-                else
-                {
-                    handLeftSweepXRect.Fill = whiteBrush;
-                }
-
-                if (Math.Abs(handLeftOld.Y - handLeftNew.Y) > significantChange)
-                {
-                    handLeftSweepYRect.Fill = redBrush;
-
-                }
-                else
-                {
-                    handLeftSweepYRect.Fill = whiteBrush;
-                }
+                orientationRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
             }
-
-            
-                if (Math.Abs(footRightOld.X - footRightNew.X) > significantChange || Math.Abs(footRightOld.Y - footRightNew.Y) > significantChange)
-                {
-                 if (avgVelocity < 1.0)
-                    {
-                     footRightSweepRect.Fill = redBrush;
-                    }
-                 }
-                else
-                {
-                    footRightSweepRect.Fill = whiteBrush;
-                }
-
-                
-
-                if (Math.Abs(footLeftOld.X - footLeftNew.X) > significantChange || Math.Abs(footLeftOld.Y - footLeftNew.Y) > significantChange)
-                {
-                    if (avgVelocity < 1.0)
-                    {
-                     footLeftSweepRect.Fill = yellowBrush;
-                    }
-                }
-                else
-                {
-                    footLeftSweepRect.Fill = whiteBrush;
-                }
-                
-
-        }
-        #endregion
-
-        #region body orientation
-        private void bodyOrientation(Point hipLeft, Point hipRight, Point shoulderLeft, Point shoulderRight, Point footLeft, Point footRight)
-        {
-            if (hipRight.X - hipLeft.X <= (0.6*(50-10*avgXYZCoordinates[2])) && shoulderRight.X - shoulderLeft.X <= (0.6*(80-14*avgXYZCoordinates[2])))
+            else if (this.overallSW.ElapsedMilliseconds > 36500 && this.overallSW.ElapsedMilliseconds < 53500)
             {
-                orientationRect.Fill = yellowBrush;
+                orientationRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, 255));
             }
             else
             {
-                orientationRect.Fill = whiteBrush;
+                orientationRect.Fill = yellowBrush;
             }
         }
         #endregion
@@ -1439,6 +1475,24 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         }
 
+        #region checkDoubleForByteConversion
+        private double checkDoubleForByteConversion(double check)
+        {
+            if (check > 255)
+            {
+                return 255;
+            }
+            else if ( check < 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return check;
+            }
+        }
+        #endregion
+
         #region timer functions
         private void timer_Tick(object sender, EventArgs e)
         {
@@ -1467,6 +1521,47 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             // on failure, set the status text
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.SensorNotAvailableStatusText;
+        }
+        #endregion
+
+        #region Labels for squares button event handlers
+        private void showLabelsButton_Click(object sender, RoutedEventArgs e)
+        {
+            xregionIntextBox.Foreground = greyBrush;
+            yregionIntextBox.Foreground = greyBrush;
+            zregionIntextBox.Foreground = greyBrush;
+            sidewaysMvmttextBox.Foreground = greyBrush;
+            verticalMvmttextBox.Foreground = greyBrush;
+            handLeftSweepXtextBox.Foreground = greyBrush;
+            handLeftSweepYtextBox.Foreground = greyBrush;
+            handRightSweepXtextBox.Foreground = greyBrush;
+            handRightSweepYtextBox.Foreground = greyBrush;
+            footLeftSweeptextBox.Foreground = greyBrush;
+            footRightSweeptextBox.Foreground = greyBrush;
+            handRighttextBox.Foreground = greyBrush;
+            handLefttextBox.Foreground = greyBrush;
+            velocitytextBox.Foreground = greyBrush;
+            orientationtextBox.Foreground = greyBrush;
+
+        }
+
+        private void hideLabelsButton_Click(object sender, RoutedEventArgs e)
+        {
+            xregionIntextBox.Foreground = transparentBrush;
+            yregionIntextBox.Foreground = transparentBrush;
+            zregionIntextBox.Foreground = transparentBrush;
+            sidewaysMvmttextBox.Foreground = transparentBrush;
+            verticalMvmttextBox.Foreground = transparentBrush;
+            handLeftSweepXtextBox.Foreground = transparentBrush;
+            handLeftSweepYtextBox.Foreground = transparentBrush;
+            handRightSweepXtextBox.Foreground = transparentBrush;
+            handRightSweepYtextBox.Foreground = transparentBrush;
+            footLeftSweeptextBox.Foreground = transparentBrush;
+            footRightSweeptextBox.Foreground = transparentBrush;
+            handRighttextBox.Foreground = transparentBrush;
+            handLefttextBox.Foreground = transparentBrush;
+            velocitytextBox.Foreground = transparentBrush;
+            orientationtextBox.Foreground = transparentBrush;
         }
         #endregion
     }
@@ -1536,7 +1631,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     Velocity = new Point(
                         Math.Sin(angle) * speed,
                         Math.Cos(angle) * speed),
-                    Color = Color.FromRgb(0, 255, 0),
+                    Color = Color.FromRgb(50, 50, 50),
                     Lifespan = 0.5 + rand.Next(2) / 1000d
                 });
         }

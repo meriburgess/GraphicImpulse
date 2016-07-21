@@ -95,10 +95,12 @@
         <Viewbox Grid.Row="1" HorizontalAlignment="Left">
             <Image Source="{Binding ImageSource}" Stretch="Fill" />
         </Viewbox>
-        
-        <Rectangle x:Name="testRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="26" Margin="1366,5,0,0" Stroke="Black" VerticalAlignment="Top" Width="77"/>
+
+        <Rectangle x:Name="testRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="26" Margin="1443,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="77"/>
         <Button x:Name="timerResetButton" Content="Reset Time" HorizontalAlignment="Left" Height="21" Margin="1172,5,0,0" VerticalAlignment="Top" Width="74" Background="WhiteSmoke" Click="timerResetButton_Click"/>
         <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="811" Margin="0,26,0,0" VerticalAlignment="Top" Width="1520"/>
+        <Button x:Name="showLabelsButton" Content="Show Labels" HorizontalAlignment="Left" Height="21" Margin="1270,5,0,0" VerticalAlignment="Top" Width="68" Background="#FFF4F4F4" Click="showLabelsButton_Click"/>
+        <Button x:Name="hideLabelsButton" Content="Hide Labels" HorizontalAlignment="Left" Height="21" Margin="1343,5,0,0" VerticalAlignment="Top" Width="73" Background="#FFF4F4F4" IsDefault="True" Click="hideLabelsButton_Click"/>
 
 
 

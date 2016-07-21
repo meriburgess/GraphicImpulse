@@ -134,7 +134,7 @@ namespace ParticlePlay
 
                         var c = p.Color;
 
-                        c.A /= 2;
+                       // c.A /= 2;
 
                         //dc.DrawLine(new Pen(new SolidColorBrush(c),1),  p.Position, new Point(p.Position.X , p.Position.Y + rnd.Next(-100, 100) )
                         //        );
