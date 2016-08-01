@@ -212,6 +212,20 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
         //Random variable 
         private Random rnd = new Random();
+
+        private uint[] myOutlinePixels = null;
+        private uint[] myRightSidePixels = null;
+        private uint[] myLeftSidePixels = null;
+        private double bodyHeight;
+        private double bodyWidth;
+        private double avgBodyX;
+        private double avgBodyY;
+
+        private Point rightExtreme;
+        private Point leftExtreme;
+        private Point lowerExtreme;
+        private Point upperExtreme;
+
         #endregion
 
         #region MainWindow initialize
@@ -237,6 +251,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             // allocate space to put the pixels being converted
             this.bodyIndexPixels = new uint[(this.bodyIndexFrameDescription.Width )* this.bodyIndexFrameDescription.Height];
+            this.myOutlinePixels = new uint[(this.bodyIndexFrameDescription.Width) * this.bodyIndexFrameDescription.Height];
+            this.myLeftSidePixels = new uint[(this.bodyIndexFrameDescription.Width) * this.bodyIndexFrameDescription.Height];
+            this.myRightSidePixels = new uint[(this.bodyIndexFrameDescription.Width) * this.bodyIndexFrameDescription.Height];
 
             // create the bitmap to display
             this.bodyIndexBitmap = new WriteableBitmap(this.bodyIndexFrameDescription.Width , this.bodyIndexFrameDescription.Height, 96.0, 96.0, PixelFormats.Bgra32, null);
@@ -558,7 +575,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                        getRegionOccupied();
                                        updateRegionSquares();
 
-                                        if (this.overallSW.ElapsedMilliseconds >= 67552)
+                                        //if (this.overallSW.ElapsedMilliseconds >= 67552)
+                                        if (this.overallSW.ElapsedMilliseconds >= 6755)
                                         {
                                             #region particle emitters
                                             rightEmitter.Update();
@@ -570,8 +588,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                             canvas.Children.Clear();
                                             canvas.Children.Add(element);
 
-                                            rightEmitter.Center = jointPoints[JointType.HandRight];
-                                            leftEmitter.Center = jointPoints[JointType.HandLeft];
+                                            rightEmitter.Center = rightExtreme;
+                                            leftEmitter.Center = new Point(rightExtreme.X, rightExtreme.Y-100);
                                             #endregion
                                         }
                                     }
@@ -599,9 +617,33 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         {
             byte* frameData = (byte*)bodyIndexFrameData;
 
+            int x = 0;
+            int y = 0;
+
+            double bodyXMin = this.kinectSensor.BodyIndexFrameSource.FrameDescription.Width;
+            double bodyYMin = this.kinectSensor.BodyIndexFrameSource.FrameDescription.Height;
+            double bodyXMax = 0;
+            double bodyYMax = 0;
+
+            bodyHeight = 0;
+            bodyWidth = 0;
+
             // convert body index to a visual representation
             for (int i = 0; i < (int)bodyIndexFrameDataSize; ++i)
             {
+
+                //update x and y coordinates (x first, then y)
+                if (x >= this.kinectSensor.BodyIndexFrameSource.FrameDescription.Width - 1)
+                {
+                    x = 0;
+                    y++;
+                }
+                else
+                {
+                    x++;
+                }
+
+
                 // the BodyColor array has been sized to match
                 // BodyFrameSource.BodyCount
                 if (frameData[i] < BodyColor.Length)
@@ -609,13 +651,77 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     // this pixel is part of a player,
                     // display the appropriate color
                     this.bodyIndexPixels[i] = BodyColor[frameData[i]];
+
+                    if (i > 0)
+                    {
+                        //if last pixel was transparent, add this [black] pixel to outline
+                        if (this.bodyIndexPixels[i - 1] == 0x000000FF)
+                        {
+                             this.myOutlinePixels[i] = 0xFFFF0000;
+                         }
+                        //otherwise, add transparent pixel to outline array
+                        else
+                        {
+                            this.myOutlinePixels[i] = 0x000000FF;
+                        }
+                    }
+
+                    //Functions to find minimum and maximum of body pixels on X and Y planes 
+                    if (x < bodyXMin)
+                    {
+                        bodyXMin = x;
+                        leftExtreme = new Point(bodyXMin, y);
+                    }
+                    if (y < bodyYMin)
+                    {
+                        bodyYMin = y;
+                        upperExtreme = new Point(x, bodyYMin);
+                    }
+                    if (x > bodyXMax)
+                    {
+                        bodyXMax = x;
+                        rightExtreme = new Point(bodyXMax, y);
+                    }
+                    if (y > bodyYMax)
+                    {
+                        bodyYMax = y;
+                        lowerExtreme = new Point(x, bodyYMax);
+                    }
                 }
                 else
                 {
                     // this pixel is not part of a player
-                    // display black
-                    this.bodyIndexPixels[i] = 0x00000000;
+                    // display transparent
+                    this.bodyIndexPixels[i] = 0x000000FF;
+
+                    if (i > 0)
+                    {
+                        //if the last pixel was not transparent, add curent pixel to outline
+                        if (this.bodyIndexPixels[i - 1] != 0x000000FF)
+                        {
+                              this.myOutlinePixels[i] = 0xFF0000FF;
+                        }
+                        //otherwise, add transparent pixel to outline array
+                        else
+                        {
+                            this.myOutlinePixels[i] = 0x000000FF;
+                        }
+                    }
                 }
+            }
+
+            //Calculate average of X plane, Y plane based on mins and maxes
+            avgBodyX = ((bodyXMax - (bodyXMax * 0.05)) + (bodyXMin + (bodyXMin * 0.05))) / 2;
+            avgBodyY = ((bodyYMax - (bodyYMax * 0.05)) + (bodyYMin + (bodyYMin * 0.05))) / 2;
+
+            //Find body width and height, given that a body of at least a pixel width occupies the frame
+            if (bodyXMax > bodyXMin)
+            {
+                bodyWidth = bodyXMax - bodyXMin;
+            }
+            if (bodyYMax > bodyYMin)
+            {
+                bodyHeight = bodyYMax - bodyYMin;
             }
         }
 
@@ -626,7 +732,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         {
             this.bodyIndexBitmap.WritePixels(
                 new Int32Rect(0, 0, this.bodyIndexBitmap.PixelWidth, this.bodyIndexBitmap.PixelHeight),
-                this.bodyIndexPixels,
+                this.myOutlinePixels,
                 this.bodyIndexBitmap.PixelWidth * (int)BytesPerPixel,
                 0);
         }
