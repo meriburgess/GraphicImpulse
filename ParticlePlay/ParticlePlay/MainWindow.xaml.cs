@@ -50,6 +50,9 @@ namespace ParticlePlay
     public class ParticleEmitter
     {
         public Point Center { get; set; }
+        public double angle { get; set; }
+        public double speed { get; set; }
+        public double lifespan { get; set; }
         public List<Particle> particles = new List<Particle>();
         Random rand = new Random();
         public WriteableBitmap TargetBitmap;
@@ -57,9 +60,9 @@ namespace ParticlePlay
 
         void CreateParticle()
         {
-            var speed = rand.Next(20) + 140;
-            var angle = (2 * Math.PI * rand.NextDouble());
-            
+            //  var speed = rand.Next(20) + 140;
+            //   var angle = (2 * Math.PI * rand.NextDouble());
+
             //triangle
             //var angle = (2 * Math.PI * (rand.NextDouble() / 8)) + 1.1;
 
@@ -77,7 +80,7 @@ namespace ParticlePlay
                         Math.Sin(angle) * speed,
                         Math.Cos(angle) * speed),
                     Color = Color.FromRgb(0, 255, 0),
-                    Lifespan = 0.5 + rand.Next(200) / 1000d
+                    Lifespan = lifespan,
                 });
         }
 
@@ -111,6 +114,8 @@ namespace ParticlePlay
 
             Random rnd = new Random();
 
+           
+
             CompositionTarget.Rendering += (s, e) =>
             {
                 emitter.Update();
@@ -129,31 +134,56 @@ namespace ParticlePlay
                     //            canvas.ActualWidth,
                     //            canvas.ActualHeight)));
 
+                    
+
                     emitter.particles.ForEach(p =>
                     {
 
                         var c = p.Color;
 
-                       // c.A /= 2;
+                        dc.DrawRectangle(new SolidColorBrush(Color.FromArgb(50, 150, 150, 150)), null, new Rect(new Point(p.Position.X , p.Position.Y), new Size(50, 60)));
 
-                        //dc.DrawLine(new Pen(new SolidColorBrush(c),1),  p.Position, new Point(p.Position.X , p.Position.Y + rnd.Next(-100, 100) )
+                        dc.DrawLine(new Pen(new SolidColorBrush(c), 1),
+                            new Point(p.Position.X  , p.Position.Y + 30),
+                            new Point(p.Position.X, p.Position.Y + 30 + rnd.Next(-50, 50) )
+                                  );
+
+                        dc.DrawLine(new Pen(new SolidColorBrush(c), 1),
+                            new Point(p.Position.X + 50 , p.Position.Y + 30),
+                            new Point(p.Position.X + 50, p.Position.Y +  30 + rnd.Next(-50, 50))
+                                  );
+
+                        //Sparkle sparkle!
+                        //var radiusX = p.Position.X % (10);
+                        //var radiusY = p.Position.Y % (10);
+
+                        // c.A /= 2;
+
+                        //  dc.DrawLine(new Pen(new SolidColorBrush(c),1),  p.Position, new Point(p.Position.X , p.Position.Y + rnd.Next(-100, 100) )
                         //        );
-                    
-                        dc.DrawEllipse(
-                           new SolidColorBrush(c),
-                            null, p.Position, 7, 7);
 
-                        dc.DrawEllipse(
-                            new SolidColorBrush(p.Color),
-                            null, p.Position, 2, 2);
+                        //dc.DrawEllipse(
+                        //   new SolidColorBrush(Color.FromArgb(10, 255, 0, 0)),
+                        //    null, p.Position, radiusX, radiusY);
+
+                        //  dc.DrawEllipse(
+                        //   new SolidColorBrush(p.Color),
+                        //  null, p.Position, 2, 2);
+
+                        //emitter.angle = (2 * Math.PI * rnd.NextDouble());
                     });
+
+                    dc.DrawRectangle(Brushes.WhiteSmoke, new Pen(Brushes.White, 2), new Rect(200, 200, 100, 100));
                 }
 
                 canvas.Children.Add(element);
             };
 
               MouseMove += (s, e) => emitter.Center = e.GetPosition(canvas);
-            
+            emitter.speed = 15;
+            emitter.angle = 4.75;
+            // emitter.lifespan = 0.5 + rnd.Next(200) / 1000000d;
+            emitter.lifespan = 1;
         }
 
         
