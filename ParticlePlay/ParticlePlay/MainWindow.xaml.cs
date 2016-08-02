@@ -114,7 +114,7 @@ namespace ParticlePlay
 
             Random rnd = new Random();
 
-           
+            Rect bigRect = new Rect(220, 100, 100, 100);
 
             CompositionTarget.Rendering += (s, e) =>
             {
@@ -134,24 +134,13 @@ namespace ParticlePlay
                     //            canvas.ActualWidth,
                     //            canvas.ActualHeight)));
 
-                    
+
+                    emitter.angle = (2 * Math.PI * rnd.NextDouble())/2 + 1.5;
 
                     emitter.particles.ForEach(p =>
                     {
 
                         var c = p.Color;
-
-                        dc.DrawRectangle(new SolidColorBrush(Color.FromArgb(50, 150, 150, 150)), null, new Rect(new Point(p.Position.X , p.Position.Y), new Size(50, 60)));
-
-                        dc.DrawLine(new Pen(new SolidColorBrush(c), 1),
-                            new Point(p.Position.X  , p.Position.Y + 30),
-                            new Point(p.Position.X, p.Position.Y + 30 + rnd.Next(-50, 50) )
-                                  );
-
-                        dc.DrawLine(new Pen(new SolidColorBrush(c), 1),
-                            new Point(p.Position.X + 50 , p.Position.Y + 30),
-                            new Point(p.Position.X + 50, p.Position.Y +  30 + rnd.Next(-50, 50))
-                                  );
 
                         //Sparkle sparkle!
                         //var radiusX = p.Position.X % (10);
@@ -166,24 +155,61 @@ namespace ParticlePlay
                         //   new SolidColorBrush(Color.FromArgb(10, 255, 0, 0)),
                         //    null, p.Position, radiusX, radiusY);
 
-                        //  dc.DrawEllipse(
-                        //   new SolidColorBrush(p.Color),
-                        //  null, p.Position, 2, 2);
+                        //dc.DrawEllipse(
+                        // new SolidColorBrush(p.Color),
+                        //null, p.Position, 5, 5);
 
-                        //emitter.angle = (2 * Math.PI * rnd.NextDouble());
-                    });
+                        Rect myRect = new Rect(p.Position.X, p.Position.Y, 5, 5);
 
-                    dc.DrawRectangle(Brushes.WhiteSmoke, new Pen(Brushes.White, 2), new Rect(200, 200, 100, 100));
+                        dc.DrawRectangle(new SolidColorBrush(p.Color), null, myRect);
+
+                        
+
+                        if (myRect.IntersectsWith(bigRect))
+                        {
+                        if (p.Position.X <= bigRect.X && p.Position.Y < bigRect.Y-(bigRect.Height/2))
+                            {
+                                p.Position.X -= rnd.Next(5, 10);
+                                p.Position.Y -= rnd.Next(5, 10);
+                            }
+                        else if (p.Position.X <= bigRect.X && p.Position.Y >= bigRect.Y - (bigRect.Height / 2))
+                            {
+                                p.Position.X -= rnd.Next(5, 10);
+                                p.Position.Y += rnd.Next(5, 10);
+                            }
+                        else if (p.Position.X > bigRect.X && p.Position.Y >= bigRect.Y - (bigRect.Height))
+                            {
+                                p.Position.X += rnd.Next(5, 10);
+                                p.Position.Y += rnd.Next(5, 10);
+                            }
+                        else if (p.Position.X > bigRect.X && p.Position.Y <= bigRect.Y)
+                            {
+                                p.Position.X += rnd.Next(5, 10);
+                                p.Position.Y += rnd.Next(5, 10);
+                            }
+
+                                p.Color = Color.FromRgb(255, 0, 0);
+                        }
+                        else
+                        {
+                            emitter.angle = (2 * Math.PI * rnd.NextDouble())/4 + 0.75;
+                        }
+                        
+
+                        
+                });
+
+                    dc.DrawRectangle(Brushes.WhiteSmoke, new Pen(Brushes.White, 2), bigRect);
                 }
 
                 canvas.Children.Add(element);
             };
 
               MouseMove += (s, e) => emitter.Center = e.GetPosition(canvas);
-            emitter.speed = 15;
-            emitter.angle = 4.75;
+            emitter.speed = 350;
+            //emitter.angle = (2 * Math.PI * rnd.NextDouble());
             // emitter.lifespan = 0.5 + rnd.Next(200) / 1000000d;
-            emitter.lifespan = 1;
+            emitter.lifespan = 1.2;
         }
 
         
