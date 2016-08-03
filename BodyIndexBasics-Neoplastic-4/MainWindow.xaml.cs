@@ -188,6 +188,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private Point footLeftOriginPt = new Point(-10, -10);
         private Point footRightOriginPt = new Point(-10, -10);
 
+        private Point myHead = new Point(0, 0);
+        private Point myRightHand = new Point(0, 0);
+        private Point myLeftHand = new Point(0, 0);
+        private Point myRightFoot = new Point(0, 0);
+        private Point myLeftFoot = new Point(0, 0);
+
         //Variable arrays for velocity calculations
         private double[] velocitiesX = new double[25];
         private double[] velocitiesY = new double[25];
@@ -241,6 +247,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private bool rightMovement;
 
         Polygon bodyPoly = new Polygon();
+        Rect bodyRect = new Rect();
 
         #endregion
 
@@ -507,11 +514,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                                         // convert the joint points to depth (display) space
                                         Dictionary<JointType, Point> jointPoints = new Dictionary<JointType, Point>();
+                                        
 
                                         #region update joint points, velocities
                                         foreach (JointType jointType in joints.Keys)
                                         {
-
+                                            
                                             // sometimes the depth(Z) of an inferred joint may show as negative
                                             // clamp down to 0.1f to prevent coordinatemapper from returning (-Infinity, -Infinity)
                                             CameraSpacePoint position = joints[jointType].Position;
@@ -530,10 +538,17 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                             }
                                             else
                                             {
-                                                //calculate the velocity of current joint, comparing old position to new position, divide by milliseconds elapsed
-                                                velocitiesX[jointCount] = getVelocity(oldPositions[jointType].X, jointPoints[jointType].X, millisecondsElapsed, joints[jointType].Position.Z);
-                                                velocitiesY[jointCount] = getVelocity(oldPositions[jointType].Y, jointPoints[jointType].Y, millisecondsElapsed, joints[jointType].Position.Z);
-                                                
+                                                if (joints[jointType].TrackingState == TrackingState.Tracked || joints[jointType].TrackingState == TrackingState.Inferred)
+                                                {
+                                                    //calculate the velocity of current joint, comparing old position to new position, divide by milliseconds elapsed
+                                                    velocitiesX[jointCount] = getVelocity(oldPositions[jointType].X, jointPoints[jointType].X, millisecondsElapsed, joints[jointType].Position.Z);
+                                                    velocitiesY[jointCount] = getVelocity(oldPositions[jointType].Y, jointPoints[jointType].Y, millisecondsElapsed, joints[jointType].Position.Z);
+                                                }
+                                                else
+                                                {
+                                                    velocitiesX[jointCount] = 0;
+                                                    velocitiesY[jointCount] = 0;
+                                                }
                                                 //update old position
                                                 oldPositions[jointType] = new Point(jointPoints[jointType].X, jointPoints[jointType].Y);
 
@@ -546,12 +561,21 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                             jointCount++;
                                         }
                                         #endregion
-                                        
+
+                                        #region update outer body part global variables
+                                        myHead = new Point(jointPoints[JointType.Head].X, jointPoints[JointType.Head].Y - 50);
+                                        myRightHand = new Point(jointPoints[JointType.HandTipRight].X - 15, jointPoints[JointType.HandTipRight].Y);
+                                        myLeftHand = new Point(jointPoints[JointType.HandTipLeft].X + 15, jointPoints[JointType.HandTipLeft].Y);
+                                        myRightFoot = new Point(jointPoints[JointType.FootRight].X + 15, jointPoints[JointType.FootRight].Y + 15);
+                                        myLeftFoot = new Point(jointPoints[JointType.FootLeft].X + 15, jointPoints[JointType.FootLeft].Y + 15);
+                                        #endregion
+
                                         getAvgCoordinates();
 
                                         getAvgVelocity();
 
-                                        bodyPolygon(jointPoints[JointType.Head], jointPoints[JointType.HandLeft], jointPoints[JointType.FootLeft], jointPoints[JointType.FootRight], jointPoints[JointType.HandRight]);
+                                        bodyPolygon();
+                                        bodyRectangle();
 
                                         #region check sideways and vertical movement
                                         if (XYOriginPoint.X == -10 && XYOriginPoint.Y  == -10)
@@ -673,15 +697,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                     if (i > 0)
                     {
-                        //if last pixel was transparent, add this [black] pixel to outline
+                        //if last pixel was transparent, add  pixel to outline
                         if (this.bodyIndexPixels[i - 1] == 0x000000FF)
                         {
                              this.myOutlinePixels[i] = 0xFFFF0000;
                          }
-                        //otherwise, add transparent pixel to outline array
+                        //otherwise, add white pixel to outline array
                         else
                         {
-                            this.myOutlinePixels[i] = 0x000000FF;
+                            this.myOutlinePixels[i] = 0xFFFFFFFF;
                         }
                     }
 
@@ -1309,7 +1333,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
  
             double toBecomeByte = checkDoubleForByteConversion((Math.Abs(displacement) * 4.0));
             
-
             byte gradientByte = Convert.ToByte(toBecomeByte);
 
             if (this.overallSW.ElapsedMilliseconds < 12050)
@@ -1335,16 +1358,26 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         }
         #endregion
 
-        private void bodyPolygon(Point head, Point leftHand, Point leftFoot, Point rightFoot, Point rightHand)
+        #region body polygon and rectangle
+        private void bodyPolygon()
         {
             PointCollection bodyPolyPts = new PointCollection();
-            bodyPolyPts.Add(head);
-            bodyPolyPts.Add(leftHand);
-            bodyPolyPts.Add(leftFoot);
-            bodyPolyPts.Add(rightFoot);
-            bodyPolyPts.Add(rightHand);
+            bodyPolyPts.Add(myHead);
+            bodyPolyPts.Add(myLeftHand);
+            bodyPolyPts.Add(myLeftFoot);
+            bodyPolyPts.Add(myRightFoot);
+            bodyPolyPts.Add(myRightHand);
             bodyPoly.Points = bodyPolyPts;
         }
+
+        private void bodyRectangle()
+        {
+            bodyRect.X = leftExtreme.X;
+            bodyRect.Y = upperExtreme.Y;
+            bodyRect.Height = bodyHeight;
+            bodyRect.Width = bodyWidth;
+        }
+        #endregion
 
         #region particle functions
         private void updateParticlesEmitter0(ParticleEmitter emitter, DrawingContext dc)
@@ -1364,18 +1397,44 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         new Point(p.Position.X, p.Position.Y + rnd.Next(-200, 200))
                               );
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 88000 && this.overallSW.ElapsedMilliseconds < 106000)
+                else if (this.overallSW.ElapsedMilliseconds >= 90000 && this.overallSW.ElapsedMilliseconds < 106000)
                 {
-                    // Rect myRect = new Rect(p.Position.X, p.Position.Y, 5, 5);
+                    Rect myRect0 = new Rect(p.Position.X, p.Position.Y, 5, 5);
                     p.Color = Color.FromArgb(50, 255, 255, 255);
 
 
                     dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
                     dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 2, 2);
+
+                    if (myRect0.IntersectsWith(bodyRect))
+                    {
+                        if (p.Position.X <= bodyRect.Left && p.Position.Y <= bodyRect.Top + (bodyRect.Height / 2))
+                        {
+                            p.Position.X -= rnd.Next(5, 10);
+                            p.Position.Y -= rnd.Next(5, 10);
+                        }
+                        else if (p.Position.X <= bodyRect.Left && p.Position.Y >= bodyRect.Top + (bodyRect.Height / 2))
+                        {
+                            p.Position.X -= rnd.Next(5, 10);
+                            p.Position.Y += rnd.Next(5, 10);
+                        }
+                        else if (p.Position.X > bodyRect.Left && p.Position.Y >= bodyRect.Top + (bodyRect.Height / 2))
+                        {
+                            p.Position.X += rnd.Next(5, 10);
+                            p.Position.Y += rnd.Next(5, 10);
+                        }
+                        else if (p.Position.X > bodyRect.Left && p.Position.Y <= bodyRect.Top + (bodyRect.Height / 2))
+                        {
+                            p.Position.X += rnd.Next(5, 10);
+                            p.Position.Y -= rnd.Next(5, 10);
+                        }
+
+                    }
+
                 }
                 else if (this.overallSW.ElapsedMilliseconds >= 106000)
                 {
-                    p.Color = Color.FromArgb(50, 0, 0, 255);
+                    p.Color = Color.FromArgb(50, 255, 255, 0);
 
 
                     dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 7, 7);
@@ -1401,14 +1460,39 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                         new Point(p.Position.X, p.Position.Y + rnd.Next(-200, 200))
                               );
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 88000 && this.overallSW.ElapsedMilliseconds < 106000)
+                else if (this.overallSW.ElapsedMilliseconds >= 90000 && this.overallSW.ElapsedMilliseconds < 106000)
                 {
-                    p.Color = Color.FromArgb(50, 255, 255, 255);
+                    p.Color = Color.FromArgb(70, 255, 255, 255);
 
-                    // Rect myRect = new Rect(p.Position.X, p.Position.Y, 5, 5);
+                    Rect myRect1 = new Rect(p.Position.X, p.Position.Y, 5, 5);
 
                     dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
                     dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 2, 2);
+
+                    if (myRect1.IntersectsWith(bodyRect))
+                    {
+                        if (p.Position.X <= bodyRect.Left && p.Position.Y <= bodyRect.Top + (bodyRect.Height / 2))
+                        {
+                            p.Position.X -= rnd.Next(5, 10);
+                            p.Position.Y -= rnd.Next(5, 10);
+                        }
+                        else if (p.Position.X <= bodyRect.Left && p.Position.Y >= bodyRect.Top + (bodyRect.Height / 2))
+                        {
+                            p.Position.X -= rnd.Next(5, 10);
+                            p.Position.Y += rnd.Next(5, 10);
+                        }
+                        else if (p.Position.X > bodyRect.Left && p.Position.Y >= bodyRect.Top + (bodyRect.Height / 2))
+                        {
+                            p.Position.X += rnd.Next(5, 10);
+                            p.Position.Y += rnd.Next(5, 10);
+                        }
+                        else if (p.Position.X > bodyRect.Left && p.Position.Y <= bodyRect.Top + (bodyRect.Height / 2))
+                        {
+                            p.Position.X += rnd.Next(5, 10);
+                            p.Position.Y -= rnd.Next(5, 10);
+                        }
+
+                    }
                 }
                 else if (this.overallSW.ElapsedMilliseconds >= 106000)
                 {
@@ -1427,25 +1511,30 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
            {
                if (this.overallSW.ElapsedMilliseconds < 88000)
                {
-                   p.Color = Color.FromArgb(50, 255, 255, 255); 
+                   p.Color = Color.FromArgb(100, 255, 255, 255);
 
-                   dc.DrawRectangle(new SolidColorBrush(p.Color),
-                       null,
+                   dc.DrawRectangle(null,
+                       new Pen(new SolidColorBrush(p.Color), 2),
                        new Rect(new Point(p.Position.X - (bodyWidth/2) - 25 , p.Position.Y - (bodyHeight/2) - 25),
                        new Size(bodyWidth+50, bodyHeight+50))
                        );
                }
                else if (this.overallSW.ElapsedMilliseconds >= 88000 && this.overallSW.ElapsedMilliseconds < 106000)
                {
-                   //dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 3), p.Position, leftExtreme);
-                   //dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 3), leftExtreme, lowerExtreme);
-                   //dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 3), lowerExtreme, rightExtreme);
-                   //dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 3), rightExtreme, p.Position);
+                   p.Color = Color.FromArgb(100, 255, 255, 255);
 
-                   p.Color = Color.FromArgb(50, 255, 255, 255);
-                   //   dc.DrawRectangle(new SolidColorBrush(p.Color), null, );
+                   ////dc.DrawRectangle(null,
+                   ////    new Pen(new SolidColorBrush(p.Color), 2),
+                   ////    new Rect(new Point(p.Position.X - (bodyWidth / 2) - 25, p.Position.Y - (bodyHeight / 2) - 25),
+                   ////    new Size(bodyWidth + 50, bodyHeight + 50))
+                   ////    );
 
-                   dc.DrawEllipse(null, new Pen(new SolidColorBrush(p.Color), 1), p.Position, bodyWidth, bodyHeight);
+                   dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 1), myHead, myLeftHand);
+                   dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 1), myLeftHand, myLeftFoot);
+                   dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 1), myLeftFoot, myRightFoot);
+                   dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 1), myRightFoot, myRightHand);
+                   dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 1), myRightHand, myHead);
+
                }
                else if (this.overallSW.ElapsedMilliseconds >= 106000)
                {
@@ -1462,30 +1551,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
            });
         }
-
-        private void updateParticlesEmitter3(ParticleEmitter emitter, DrawingContext dc)
-        {
-            
-            emitter.particles.ForEach(p =>
-            {
-                if (this.overallSW.ElapsedMilliseconds < 106000)
-                {
-                    p.Color = Color.FromArgb(0, 0, 0, 0);
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 106000)
-                {
-                    p.Color = Color.FromArgb(50, 0, 0, 255);
-                }
-
-                dc.DrawEllipse(
-                         new SolidColorBrush(p.Color),
-                         null, p.Position, 4, 4);
-
-                dc.DrawEllipse(
-                     new SolidColorBrush(p.Color),
-                     null, p.Position, 2, 2);
-            });
-        }
+        
 
 
         private void updateParticleEmitters(Point p0, Point p1, Point p2, Point p3, Point p4, Point p5, Point p6, Point p7, DrawingContext dc)
@@ -1493,15 +1559,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             emitters[0].Update();
             emitters[1].Update();
             emitters[2].Update();
-            emitters[3].Update();
 
             updateParticlesEmitter0(emitters[0], dc);
             updateParticlesEmitter1(emitters[1], dc);
             updateParticlesEmitter2(emitters[2], dc);
-            updateParticlesEmitter3(emitters[3], dc);
 
             canvas.Children.Clear();
             canvas.Children.Add(element);
+
+            //emitters[2].Center = p3;
 
             if ( this.overallSW.ElapsedMilliseconds < 88000)
             {
@@ -1509,7 +1575,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 emitters[0].Center = p3;
                 emitters[1].Center = p3;
                 emitters[2].Center = p3;
-                emitters[3].Center = p3;
 
                 emitters[0].angle = 1.6;
                 emitters[0].speed = 250;
@@ -1520,38 +1585,30 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 emitters[1].speed = 250;
                 emitters[1].lifespan = 0.5;
 
-                emitters[2].angle = 1.5;
-                emitters[2].speed = 5;
-                emitters[2].lifespan = 0.5;
-
-                emitters[3].angle = 0;
-                emitters[3].speed = 0;
-                emitters[3].lifespan = 0;
+                emitters[2].angle = 0;
+                emitters[2].speed = 1;
+                emitters[2].lifespan = 0.2;
                 #endregion
             }
             else if (this.overallSW.ElapsedMilliseconds >= 88000 && this.overallSW.ElapsedMilliseconds < 106000)
             {
                 #region section 2
-                emitters[0].Center = new Point(0, avgBodyY);
-                emitters[1].Center = new Point(500, avgBodyY);
-                emitters[2].Center = p1;
-                emitters[3].Center = p3;
+                emitters[0].Center = new Point(p6.X-100, p6.Y-50);
+                emitters[1].Center = new Point(p6.X-100, p6.Y+50);
+                emitters[2].Center = p3;
 
-                emitters[0].angle = (2 * Math.PI * rnd.NextDouble()) / 4 + 0.75;
-                emitters[0].speed = 240;
-                emitters[0].lifespan = 2;
+                emitters[0].angle = (2 * Math.PI * rnd.NextDouble())/8 + 1.1 ;
+                emitters[0].speed = 200;
+                emitters[0].lifespan = .5;
 
-                emitters[1].angle = (2 * Math.PI * rnd.NextDouble()) / 4 + 4;
-                emitters[1].speed = 450;
-                emitters[1].lifespan = 2;
+                emitters[1].angle = (2 * Math.PI * rnd.NextDouble()) / 8 + 3.9;
+                emitters[1].speed = 200;
+                emitters[1].lifespan = 0.5;
 
                 emitters[2].angle = 0;
-                emitters[2].speed = 5;
+                emitters[2].speed = 1;
                 emitters[2].lifespan = 0.5;
 
-                emitters[3].angle = 0;
-                emitters[3].speed = 0;
-                emitters[3].lifespan = 0;
                 #endregion
             }
             else if (this.overallSW.ElapsedMilliseconds >= 106000)
@@ -1559,43 +1616,51 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 #region section 3
 
                 emitters[0].Center = p0;
-                emitters[1].Center = p1;
-                emitters[2].Center = p2;
-                emitters[3].Center = p3;
-
-                #region angles
+                emitters[1].Center = p3;
+                emitters[2].Center = p5;
+                
                 if (leftMovement == true && rightMovement == false)
                 {
                     emitters[0].angle = 1.6;
                     emitters[1].angle = 1.6;
                     emitters[2].angle = 1.6;
-                    emitters[3].angle = 1.6;
+
+                    emitters[0].speed = 10;
+                    emitters[1].speed = 10;
+                    emitters[2].speed = 10;
+
+                    emitters[0].lifespan = 1;
+                    emitters[1].lifespan = 1;
+                    emitters[2].lifespan = 1;
                 }
                 else if (rightMovement == true && leftMovement == false)
                 {
                     emitters[0].angle = 4.75;
                     emitters[1].angle = 4.75;
                     emitters[2].angle = 4.75;
-                    emitters[3].angle = 4.75;
+
+                    emitters[0].speed = 10;
+                    emitters[1].speed = 10;
+                    emitters[2].speed = 10;
+
+                    emitters[0].lifespan = 1;
+                    emitters[1].lifespan = 1;
+                    emitters[2].lifespan = 1;
                 }
                 else if (rightMovement == false && leftMovement == false)
                 {
                     emitters[0].angle = (2 * Math.PI * rnd.NextDouble());
                     emitters[1].angle = (2 * Math.PI * rnd.NextDouble());
                     emitters[2].angle = (2 * Math.PI * rnd.NextDouble());
-                    emitters[3].angle = (2 * Math.PI * rnd.NextDouble());
+
+                    emitters[0].speed = 50;
+                    emitters[1].speed = 50;
+                    emitters[2].speed = 50;
+
+                    emitters[0].lifespan = 0.35;
+                    emitters[1].lifespan = 0.35;
+                    emitters[2].lifespan = 0.35;
                 }
-                #endregion
-
-                emitters[0].speed = 10;
-                emitters[1].speed = 10;
-                emitters[2].speed = 10;
-                emitters[3].speed = 10;
-
-                emitters[0].lifespan = 1;
-                emitters[1].lifespan = 1;
-                emitters[2].lifespan = 1;
-                emitters[3].lifespan = 1;
                 #endregion
             }
         }
@@ -2328,6 +2393,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         #endregion
     }
 
+    #endregion
 
     #region Particle Emitter classes
     class DrawingVisualElement : FrameworkElement
@@ -2363,7 +2429,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         }
     }
 
-    #endregion
+    
 
 
     public class ParticleEmitter

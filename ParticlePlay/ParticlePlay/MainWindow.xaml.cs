@@ -195,7 +195,7 @@ namespace ParticlePlay
                         }
                         else
                         {
-                            emitter.angle = (2 * Math.PI * rnd.NextDouble())/4 + 4;
+                            emitter.angle = (2 * Math.PI * rnd.NextDouble());
                         }
                         
 
