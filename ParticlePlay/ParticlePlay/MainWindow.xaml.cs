@@ -115,6 +115,7 @@ namespace ParticlePlay
             Random rnd = new Random();
 
             Rect bigRect = new Rect(220, 100, 100, 100);
+            
 
             CompositionTarget.Rendering += (s, e) =>
             {
@@ -161,38 +162,40 @@ namespace ParticlePlay
 
                         Rect myRect = new Rect(p.Position.X, p.Position.Y, 5, 5);
 
-                        dc.DrawRectangle(new SolidColorBrush(p.Color), null, myRect);
-
+                      //  dc.DrawRectangle(new SolidColorBrush(p.Color), null, myRect);
                         
+
+                        dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
+                        dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 2, 2);
 
                         if (myRect.IntersectsWith(bigRect))
                         {
-                        if (p.Position.X <= bigRect.X && p.Position.Y < bigRect.Y-(bigRect.Height/2))
+                        if (p.Position.X <= bigRect.Left && p.Position.Y <= bigRect.Top + (bigRect.Height / 2))
                             {
                                 p.Position.X -= rnd.Next(5, 10);
                                 p.Position.Y -= rnd.Next(5, 10);
                             }
-                        else if (p.Position.X <= bigRect.X && p.Position.Y >= bigRect.Y - (bigRect.Height / 2))
+                        else if (p.Position.X <= bigRect.Left && p.Position.Y >= bigRect.Top + (bigRect.Height / 2))
                             {
                                 p.Position.X -= rnd.Next(5, 10);
                                 p.Position.Y += rnd.Next(5, 10);
                             }
-                        else if (p.Position.X > bigRect.X && p.Position.Y >= bigRect.Y - (bigRect.Height))
+                        else if (p.Position.X > bigRect.Left && p.Position.Y >= bigRect.Top + (bigRect.Height / 2))
                             {
                                 p.Position.X += rnd.Next(5, 10);
                                 p.Position.Y += rnd.Next(5, 10);
                             }
-                        else if (p.Position.X > bigRect.X && p.Position.Y <= bigRect.Y)
+                        else if (p.Position.X > bigRect.Left && p.Position.Y <= bigRect.Top + (bigRect.Height / 2))
                             {
                                 p.Position.X += rnd.Next(5, 10);
-                                p.Position.Y += rnd.Next(5, 10);
+                                p.Position.Y -= rnd.Next(5, 10);
                             }
 
                                 p.Color = Color.FromRgb(255, 0, 0);
                         }
                         else
                         {
-                            emitter.angle = (2 * Math.PI * rnd.NextDouble())/4 + 0.75;
+                            emitter.angle = (2 * Math.PI * rnd.NextDouble())/4 + 4;
                         }
                         
 

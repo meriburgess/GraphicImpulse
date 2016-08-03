@@ -240,6 +240,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private bool leftMovement;
         private bool rightMovement;
 
+        Polygon bodyPoly = new Polygon();
+
         #endregion
 
         #region MainWindow initialize
@@ -549,6 +551,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                                         getAvgVelocity();
 
+                                        bodyPolygon(jointPoints[JointType.Head], jointPoints[JointType.HandLeft], jointPoints[JointType.FootLeft], jointPoints[JointType.FootRight], jointPoints[JointType.HandRight]);
+
                                         #region check sideways and vertical movement
                                         if (XYOriginPoint.X == -10 && XYOriginPoint.Y  == -10)
                                         {
@@ -592,7 +596,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                         //if (this.overallSW.ElapsedMilliseconds >= 67552)
                                         if (this.overallSW.ElapsedMilliseconds >= 67552)
                                         {
-                                            dc.DrawRectangle(blackBrush, null, new Rect(new Size(myGrid.ActualWidth, myGrid.ActualHeight)));
+                                            myGrid.Background = new SolidColorBrush(Colors.Black);
 
                                             #region particle emitters
                                             updateParticleEmitters(jointPoints[JointType.Head], 
@@ -1331,8 +1335,19 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         }
         #endregion
 
+        private void bodyPolygon(Point head, Point leftHand, Point leftFoot, Point rightFoot, Point rightHand)
+        {
+            PointCollection bodyPolyPts = new PointCollection();
+            bodyPolyPts.Add(head);
+            bodyPolyPts.Add(leftHand);
+            bodyPolyPts.Add(leftFoot);
+            bodyPolyPts.Add(rightFoot);
+            bodyPolyPts.Add(rightHand);
+            bodyPoly.Points = bodyPolyPts;
+        }
+
         #region particle functions
-        private void updateParticles(ParticleEmitter emitter, DrawingContext dc)
+        private void updateParticlesEmitter0(ParticleEmitter emitter, DrawingContext dc)
         {
             emitter.particles.ForEach(p =>
             {
@@ -1340,117 +1355,221 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                 c.A /= 2;
 
-                if (this.overallSW.ElapsedMilliseconds < 92000)
+                if (this.overallSW.ElapsedMilliseconds < 88000)
                 {
-                //    dc.DrawRectangle(new SolidColorBrush(Color.FromArgb(50, 150, 150, 150)), null, new Rect(new Point(p.Position.X + (p.Position.X/2), p.Position.Y - (p.Position.Y/2)) , new Size(bodyWidth, bodyHeight) ) );
+                    p.Color = Color.FromArgb(50, 255, 255, 255);
 
-                    dc.DrawLine(new Pen(new SolidColorBrush(Colors.White), 1), 
+                    dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 1), 
                         new Point(p.Position.X, p.Position.Y),
                         new Point(p.Position.X, p.Position.Y + rnd.Next(-200, 200))
                               );
                 }
-                else if ( this.overallSW.ElapsedMilliseconds >= 92000)
+                else if (this.overallSW.ElapsedMilliseconds >= 88000 && this.overallSW.ElapsedMilliseconds < 106000)
                 {
-                    dc.DrawEllipse(
-                         whiteBrush,
-                         null, p.Position, 4, 4);
+                    // Rect myRect = new Rect(p.Position.X, p.Position.Y, 5, 5);
+                    p.Color = Color.FromArgb(50, 255, 255, 255);
 
-                    dc.DrawEllipse(
-                         greyBrush,
-                         null, p.Position, 2, 2);
+
+                    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
+                    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 2, 2);
+                }
+                else if (this.overallSW.ElapsedMilliseconds >= 106000)
+                {
+                    p.Color = Color.FromArgb(50, 0, 0, 255);
+
+
+                    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 7, 7);
+                    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
                 }
             });
         }
 
-        private void updateParticlesAlternate(ParticleEmitter emitter, DrawingContext dc)
+        private void updateParticlesEmitter1(ParticleEmitter emitter, DrawingContext dc)
+        {
+            emitter.particles.ForEach(p =>
+            {
+                var c = p.Color;
+
+                c.A /= 2;
+
+                if (this.overallSW.ElapsedMilliseconds < 88000)
+                {
+                    p.Color = Color.FromArgb(50, 255, 255, 255);
+
+                    dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 1),
+                        new Point(p.Position.X, p.Position.Y),
+                        new Point(p.Position.X, p.Position.Y + rnd.Next(-200, 200))
+                              );
+                }
+                else if (this.overallSW.ElapsedMilliseconds >= 88000 && this.overallSW.ElapsedMilliseconds < 106000)
+                {
+                    p.Color = Color.FromArgb(50, 255, 255, 255);
+
+                    // Rect myRect = new Rect(p.Position.X, p.Position.Y, 5, 5);
+
+                    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
+                    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 2, 2);
+                }
+                else if (this.overallSW.ElapsedMilliseconds >= 106000)
+                {
+                    p.Color = Color.FromArgb(50, 0, 0, 255);
+
+                    dc.DrawEllipse( new SolidColorBrush(p.Color), null, p.Position, 7, 7);
+                    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
+                }
+            });
+        }
+
+
+        private void updateParticlesEmitter2(ParticleEmitter emitter, DrawingContext dc)
         {
             emitter.particles.ForEach(p =>
            {
-               if (this.overallSW.ElapsedMilliseconds < 92000)
+               if (this.overallSW.ElapsedMilliseconds < 88000)
                {
-                   dc.DrawRectangle(new SolidColorBrush(Color.FromArgb(25, 245, 245, 245)),
+                   p.Color = Color.FromArgb(50, 255, 255, 255); 
+
+                   dc.DrawRectangle(new SolidColorBrush(p.Color),
                        null,
                        new Rect(new Point(p.Position.X - (bodyWidth/2) - 25 , p.Position.Y - (bodyHeight/2) - 25),
                        new Size(bodyWidth+50, bodyHeight+50))
                        );
                }
+               else if (this.overallSW.ElapsedMilliseconds >= 88000 && this.overallSW.ElapsedMilliseconds < 106000)
+               {
+                   //dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 3), p.Position, leftExtreme);
+                   //dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 3), leftExtreme, lowerExtreme);
+                   //dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 3), lowerExtreme, rightExtreme);
+                   //dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 3), rightExtreme, p.Position);
+
+                   p.Color = Color.FromArgb(50, 255, 255, 255);
+                   //   dc.DrawRectangle(new SolidColorBrush(p.Color), null, );
+
+                   dc.DrawEllipse(null, new Pen(new SolidColorBrush(p.Color), 1), p.Position, bodyWidth, bodyHeight);
+               }
+               else if (this.overallSW.ElapsedMilliseconds >= 106000)
+               {
+                   p.Color = Color.FromArgb(50, 255, 0, 0);
+
+                   dc.DrawEllipse(
+                         new SolidColorBrush(p.Color),
+                         null, p.Position, 4, 4);
+
+                   dc.DrawEllipse(
+                        new SolidColorBrush(p.Color),
+                        null, p.Position, 2, 2);
+               }
 
            });
         }
 
+        private void updateParticlesEmitter3(ParticleEmitter emitter, DrawingContext dc)
+        {
+            
+            emitter.particles.ForEach(p =>
+            {
+                if (this.overallSW.ElapsedMilliseconds < 106000)
+                {
+                    p.Color = Color.FromArgb(0, 0, 0, 0);
+                }
+                else if (this.overallSW.ElapsedMilliseconds >= 106000)
+                {
+                    p.Color = Color.FromArgb(50, 0, 0, 255);
+                }
+
+                dc.DrawEllipse(
+                         new SolidColorBrush(p.Color),
+                         null, p.Position, 4, 4);
+
+                dc.DrawEllipse(
+                     new SolidColorBrush(p.Color),
+                     null, p.Position, 2, 2);
+            });
+        }
+
+
         private void updateParticleEmitters(Point p0, Point p1, Point p2, Point p3, Point p4, Point p5, Point p6, Point p7, DrawingContext dc)
         {
-            if ( this.overallSW.ElapsedMilliseconds < 92000)
+            emitters[0].Update();
+            emitters[1].Update();
+            emitters[2].Update();
+            emitters[3].Update();
+
+            updateParticlesEmitter0(emitters[0], dc);
+            updateParticlesEmitter1(emitters[1], dc);
+            updateParticlesEmitter2(emitters[2], dc);
+            updateParticlesEmitter3(emitters[3], dc);
+
+            canvas.Children.Clear();
+            canvas.Children.Add(element);
+
+            if ( this.overallSW.ElapsedMilliseconds < 88000)
             {
-                emitters[0].Update();
-                emitters[1].Update();
-                emitters[2].Update();
-
-                updateParticles(emitters[0], dc);
-                updateParticles(emitters[1], dc);
-                updateParticlesAlternate(emitters[2], dc);
-
-                canvas.Children.Clear();
-                canvas.Children.Add(element);
-
+                #region section 1
                 emitters[0].Center = p3;
                 emitters[1].Center = p3;
                 emitters[2].Center = p3;
+                emitters[3].Center = p3;
 
                 emitters[0].angle = 1.6;
                 emitters[0].speed = 250;
-                emitters[0].lifespan = 0.75;
+                emitters[0].lifespan = 0.5;
+
 
                 emitters[1].angle = 4.75;
                 emitters[1].speed = 250;
-                emitters[1].lifespan = 0.75;
+                emitters[1].lifespan = 0.5;
 
+                emitters[2].angle = 1.5;
                 emitters[2].speed = 5;
                 emitters[2].lifespan = 0.5;
 
+                emitters[3].angle = 0;
+                emitters[3].speed = 0;
+                emitters[3].lifespan = 0;
+                #endregion
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 92000)
+            else if (this.overallSW.ElapsedMilliseconds >= 88000 && this.overallSW.ElapsedMilliseconds < 106000)
             {
-                emitters[0].Update();
-                emitters[1].Update();
-                emitters[2].Update();
-                emitters[3].Update();
-                emitters[4].Update();
-                emitters[5].Update();
-                emitters[6].Update();
-                emitters[7].Update();
+                #region section 2
+                emitters[0].Center = new Point(0, avgBodyY);
+                emitters[1].Center = new Point(500, avgBodyY);
+                emitters[2].Center = p1;
+                emitters[3].Center = p3;
 
-                updateParticles(emitters[0], dc);
-                updateParticles(emitters[1], dc);
-                updateParticles(emitters[2], dc);
-                updateParticles(emitters[3], dc);
-                updateParticles(emitters[4], dc);
-                updateParticles(emitters[5], dc);
-                updateParticles(emitters[6], dc);
-                updateParticles(emitters[7], dc);
+                emitters[0].angle = (2 * Math.PI * rnd.NextDouble()) / 4 + 0.75;
+                emitters[0].speed = 240;
+                emitters[0].lifespan = 2;
 
-                canvas.Children.Clear();
-                canvas.Children.Add(element);
+                emitters[1].angle = (2 * Math.PI * rnd.NextDouble()) / 4 + 4;
+                emitters[1].speed = 450;
+                emitters[1].lifespan = 2;
+
+                emitters[2].angle = 0;
+                emitters[2].speed = 5;
+                emitters[2].lifespan = 0.5;
+
+                emitters[3].angle = 0;
+                emitters[3].speed = 0;
+                emitters[3].lifespan = 0;
+                #endregion
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 106000)
+            {
+                #region section 3
 
                 emitters[0].Center = p0;
                 emitters[1].Center = p1;
                 emitters[2].Center = p2;
                 emitters[3].Center = p3;
-                emitters[4].Center = p4;
-                emitters[5].Center = p5;
-                emitters[6].Center = p6;
-                emitters[7].Center = p7;
 
+                #region angles
                 if (leftMovement == true && rightMovement == false)
                 {
                     emitters[0].angle = 1.6;
                     emitters[1].angle = 1.6;
                     emitters[2].angle = 1.6;
                     emitters[3].angle = 1.6;
-                    emitters[4].angle = 1.6;
-                    emitters[5].angle = 1.6;
-                    emitters[6].angle = 1.6;
-                    emitters[7].angle = 1.6;
                 }
                 else if (rightMovement == true && leftMovement == false)
                 {
@@ -1458,10 +1577,6 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     emitters[1].angle = 4.75;
                     emitters[2].angle = 4.75;
                     emitters[3].angle = 4.75;
-                    emitters[4].angle = 4.75;
-                    emitters[5].angle = 4.75;
-                    emitters[6].angle = 4.75;
-                    emitters[7].angle = 4.75;
                 }
                 else if (rightMovement == false && leftMovement == false)
                 {
@@ -1469,29 +1584,19 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     emitters[1].angle = (2 * Math.PI * rnd.NextDouble());
                     emitters[2].angle = (2 * Math.PI * rnd.NextDouble());
                     emitters[3].angle = (2 * Math.PI * rnd.NextDouble());
-                    emitters[4].angle = (2 * Math.PI * rnd.NextDouble());
-                    emitters[5].angle = (2 * Math.PI * rnd.NextDouble());
-                    emitters[6].angle = (2 * Math.PI * rnd.NextDouble());
-                    emitters[7].angle = (2 * Math.PI * rnd.NextDouble());
                 }
+                #endregion
 
                 emitters[0].speed = 10;
                 emitters[1].speed = 10;
                 emitters[2].speed = 10;
                 emitters[3].speed = 10;
-                emitters[4].speed = 10;
-                emitters[5].speed = 10;
-                emitters[6].speed = 10;
-                emitters[7].speed = 10;
 
                 emitters[0].lifespan = 1;
                 emitters[1].lifespan = 1;
                 emitters[2].lifespan = 1;
                 emitters[3].lifespan = 1;
-                emitters[4].lifespan = 1;
-                emitters[5].lifespan = 1;
-                emitters[6].lifespan = 1;
-                emitters[7].lifespan = 1;
+                #endregion
             }
         }
         #endregion
@@ -1804,7 +1909,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 leftHandRect.Stroke = whiteBrush;
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
-                
+
             }
             #endregion
 
@@ -1813,11 +1918,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             double[] heights = new double[15];
             double[] startingWidths = { 197, 440, 432, 331, 301, 322, 322, 254, 301, 187, 364, 440, 454, 616, 214 };
             double[] widths = new double[15];
-            double[] heightChanges = { 41, 80, 17, 15, 28, 35, 18, 51, 22, 16,18, 34, 65, 66, 27};
+            double[] heightChanges = { 41, 80, 17, 15, 28, 35, 18, 51, 22, 16, 18, 34, 65, 66, 27 };
             double[] widthChanges = { 32, 73, 72, 55, 50, 53, 53, 42, 50, 31, 60, 73, 75, 102, 35 };
 
             if (this.overallSW.ElapsedMilliseconds < 54512)
-            { 
+            {
                 xregionColorRect.Height = startingHeights[0];
                 yregionColorRect.Height = startingHeights[1];
                 zregionColorRect.Height = startingHeights[2];
@@ -1916,7 +2021,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 leftHandRect.Height = heights[12];
                 velocityRect.Height = heights[13];
                 orientationRect.Height = heights[14];
-                
+
             }
             else if (this.overallSW.ElapsedMilliseconds >= 56766 && this.overallSW.ElapsedMilliseconds < 58496)
             {
@@ -2075,8 +2180,59 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 leftHandRect.Width = widths[12];
                 velocityRect.Width = widths[13];
                 orientationRect.Width = widths[14];
-                
+
             }
+            else if (this.overallSW.ElapsedMilliseconds >= 62758)
+            {
+                xregionColorRect.Width = 0;
+                yregionColorRect.Width = 0;
+                zregionColorRect.Width = 0;
+                sidewaysMvmtRect.Width = 0;
+                verticalMvmtRect.Width = 0;
+                handLeftSweepXRect.Width = 0;
+                handLeftSweepYRect.Width = 0;
+                footLeftSweepRect.Width = 0;
+                handRightSweepXRect.Width = 0;
+                handRightSweepYRect.Width = 0;
+                footRightSweepRect.Width = 0;
+                rightHandRect.Width = 0;
+                leftHandRect.Width = 0;
+                velocityRect.Width = 0;
+                orientationRect.Width = 0;
+
+                xregionColorRect.Height = 0;
+                yregionColorRect.Height = 0;
+                zregionColorRect.Height = 0;
+                sidewaysMvmtRect.Height = 0;
+                verticalMvmtRect.Height = 0;
+                handLeftSweepXRect.Height = 0;
+                handLeftSweepYRect.Height = 0;
+                footLeftSweepRect.Height = 0;
+                handRightSweepXRect.Height = 0;
+                handRightSweepYRect.Height = 0;
+                footRightSweepRect.Height = 0;
+                rightHandRect.Height = 0;
+                leftHandRect.Height = 0;
+                velocityRect.Height = 0;
+                orientationRect.Height = 0;
+
+                xregionColorRect.StrokeThickness = 0;
+                yregionColorRect.StrokeThickness = 0;
+                zregionColorRect.StrokeThickness= 0;
+                sidewaysMvmtRect.StrokeThickness = 0;
+                verticalMvmtRect.StrokeThickness = 0;
+                handLeftSweepXRect.StrokeThickness = 0;
+                handLeftSweepYRect.StrokeThickness = 0;
+                footLeftSweepRect.StrokeThickness = 0;
+                handRightSweepXRect.StrokeThickness = 0;
+                handRightSweepYRect.StrokeThickness = 0;
+                footRightSweepRect.StrokeThickness = 0;
+                rightHandRect.StrokeThickness = 0;
+                leftHandRect.StrokeThickness = 0;
+                velocityRect.StrokeThickness= 0;
+                orientationRect.StrokeThickness = 0;
+            }
+
             #endregion
 
         }
