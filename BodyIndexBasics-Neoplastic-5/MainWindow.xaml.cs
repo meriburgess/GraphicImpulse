@@ -514,7 +514,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                                         // convert the joint points to depth (display) space
                                         Dictionary<JointType, Point> jointPoints = new Dictionary<JointType, Point>();
-                                        
+                                        Dictionary<JointType, Point> otherPoints = new Dictionary<JointType, Point>();
 
                                         #region update joint points, velocities
                                         foreach (JointType jointType in joints.Keys)
@@ -530,6 +530,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                                             DepthSpacePoint depthSpacePoint = this.coordinateMapper.MapCameraPointToDepthSpace(position);
                                             jointPoints[jointType] = new Point(((this.displayWidth - depthSpacePoint.X) - 570) * 2.5, (depthSpacePoint.Y + 80) * 2.5);
+                                            otherPoints[jointType] = new Point(depthSpacePoint.X * 2.5, (depthSpacePoint.Y + 80) * 2.5);
 
                                             //If first coordinates for velocity have not been established yet, assign current coordinates 
                                             if (oldPositions[jointType].X == -10 && oldPositions[jointType].Y == -10)
@@ -573,6 +574,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                         getAvgCoordinates();
 
                                         getAvgVelocity();
+                                        Console.WriteLine(avgVelocity);
 
                                         bodyPolygon();
                                         bodyRectangle();
@@ -611,7 +613,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                                         bodyOrientation(jointPoints[JointType.HipLeft], jointPoints[JointType.HipRight], jointPoints[JointType.ShoulderLeft], jointPoints[JointType.ShoulderRight], jointPoints[JointType.FootLeft], jointPoints[JointType.FootRight]);
 
-                                        this.DrawBody(joints, jointPoints, dc, new Pen(new SolidColorBrush( Color.FromArgb(255, 225, 60, 255) ), 5));
+                                        this.DrawBody(joints, jointPoints, otherPoints, dc, new Pen(new SolidColorBrush( Color.FromArgb(255, 225, 60, 255) ), 5));
                                        this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc, true);
                                        this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc, false);
                                        
@@ -802,12 +804,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// <param name="jointPoints">translated positions of joints to draw</param>
         /// <param name="drawingContext">drawing context to draw to</param>
         /// <param name="drawingPen">specifies color to draw a specific body</param>
-        private void DrawBody(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, DrawingContext drawingContext, Pen drawingPen)
+        private void DrawBody(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, IDictionary<JointType, Point> otherPoints, DrawingContext drawingContext, Pen drawingPen)
         {
             // Draw the bones
             foreach (var bone in this.bones)
             {
-                this.DrawBone(joints, jointPoints, bone.Item1, bone.Item2, drawingContext, drawingPen);
+                this.DrawBone(joints, jointPoints, otherPoints, bone.Item1, bone.Item2, drawingContext, drawingPen);
             }
 
             // Draw the joints
@@ -842,7 +844,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         /// <param name="jointType1">second joint of bone to draw</param>
         /// <param name="drawingContext">drawing context to draw to</param>
         /// /// <param name="drawingPen">specifies color to draw a specific bone</param>
-        private void DrawBone(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, JointType jointType0, JointType jointType1, DrawingContext drawingContext, Pen drawingPen)
+        private void DrawBone(IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, IDictionary<JointType, Point> otherPoints, JointType jointType0, JointType jointType1, DrawingContext drawingContext, Pen drawingPen)
         {
             Joint joint0 = joints[jointType0];
             Joint joint1 = joints[jointType1];
@@ -897,64 +899,34 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 drawingContext.DrawLine(new Pen(blackBrush, 4), myRightHand, myHead);
                 
 
-                if (this.overallSW.ElapsedMilliseconds > 92000)
-                {
-                    drawingContext.DrawLine(new Pen(blackBrush, 1), new Point(myHead.X + 167, myHead.Y + 40), new Point(myLeftHand.X - 300, myLeftFoot.Y - 211));
-                }
-                if (this.overallSW.ElapsedMilliseconds > 94000)
-                {
-                    drawingContext.DrawLine(new Pen(blackBrush, 4), new Point(myLeftHand.X + 145, myLeftHand.Y + 230), new Point(myLeftFoot.X - 167, myLeftFoot.Y + 200));
-                }
-                if (this.overallSW.ElapsedMilliseconds > 96000)
-                {
-                    drawingContext.DrawLine(new Pen(blackBrush,2), new Point(myLeftFoot.X - 183, myLeftFoot.Y + 130), new Point(myRightFoot.X + 211, myRightFoot.Y + 249));
-                }
-                if (this.overallSW.ElapsedMilliseconds > 98000)
-                {
-                    drawingContext.DrawLine(new Pen(blackBrush, 5), new Point(myRightFoot.X + 46, myRightFoot.Y - 160), new Point(myRightHand.X - 172, myRightHand.Y - 195));
-                }
-                if (this.overallSW.ElapsedMilliseconds > 100000)
-                {
-                    drawingContext.DrawLine(new Pen(blackBrush, 3), new Point(myRightHand.X - 152, myRightHand.Y - 245), new Point(myHead.X - 289, myHead.Y - 230));
-                }
-                if (this.overallSW.ElapsedMilliseconds > 102000)
-                {
-                    drawingContext.DrawLine(new Pen(blackBrush, 2), new Point(myHead.X - 100, myHead.X + 340), new Point(myLeftHand.X + 230, myLeftFoot.Y - 200));
-                }
-                if (this.overallSW.ElapsedMilliseconds > 104000)
-                {
-                    drawingContext.DrawLine(new Pen(blackBrush, 3), new Point(myLeftHand.X + 99, myLeftHand.Y + 100), new Point(myLeftFoot.X - 204, myLeftFoot.Y - 188));
-                }
-                if (this.overallSW.ElapsedMilliseconds > 104250)
-                {
-                    drawingContext.DrawLine(new Pen(blackBrush, 1), new Point(myLeftFoot.X - 158, myLeftFoot.Y + 30), new Point(myRightFoot.X + 111, myRightFoot.Y - 219));
-                }
-                if (this.overallSW.ElapsedMilliseconds > 105000)
-                {
-                    drawingContext.DrawLine(new Pen(blackBrush, 5), new Point(myRightFoot.X + 110, myRightFoot.Y - 160), new Point(myRightHand.X + 182, myRightHand.Y + 176));
-                }
-                if (this.overallSW.ElapsedMilliseconds > 105500)
-                {
-                    drawingContext.DrawLine(new Pen(blackBrush, 4), new Point(myRightHand.X - 15, myRightHand.Y + 108), new Point(myHead.X - 113, myHead.Y + 116));
-                }
+                //if (this.overallSW.ElapsedMilliseconds > 92000)
+                //{
+                //    drawingContext.DrawLine(new Pen(blackBrush, 6), jointPoints[JointType.ShoulderLeft], jointPoints[JointType.ShoulderRight]);
+                //}
+                //if (this.overallSW.ElapsedMilliseconds > 94000)
+                //{
+                //    drawingContext.DrawLine(new Pen(blackBrush, 6), jointPoints[JointType.ElbowLeft], jointPoints[JointType.ElbowRight]);
+                //}
+                //if (this.overallSW.ElapsedMilliseconds > 96000)
+                //{
+                //    drawingContext.DrawLine(new Pen(blackBrush, 6), jointPoints[JointType.WristRight], jointPoints[JointType.WristRight]);
+                //}
+                //if (this.overallSW.ElapsedMilliseconds > 98000)
+                //{
+                //    drawingContext.DrawLine(new Pen(blackBrush, 6), jointPoints[JointType.HipRight], jointPoints[JointType.HipLeft]);
+                //}
+                //if (this.overallSW.ElapsedMilliseconds > 100000)
+                //{
+                //    drawingContext.DrawLine(new Pen(blackBrush, 6), jointPoints[JointType.KneeRight], jointPoints[JointType.KneeLeft]);
+                //}
+
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 109000 && this.overallSW.ElapsedMilliseconds < 111000)
+            else if (this.overallSW.ElapsedMilliseconds >= 106000)
             {
-                Point p1 = new Point(0,0);
-                Point p2 = new Point(0,0);
-                double height = 100;
-                double width = 100;
-
-                if (this.overallSW.ElapsedMilliseconds == 109000)
-                {
-                     p1 = upperExtreme;
-                     p2 = leftExtreme;
-                     height = bodyHeight;
-                     width = bodyWidth;
-                }
-
-                //drawingContext.DrawRectangle(null, new Pen(blackBrush, 6), new Rect(p1.X, p2.Y, height, width));
+                drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 145, 145, 145)), null, jointPoints[jointType0], 20, 20);
+                drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 145, 145, 145)), null, otherPoints[jointType0], 20, 20);
             }
+            
         }
 
         /// <summary>
@@ -1024,11 +996,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 leftHandRect.Fill = blueBrush;
                 rightHandRect.Fill = yellowBrush;
             }
-            else
+            else if (this.overallSW.ElapsedMilliseconds >= 62758 && this.overallSW.ElapsedMilliseconds < 106000)
             {
 
                 leftHandRect.Fill = whiteBrush;
                 rightHandRect.Fill = whiteBrush;
+            }
+            else if (this.overallSW.ElapsedMilliseconds > 106000)
+            {
+                drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 125, 125, 125)), null, handPosition, 30, 30);
             }
 
         }
@@ -1493,23 +1469,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 var c = p.Color;
 
                 c.A /= 2;
-
-                if (this.overallSW.ElapsedMilliseconds < 88000)
+                
+                if (this.overallSW.ElapsedMilliseconds >= 106000)
                 {
-                     p.Color = Color.FromArgb(50, 255, 255, 255);
-
-                    //dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 3), 
-                    //    new Point(p.Position.X, p.Position.Y),
-                    //    new Point(p.Position.X, p.Position.Y + rnd.Next(-300, 300))
-                    //          );
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 90000 && this.overallSW.ElapsedMilliseconds < 106000)
-                {
-
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 106000)
-                {
-                    p.Color = Color.FromArgb(100, 115, 115, 115);
+                    p.Color = Color.FromArgb(100, 100, 100, 100);
 
                     //   dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, p.Position.X % 20, p.Position.Y % 20);
                     //    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, p.Position.X % 10, p.Position.Y % 10);
@@ -1527,24 +1490,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 var c = p.Color;
 
                 c.A /= 2;
-
-                if (this.overallSW.ElapsedMilliseconds < 88000)
+                
+                if (this.overallSW.ElapsedMilliseconds >= 106000)
                 {
-                    p.Color = Color.FromArgb(50, 255, 255, 255);
-                    //p.Color = Color.FromArgb(100, 0, 0, 0);
-
-                    //dc.DrawLine(new Pen(new SolidColorBrush(p.Color), 3),
-                    //    new Point(p.Position.X, p.Position.Y),
-                    //    new Point(p.Position.X, p.Position.Y + rnd.Next(-300, 300))
-                    //          );
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 90000 && this.overallSW.ElapsedMilliseconds < 106000)
-                {
-
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 106000)
-                {
-                    p.Color = Color.FromArgb(100, 140, 140, 140);
+                    p.Color = Color.FromArgb(100, 85, 85, 85);
 
                  //   dc.DrawEllipse( new SolidColorBrush(p.Color), null, p.Position, p.Position.X % 20, p.Position.Y % 20);
                  //   dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, p.Position.X % 10, p.Position.Y % 10);
@@ -1561,24 +1510,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         {
             emitter.particles.ForEach(p =>
            {
-               if (this.overallSW.ElapsedMilliseconds < 88000)
+             
+               if (this.overallSW.ElapsedMilliseconds >= 106000)
                {
-                   p.Color = Color.FromArgb(50, 255, 255, 255);
-                   //p.Color = Color.FromArgb(100, 0, 0, 0);
-                   
-                   //dc.DrawRectangle(null,
-                   //    new Pen(new SolidColorBrush(p.Color), 2),
-                   //    new Rect(new Point(p.Position.X - (bodyWidth/2) - 25 , p.Position.Y - (bodyHeight/2) - 25),
-                   //    new Size(bodyWidth+50, bodyHeight+50))
-                   //    );
-               }
-               else if (this.overallSW.ElapsedMilliseconds >= 88000 && this.overallSW.ElapsedMilliseconds < 106000)
-               {
-                  
-               }
-               else if (this.overallSW.ElapsedMilliseconds >= 106000)
-               {
-                   p.Color = Color.FromArgb(50, 165, 165, 165);
+                   p.Color = Color.FromArgb(50, 60, 60, 60);
                   
                   // dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, p.Position.X % 20, p.Position.Y % 20);
                 //   dc.DrawEllipse( new SolidColorBrush(p.Color), null, p.Position, p.Position.X % 10, p.Position.Y % 10);
@@ -1605,53 +1540,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             canvas.Children.Clear();
             canvas.Children.Add(element);
             
-            if ( this.overallSW.ElapsedMilliseconds < 88000)
+            if (this.overallSW.ElapsedMilliseconds >= 106000)
             {
-
                 #region section 1
-                emitters[0].Center = new Point(p3.X/2, p3.Y);
-                emitters[1].Center = new Point(p3.X*2, p3.Y);
-                emitters[2].Center = p3;
-
-                emitters[0].angle = 1.6;
-                emitters[0].speed = 850;
-                emitters[0].lifespan = 2;
-
-
-                emitters[1].angle = 4.75;
-                emitters[1].speed = 850;
-                emitters[1].lifespan = 2;
-
-                emitters[2].angle = 0;
-                emitters[2].speed = 1;
-                emitters[2].lifespan = 0.2;
-                #endregion
-            }
-            else if (this.overallSW.ElapsedMilliseconds >= 88000 && this.overallSW.ElapsedMilliseconds < 106000)
-            {
-                #region section 2
-
-                //emitters[0].Center = new Point(p0.X, p0.Y - 200);
-                //emitters[1].Center = new Point(p3.X - 100, p3.Y);
-                //emitters[2].Center = new Point(p2.X + 100, p2.Y);
-
-                //emitters[0].angle = 0;
-                //emitters[0].speed = 0;
-                //emitters[0].lifespan = 0;
-                
-                //emitters[1].angle = 0;
-                //emitters[1].speed = 0;
-                //emitters[1].lifespan = 0;
-
-                //emitters[2].angle = 0;
-                //emitters[2].speed = 0;
-                //emitters[2].lifespan = 0;
-
-                #endregion
-            }
-            else if (this.overallSW.ElapsedMilliseconds >= 106000)
-            {
-                #region section 3
 
                 emitters[0].Center = new Point(p0.X, p0.Y );
                 emitters[1].Center = new Point(p6.X, p6.Y);
@@ -1664,7 +1555,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     emitters[1].angle = 1.6;
                     emitters[2].angle = 1.6;
 
-                    emitters[0].speed = 50;
+                    emitters[0].speed = avgVelocity*8;
                     emitters[1].speed = 50;
                     emitters[2].speed = 50;
 
@@ -1678,7 +1569,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     emitters[1].angle = 4.75;
                     emitters[2].angle = 4.75;
 
-                    emitters[0].speed = 50;
+                    emitters[0].speed = avgVelocity*8;
                     emitters[1].speed = 50;
                     emitters[2].speed = 50;
 
@@ -1692,7 +1583,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     emitters[1].angle = (2 * Math.PI * rnd.NextDouble());
                     emitters[2].angle = (2 * Math.PI * rnd.NextDouble());
 
-                    emitters[0].speed = 350;
+                    emitters[0].speed = avgVelocity*8;
                     emitters[1].speed = 350;
                     emitters[2].speed = 350;
 
