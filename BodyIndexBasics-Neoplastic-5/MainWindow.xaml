@@ -13,7 +13,10 @@
         </Style>
 
     </Window.Resources>
+
     <Grid x:Name="myGrid" Margin="0,0,3.6,2" RenderTransformOrigin="0.479,0.705" Background="White">
+
+        <Canvas x:Name="myBGCanvas" HorizontalAlignment="Left" Height="787" Margin="18,45,0,0" VerticalAlignment="Top" Width="1500"/>
 
 
 
@@ -97,14 +100,13 @@
 
         <Rectangle x:Name="testRect" Fill="#FFFFFFFF" HorizontalAlignment="Left" Height="26" Margin="1443,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="77"/>
         <Button x:Name="timerResetButton" Content="Reset Time" HorizontalAlignment="Left" Height="21" Margin="1172,5,0,0" VerticalAlignment="Top" Width="74" Background="WhiteSmoke" Click="timerResetButton_Click"/>
-     
+
         <Button x:Name="showLabelsButton" Content="Show Labels" HorizontalAlignment="Left" Height="21" Margin="1270,5,0,0" VerticalAlignment="Top" Width="68" Background="#FFF4F4F4" Click="showLabelsButton_Click"/>
         <Button x:Name="hideLabelsButton" Content="Hide Labels" HorizontalAlignment="Left" Height="21" Margin="1343,5,0,0" VerticalAlignment="Top" Width="73" Background="#FFF4F4F4" IsDefault="True" Click="hideLabelsButton_Click"/>
 
 
 
-
-
+        <Canvas x:Name="myCanvas" HorizontalAlignment="Left" Height="787" Margin="18,45,0,0" VerticalAlignment="Top" Width="1500"/>
 
     </Grid>
 </Window>
