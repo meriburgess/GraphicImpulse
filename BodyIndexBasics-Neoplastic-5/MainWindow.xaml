@@ -106,7 +106,7 @@
 
 
 
-        <Canvas x:Name="myCanvas" HorizontalAlignment="Left" Height="787" Margin="18,45,0,0" VerticalAlignment="Top" Width="1500"/>
+        <Canvas x:Name="myCanvas" HorizontalAlignment="Left" Height="873" Margin="0,-31,-0.4,0" VerticalAlignment="Top" Width="1537"/>
 
     </Grid>
 </Window>

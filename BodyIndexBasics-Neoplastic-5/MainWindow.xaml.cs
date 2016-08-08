@@ -202,9 +202,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         //Arrays for X,Y, and Z coordinates of each joint
         private double[] jointXCoordinates = new double[25];
         private double[] jointYCoordinates = new double[25];
+        private double[] alt_jointXCoordinates = new double[25];
+        private double[] alt_jointYCoordinates = new double[25];
         private double[] jointZCoordinates = new double[25];
         private double[] avgXYZCoordinates = new double[3];
-        
+        private double[] alt_avgXYZCoordinates = new double[3];
+
         //Timer variables
         private Timer myTimer = new Timer();
         private TimeSpan myTS = new TimeSpan();
@@ -558,8 +561,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                                 //update old position
                                                 oldPositions[jointType] = new Point(jointPoints[jointType].X, jointPoints[jointType].Y);
 
-                                                jointXCoordinates[jointCount] = joints[jointType].Position.X;
-                                                jointYCoordinates[jointCount] = joints[jointType].Position.Y;
+                                                alt_jointXCoordinates[jointCount] = joints[jointType].Position.X;
+                                                alt_jointYCoordinates[jointCount] = joints[jointType].Position.Y;
+
+                                                jointXCoordinates[jointCount] = jointPoints[jointType].X;
+                                                jointYCoordinates[jointCount] = jointPoints[jointType].Y;
                                                 jointZCoordinates[jointCount] = joints[jointType].Position.Z;
                                             }
                                            
@@ -579,6 +585,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                         getAvgCoordinates();
 
                                         getAvgVelocity();
+
+                                        Console.WriteLine(avgVelocity);
                                       
                                         bodyPolygon();
                                         bodyRectangle();
@@ -830,14 +838,23 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             }
 
             //drawingContext.DrawLine(drawPen, jointPoints[jointType0], jointPoints[jointType1]);
-            
-            
+
+
+            drawingContext.DrawEllipse(new SolidColorBrush(Colors.Fuchsia), null, new Point(bodyXMax, bodyYMin), 10, 10);
+            drawingContext.DrawEllipse(new SolidColorBrush(Colors.Firebrick), null, new Point(bodyXMin, bodyYMin), 10, 10);
+            drawingContext.DrawEllipse(new SolidColorBrush(Colors.LimeGreen), null, new Point(bodyXMin, bodyYMax), 10, 10);
+            drawingContext.DrawEllipse(new SolidColorBrush(Colors.Coral), null, new Point(bodyXMax, bodyYMax), 10, 10);
+            drawingContext.DrawEllipse(redBrush, null, upperExtreme, 10, 10);
+            drawingContext.DrawEllipse(blueBrush, null, lowerExtreme, 10, 10);
+            drawingContext.DrawEllipse(yellowBrush, null, rightExtreme, 10, 10);
+            drawingContext.DrawEllipse(yellowBrush, null, leftExtreme, 10, 10);
+
 
             double xMidPoint = jointPoints[jointType0].X + jointPoints[jointType1].X / 2;
             double yMidPoint = jointPoints[jointType0].Y + jointPoints[jointType1].Y / 2;
             double length = Math.Sqrt(Math.Pow(jointPoints[jointType0].X - jointPoints[jointType1].X, 2) + Math.Pow(jointPoints[jointType0].Y - jointPoints[jointType1].Y, 2));
-            
-            
+
+
             if (this.overallSW.ElapsedMilliseconds < 36500)
             {
                 drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 115, 115, 115)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X, jointPoints[jointType0].Y - 450), new Point(jointPoints[jointType1].X, jointPoints[jointType1].Y - 450)));
@@ -846,11 +863,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             }
             else if (this.overallSW.ElapsedMilliseconds >= 36500 && this.overallSW.ElapsedMilliseconds < 62500)
             {
-                drawingContext.DrawRoundedRectangle(redBrush, new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X , jointPoints[jointType0].Y - 350), new Point(jointPoints[jointType1].X , jointPoints[jointType1].Y - 350)), length, length);
+                drawingContext.DrawRoundedRectangle(redBrush, new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X, jointPoints[jointType0].Y - 350), new Point(jointPoints[jointType1].X, jointPoints[jointType1].Y - 350)), length, length);
                 drawingContext.DrawRoundedRectangle(blueBrush, new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X + 150, jointPoints[jointType0].Y - 50), new Point(jointPoints[jointType1].X + 150, jointPoints[jointType1].Y - 50)), length, length);
                 drawingContext.DrawRoundedRectangle(yellowBrush, new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X - 150, jointPoints[jointType0].Y - 50), new Point(jointPoints[jointType1].X - 150, jointPoints[jointType1].Y - 50)), length, length);
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 62500 && this.overallSW.ElapsedMilliseconds < 90000 )
+            else if (this.overallSW.ElapsedMilliseconds >= 62500 && this.overallSW.ElapsedMilliseconds < 90000)
             {
                 drawingContext.DrawEllipse(whiteBrush, new Pen(greyBrush, 1), new Point(xMidPoint, yMidPoint), length, length);
                 drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 125, 125, 125)), new Pen(whiteBrush, 1), new Point(xMidPoint + 170, yMidPoint - 100), length, length);
@@ -869,7 +886,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 drawingContext.DrawLine(new Pen(blackBrush, 5), new Point(myLeftFoot.X, myLeftFoot.Y + 50), new Point(myRightFoot.X, myRightFoot.Y + 50));
                 drawingContext.DrawLine(new Pen(blackBrush, 5), new Point(myRightFoot.X, myRightFoot.Y + 50), new Point(myRightHand.X - 25, myRightHand.Y));
                 drawingContext.DrawLine(new Pen(blackBrush, 5), new Point(myRightHand.X - 50, myRightHand.Y), new Point(myHead.X, myHead.Y - 50));
-                
+
 
             }
             else if (this.overallSW.ElapsedMilliseconds >= 106000 && this.overallSW.ElapsedMilliseconds < 132000)
@@ -877,11 +894,117 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 145, 145, 145)), null, jointPoints[jointType0], 20, 20);
                 drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 145, 145, 145)), null, otherPoints[jointType0], 20, 20);
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 133000)
+            else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 144000)
             {
-              //  drawingContext.DrawRectangle(null, new Pen(redBrush, 8), bodyRect);
-                
+                drawingContext.DrawLine(drawPen, jointPoints[jointType0], jointPoints[jointType1]);
+
+
+                Rectangle myBodyRectangle = new Rectangle();
+                myBodyRectangle.Width = bodyWidth;
+                myBodyRectangle.Height = bodyHeight;
+                myBodyRectangle.StrokeThickness = 10;
+
+                if ((this.overallSW.ElapsedMilliseconds % 2000) >= 0 && (this.overallSW.ElapsedMilliseconds % 2000) <= 100)
+                {
+
+                    byte r = Convert.ToByte(avgXYZCoordinates[0] % 255);
+                    byte g = Convert.ToByte(avgXYZCoordinates[1] % 255);
+                    byte b = Convert.ToByte((avgXYZCoordinates[2] * 100) % 255);
+                    myBodyRectangle.Stroke = new SolidColorBrush(Color.FromArgb(150, r, g, b));
+                    Canvas.SetTop(myBodyRectangle, bodyYMin);
+                    Canvas.SetLeft(myBodyRectangle, bodyXMin);
+
+                    myCanvas.Children.Add(myBodyRectangle);
+                }
             }
+            else if (this.overallSW.ElapsedMilliseconds >= 144000 && this.overallSW.ElapsedMilliseconds < 145000)
+            {
+                myCanvas.Children.Clear();
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 145000 && this.overallSW.ElapsedMilliseconds < 160000)
+            {
+                Polygon myBodyPoly = new Polygon();
+                PointCollection myBodyPolyPoints = new PointCollection();
+                myBodyPolyPoints.Add(jointPoints[JointType.Head]);
+                myBodyPolyPoints.Add(jointPoints[JointType.HandLeft]);
+                myBodyPolyPoints.Add(jointPoints[JointType.FootLeft]);
+                myBodyPolyPoints.Add(jointPoints[JointType.FootRight]);
+                myBodyPolyPoints.Add(jointPoints[JointType.HandRight]);
+                myBodyPoly.Points = myBodyPolyPoints;
+
+                byte r = Convert.ToByte(avgXYZCoordinates[0] % 255);
+                byte g = Convert.ToByte(avgXYZCoordinates[1] % 255);
+                byte b = Convert.ToByte((avgXYZCoordinates[2] * 100) % 255);
+                myBodyPoly.Stroke = new SolidColorBrush(Color.FromArgb(150, r, g, b));
+                myBodyPoly.StrokeThickness = 5;
+
+                if (avgVelocity <= 10)
+                {
+                    myCanvas.Children.Add(myBodyPoly);
+                }
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 160000 && this.overallSW.ElapsedMilliseconds < 161000)
+            {
+                myCanvas.Children.Clear();
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 161000 && this.overallSW.ElapsedMilliseconds <= 180000)
+            {
+                Polygon myBodyPoly = new Polygon();
+                PointCollection myBodyPolyPoints = new PointCollection();
+
+                myBodyPolyPoints.Add(jointPoints[JointType.Head]);
+                myBodyPolyPoints.Add(jointPoints[JointType.SpineShoulder]);
+                myBodyPolyPoints.Add(jointPoints[JointType.SpineBase]);
+                myBodyPolyPoints.Add(jointPoints[JointType.HipLeft]);
+                myBodyPolyPoints.Add(jointPoints[JointType.KneeRight]);
+                myBodyPolyPoints.Add(jointPoints[JointType.AnkleLeft]);
+                myBodyPolyPoints.Add(jointPoints[JointType.FootRight]);
+                myBodyPolyPoints.Add(jointPoints[JointType.KneeLeft]);
+                myBodyPolyPoints.Add(jointPoints[JointType.HandLeft]);
+                myBodyPolyPoints.Add(jointPoints[JointType.ElbowLeft]);
+                myBodyPolyPoints.Add(jointPoints[JointType.SpineMid]);
+
+                myBodyPoly.Points = myBodyPolyPoints;
+
+                byte r = Convert.ToByte(avgXYZCoordinates[0] % 255);
+                byte g = Convert.ToByte(avgXYZCoordinates[1] % 255);
+                byte b = Convert.ToByte((avgXYZCoordinates[2] * 100) % 255);
+                myBodyPoly.Stroke = new SolidColorBrush(Color.FromArgb(150, r, g, b));
+                myBodyPoly.StrokeThickness = 5;
+
+                if ((this.overallSW.ElapsedMilliseconds % 2000) >= 0 && (this.overallSW.ElapsedMilliseconds % 2000) <= 100)
+                {
+                    myCanvas.Children.Add(myBodyPoly);
+                }
+            }
+            else if (this.overallSW.ElapsedMilliseconds > 180000 && this.overallSW.ElapsedMilliseconds < 181000)
+            {
+                myCanvas.Children.Clear();
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 181000)
+            {
+                
+                if ((this.overallSW.ElapsedMilliseconds % 2000) >= 0 && (this.overallSW.ElapsedMilliseconds % 2000) <= 100)
+                {
+                    Line attackLine = new Line();
+                    attackLine.X1 = 700;
+                    attackLine.Y1 = 0;
+                    attackLine.Y2 = 873;
+
+                    double XPrime = bodyXMax;
+                    double YPrime = bodyYMin;
+
+                    double slope = -((attackLine.X1 - XPrime) / (0 - YPrime));
+                    attackLine.X2 = 873 - (slope * attackLine.X1);
+
+                    attackLine.Stroke = blackBrush;
+                    attackLine.StrokeThickness = 5;
+
+                    myCanvas.Children.Add(attackLine);
+                }
+
+            }
+
 
         }
 
@@ -1038,8 +1161,14 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             }
 
             avgVelocity = 100*Math.Abs((total1 + total2) / (length * 2));
+
+
+            if (avgVelocity >= 255)
+            {
+                avgVelocity = 255;
+            }
             
-            double toBecomeByte = checkDoubleForByteConversion(255 - (avgVelocity/2));
+            double toBecomeByte = checkDoubleForByteConversion(255 - (avgVelocity));
           
             byte colorByte = Convert.ToByte(toBecomeByte);
 
@@ -1072,54 +1201,60 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             double totalX = 0;
             double totalY = 0;
             double totalZ = 0;
+            double alt_totalX = 0;
+            double alt_totalY = 0;
 
-            double maxX = -1;
-            double minX = 1000;
+            double maxX = -10000;
+            double minX = 10000;
 
-            double maxY = -1;
-            double minY = 1000; 
+            double maxY = -10000;
+            double minY = 10000; 
 
             for (int i = 0; i < jointXCoordinates.Length; i++)
             {
                 totalX += jointXCoordinates[i];
                 totalY += jointYCoordinates[i];
                 totalZ += jointZCoordinates[i];
+                alt_totalX += alt_jointXCoordinates[i];
+                alt_totalY += alt_jointYCoordinates[i];
 
                 if (jointXCoordinates[i] > maxX)
                 {
                     maxX = jointXCoordinates[i];
+                    rightExtreme = new Point(jointXCoordinates[i], jointYCoordinates[i]);
                 }
 
                 if (jointXCoordinates[i] < minX)
                 {
                     minX = jointXCoordinates[i];
+                    leftExtreme = new Point(jointXCoordinates[i], jointYCoordinates[i]);
                 }
 
                 if (jointYCoordinates[i] < minY)
                 {
                     minY = jointYCoordinates[i];
+                    upperExtreme = new Point(jointXCoordinates[i], jointYCoordinates[i]);
                 }
 
                 if (jointYCoordinates[i] > maxY)
                 {
                     maxY = jointYCoordinates[i];
+                    lowerExtreme = new Point(jointXCoordinates[i], jointYCoordinates[i]);
                 }
             }
             bodyWidth = Math.Abs(maxX - minX);
             bodyHeight = Math.Abs(maxY - minY);
 
-            bodyXMin = Math.Abs(minX);
-            bodyYMin = Math.Abs(minY);
-            bodyXMax = Math.Abs(maxX);
-            bodyYMax = Math.Abs(maxY);
-
-            Console.WriteLine("Min X:" + bodyXMin + " Min Y: " + bodyYMin) ;
-            Console.WriteLine("Max X:" + bodyXMax + " Max Y: " + bodyYMax);
-            Console.WriteLine("Body width: " + bodyWidth + " Body Height: " + bodyHeight);
-
+            bodyXMin = minX;
+            bodyYMin = minY;
+            bodyXMax = maxX;
+            bodyYMax = maxY;
+            
             avgXYZCoordinates[0] = totalX / jointXCoordinates.Length;
             avgXYZCoordinates[1] = totalY / jointYCoordinates.Length;
             avgXYZCoordinates[2] = totalZ / jointZCoordinates.Length;
+            alt_avgXYZCoordinates[0] = alt_totalX / alt_jointXCoordinates.Length;
+            alt_avgXYZCoordinates[1] = alt_totalY / alt_jointYCoordinates.Length;
 
             avgBodyX = avgXYZCoordinates[0];
             avgBodyY = avgXYZCoordinates[1];
@@ -1136,8 +1271,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             double distance = avgXYZCoordinates[2];
             //Determine relative x and y ranges based on distance from camera
-            double xRange = 0.6153 * distance;
-            double yRange = 0.4615 * distance;
+            //     double xRange = 0.6153 * distance;
+            //   double yRange = 0.4615 * distance;
+            double xRange = 1537;
+            double yRange = 873;
 
             //Determine appropriate 1/3 step ranges 
             double xStep = xRange - ((xRange * 2) / 3);
@@ -1190,8 +1327,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         
         private void updateRegionSquares()
         {
-            byte xByte = Convert.ToByte(checkDoubleForByteConversion(255 - Math.Abs(avgXYZCoordinates[0] * 92.3)));
-            byte yByte = Convert.ToByte(checkDoubleForByteConversion(255 - Math.Abs(avgXYZCoordinates[1] * 122.5)));
+            byte xByte = Convert.ToByte(checkDoubleForByteConversion(255 - Math.Abs(alt_avgXYZCoordinates[0] * 92.3)));
+            byte yByte = Convert.ToByte(checkDoubleForByteConversion(255 - Math.Abs(alt_avgXYZCoordinates[1] * 122.5)));
+            //byte xByte = Convert.ToByte(Math.Abs(avgBodyX/2) % 255);
+            //byte yByte = Convert.ToByte(Math.Abs(avgBodyY/2) % 255);
             byte zByte = Convert.ToByte(checkDoubleForByteConversion(255 - Math.Abs(avgXYZCoordinates[2] * 56.6)));
 
             if (this.overallSW.ElapsedMilliseconds < 12050)
@@ -1454,16 +1593,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             bodyRect.Y = myHead.Y;
             bodyRect.Height = Math.Abs(myRightFoot.Y - myHead.Y);
             bodyRect.Width = Math.Abs(myRightHand.X - myLeftHand.X);
-
-            Rectangle myRectangle = new Rectangle();
-            myRectangle.Width = bodyWidth*1000;
-            myRectangle.Height = bodyHeight*1000;
-            myRectangle.Stroke = new SolidColorBrush(Color.FromArgb(50, 255, 100, 100));
-            myRectangle.StrokeThickness = 10;
-            Canvas.SetTop(myRectangle, myHead.Y);
-            Canvas.SetLeft(myRectangle, myLeftHand.X);
-
-            myCanvas.Children.Add(myRectangle);
+            
+           // myCanvas.Children.Add(myRectangle);
 
         }
         #endregion
@@ -1552,7 +1683,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 #region section 1
 
                 emitters[0].Center = new Point(p0.X, p0.Y );
-                emitters[1].Center = new Point(p4.X, p4.Y);
+                emitters[1].Center = new Point(p3.X, p3.Y);
                 emitters[2].Center = new Point(p5.X , p5.Y);
 
 
