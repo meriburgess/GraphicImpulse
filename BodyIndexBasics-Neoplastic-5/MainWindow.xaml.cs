@@ -823,6 +823,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             Joint joint0 = joints[jointType0];
             Joint joint1 = joints[jointType1];
 
+            int x1 = rnd.Next(10, 1520);
+
             // If we can't find either of these joints, exit
             if (joint0.TrackingState == TrackingState.NotTracked ||
                 joint1.TrackingState == TrackingState.NotTracked)
@@ -855,7 +857,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             double length = Math.Sqrt(Math.Pow(jointPoints[jointType0].X - jointPoints[jointType1].X, 2) + Math.Pow(jointPoints[jointType0].Y - jointPoints[jointType1].Y, 2));
 
 
-            if (this.overallSW.ElapsedMilliseconds < 36500)
+            if (this.overallSW.ElapsedMilliseconds > 12000 && this.overallSW.ElapsedMilliseconds < 36500)
             {
                 drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 115, 115, 115)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X, jointPoints[jointType0].Y - 450), new Point(jointPoints[jointType1].X, jointPoints[jointType1].Y - 450)));
                 drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 145, 145, 145)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X + 175, jointPoints[jointType0].Y - 50), new Point(jointPoints[jointType1].X + 175, jointPoints[jointType1].Y - 50)));
@@ -894,7 +896,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 145, 145, 145)), null, jointPoints[jointType0], 20, 20);
                 drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 145, 145, 145)), null, otherPoints[jointType0], 20, 20);
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 144000)
+            else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 168000)
+            {
+
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 168000 && this.overallSW.ElapsedMilliseconds < 180000)
             {
                 drawingContext.DrawLine(drawPen, jointPoints[jointType0], jointPoints[jointType1]);
 
@@ -904,7 +910,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 myBodyRectangle.Height = bodyHeight;
                 myBodyRectangle.StrokeThickness = 10;
 
-                if ((this.overallSW.ElapsedMilliseconds % 2000) >= 0 && (this.overallSW.ElapsedMilliseconds % 2000) <= 100)
+                //   if ((this.overallSW.ElapsedMilliseconds % 2000) >= 0 && (this.overallSW.ElapsedMilliseconds % 2000) <= 100)
+                if (avgVelocity <= 15)
                 {
 
                     byte r = Convert.ToByte(avgXYZCoordinates[0] % 255);
@@ -917,11 +924,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     myCanvas.Children.Add(myBodyRectangle);
                 }
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 144000 && this.overallSW.ElapsedMilliseconds < 145000)
+            else if (this.overallSW.ElapsedMilliseconds >= 180000 && this.overallSW.ElapsedMilliseconds < 181000)
             {
-                myCanvas.Children.Clear();
+             //   myCanvas.Children.Clear();
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 145000 && this.overallSW.ElapsedMilliseconds < 160000)
+            else if (this.overallSW.ElapsedMilliseconds >= 181000 && this.overallSW.ElapsedMilliseconds < 193000)
             {
                 Polygon myBodyPoly = new Polygon();
                 PointCollection myBodyPolyPoints = new PointCollection();
@@ -938,16 +945,16 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 myBodyPoly.Stroke = new SolidColorBrush(Color.FromArgb(150, r, g, b));
                 myBodyPoly.StrokeThickness = 5;
 
-                if (avgVelocity <= 10)
+                if (avgVelocity <= 15)
                 {
                     myCanvas.Children.Add(myBodyPoly);
                 }
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 160000 && this.overallSW.ElapsedMilliseconds < 161000)
+            else if (this.overallSW.ElapsedMilliseconds >= 193000 && this.overallSW.ElapsedMilliseconds < 194000)
             {
-                myCanvas.Children.Clear();
+              //  myCanvas.Children.Clear();
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 161000 && this.overallSW.ElapsedMilliseconds <= 180000)
+            else if (this.overallSW.ElapsedMilliseconds >= 194000 && this.overallSW.ElapsedMilliseconds <= 224000)
             {
                 Polygon myBodyPoly = new Polygon();
                 PointCollection myBodyPolyPoints = new PointCollection();
@@ -972,27 +979,28 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 myBodyPoly.Stroke = new SolidColorBrush(Color.FromArgb(150, r, g, b));
                 myBodyPoly.StrokeThickness = 5;
 
-                if ((this.overallSW.ElapsedMilliseconds % 2000) >= 0 && (this.overallSW.ElapsedMilliseconds % 2000) <= 100)
+              //  if ((this.overallSW.ElapsedMilliseconds % 2000) >= 0 && (this.overallSW.ElapsedMilliseconds % 2000) <= 100)
+              if (avgVelocity <= 15)
                 {
                     myCanvas.Children.Add(myBodyPoly);
                 }
             }
-            else if (this.overallSW.ElapsedMilliseconds > 180000 && this.overallSW.ElapsedMilliseconds < 181000)
+            else if (this.overallSW.ElapsedMilliseconds > 224000 && this.overallSW.ElapsedMilliseconds < 225000)
             {
                 myCanvas.Children.Clear();
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 181000)
+            else if (this.overallSW.ElapsedMilliseconds >= 225000 && this.overallSW.ElapsedMilliseconds < 240000)
             {
                 
-                if ((this.overallSW.ElapsedMilliseconds % 2000) >= 0 && (this.overallSW.ElapsedMilliseconds % 2000) <= 100)
+                if ((this.overallSW.ElapsedMilliseconds % 500) >= 0 && (this.overallSW.ElapsedMilliseconds % 500) <= 50)
                 {
                     Line attackLine = new Line();
-                    attackLine.X1 = 700;
+                    attackLine.X1 = x1;
                     attackLine.Y1 = 0;
                     attackLine.Y2 = 873;
 
-                    double XPrime = bodyXMax;
-                    double YPrime = bodyYMin;
+                    double XPrime = avgBodyX;
+                    double YPrime = avgBodyY;
 
                     double slope = -((attackLine.X1 - XPrime) / (0 - YPrime));
                     attackLine.X2 = 873 - (slope * attackLine.X1);
@@ -1003,6 +1011,122 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     myCanvas.Children.Add(attackLine);
                 }
 
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 240000 && this.overallSW.ElapsedMilliseconds < 240500)
+            {
+                myCanvas.Children.Clear();
+                myCanvas.Background = blackBrush;
+            }
+            else if (this.overallSW.ElapsedMilliseconds >= 240000 && this.overallSW.ElapsedMilliseconds < 256000)
+            {
+                myBGCanvas.Background = Brushes.Black;
+                Rectangle endingRectangle = new Rectangle();
+                endingRectangle.Fill = Brushes.White;
+                endingRectangle.Height = 873;
+                endingRectangle.Width = 1537;
+                Canvas.SetTop(endingRectangle, 0);
+                Canvas.SetLeft(endingRectangle, 0);
+
+                if (this.overallSW.ElapsedMilliseconds >= 241000 && this.overallSW.ElapsedMilliseconds < 242000)
+                {
+                    double newHeight = bodyHeight * 4;
+                    if (newHeight > 873)
+                    {
+                        newHeight = 850;
+                    }
+                    endingRectangle.Height = newHeight;
+                    Canvas.SetTop(endingRectangle, (873-newHeight)/2);
+                    Canvas.SetLeft(endingRectangle, 0);
+                }
+                if (this.overallSW.ElapsedMilliseconds >= 242000 && this.overallSW.ElapsedMilliseconds < 243000)
+                {
+                    double newWidth = bodyWidth * 4;
+                    if (newWidth > 1537)
+                    {
+                        newWidth = 1350;
+                    }
+                    endingRectangle.Width = newWidth;
+                    Canvas.SetTop(endingRectangle, (1537 - newWidth) / 2);
+                    Canvas.SetLeft(endingRectangle, 0);
+                }
+
+                if (this.overallSW.ElapsedMilliseconds >= 243500 && this.overallSW.ElapsedMilliseconds < 244000)
+                {
+                    double newHeight = bodyHeight * 2;
+                    if (newHeight > 873)
+                    {
+                        newHeight = 850;
+                    }
+                    endingRectangle.Height = newHeight;
+                    Canvas.SetTop(endingRectangle, (873 - newHeight) / 2);
+                    Canvas.SetLeft(endingRectangle, 0);
+                }
+                if (this.overallSW.ElapsedMilliseconds >= 244000 && this.overallSW.ElapsedMilliseconds < 244500)
+                {
+                    double newWidth = bodyWidth * 2;
+                    if (newWidth > 1537)
+                    {
+                        newWidth = 1350;
+                    }
+                    endingRectangle.Width = newWidth;
+                    Canvas.SetTop(endingRectangle, (1537 - newWidth) / 2);
+                    Canvas.SetLeft(endingRectangle, 0);
+                }
+
+                if (this.overallSW.ElapsedMilliseconds >= 246000 && this.overallSW.ElapsedMilliseconds < 247000)
+                {
+                    double newHeight = bodyHeight * 1.5;
+                    if (newHeight > 873)
+                    {
+                        newHeight = 850;
+                    }
+                    endingRectangle.Height = newHeight;
+                    Canvas.SetTop(endingRectangle, (873 - newHeight) / 2);
+                    Canvas.SetLeft(endingRectangle, 0);
+                }
+                if (this.overallSW.ElapsedMilliseconds >= 247000 && this.overallSW.ElapsedMilliseconds < 248000)
+                {
+                    double newWidth = bodyWidth * 1.5;
+                    if (newWidth > 1537)
+                    {
+                        newWidth = 1350;
+                    }
+                    endingRectangle.Width = newWidth;
+                    Canvas.SetTop(endingRectangle, (1537 - newWidth) / 2);
+                    Canvas.SetLeft(endingRectangle, 0);
+                }
+
+                if (this.overallSW.ElapsedMilliseconds >= 249000 && this.overallSW.ElapsedMilliseconds < 250000)
+                {
+                    double newHeight = bodyHeight;
+                    if (newHeight > 873)
+                    {
+                        newHeight = 850;
+                    }
+                    endingRectangle.Height = newHeight;
+                    Canvas.SetTop(endingRectangle, (873 - newHeight) / 2);
+                    Canvas.SetLeft(endingRectangle, 0);
+                }
+                if (this.overallSW.ElapsedMilliseconds >= 250000 && this.overallSW.ElapsedMilliseconds < 250500)
+                {
+                    double newWidth = bodyWidth;
+                    if (newWidth > 1537)
+                    {
+                        newWidth = 1350;
+                    }
+                    endingRectangle.Width = newWidth;
+                    Canvas.SetTop(endingRectangle, (1537 - newWidth) / 2);
+                    Canvas.SetLeft(endingRectangle, 0);
+                }
+
+                if (this.overallSW.ElapsedMilliseconds >= 251000)
+                {
+                    endingRectangle.Height = 837;
+                    endingRectangle.Width = bodyWidth / 3 ;
+                    Canvas.SetTop(endingRectangle, 0);
+                    Canvas.SetLeft(endingRectangle, avgBodyX);
+                
+                }
             }
 
 
