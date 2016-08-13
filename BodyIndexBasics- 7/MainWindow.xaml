@@ -16,7 +16,7 @@
 
     <Grid x:Name="myGrid" Margin="0,0,3.6,2" RenderTransformOrigin="0.479,0.705" Background="White">
 
-        <Canvas x:Name="myBGCanvas" HorizontalAlignment="Left" Height="787" Margin="18,45,0,0" VerticalAlignment="Top" Width="1500"/>
+        <Canvas x:Name="myBGCanvas" HorizontalAlignment="Left" Height="873" Margin="0,-31,-10.6,-1" VerticalAlignment="Top" Width="1537"/>
 
 
 
@@ -100,7 +100,7 @@
         <Button x:Name="hideLabelsButton" Content="Hide Labels" HorizontalAlignment="Left" Height="21" Margin="1434,5,0,0" VerticalAlignment="Top" Width="73" Background="#FFF4F4F4" IsDefault="True" Click="hideLabelsButton_Click"/>
 
 
-        
+
         <Canvas x:Name="myCanvas" HorizontalAlignment="Left" Height="873" Margin="0,-31,-0.4,0" VerticalAlignment="Top" Width="1537">
 
         </Canvas>
