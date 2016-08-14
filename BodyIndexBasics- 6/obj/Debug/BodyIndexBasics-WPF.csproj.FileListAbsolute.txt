@@ -196,3 +196,6 @@ C:\Users\IronLab\Documents\Meri\PersonalGIRepo\GraphicImpulse\BodyIndexBasics- 6
 C:\Users\IronLab\Documents\Meri\PersonalGIRepo\GraphicImpulse\BodyIndexBasics- 6\obj\Debug\BodyIndexBasics-WPF.g.resources
 C:\Users\IronLab\Documents\Meri\PersonalGIRepo\GraphicImpulse\BodyIndexBasics- 6\obj\Debug\Microsoft.Samples.Kinect.BodyIndexBasics.Properties.Resources.resources
 C:\Users\IronLab\Documents\Meri\PersonalGIRepo\GraphicImpulse\BodyIndexBasics- 6\obj\Debug\BodyIndexBasics-WPF.csproj.GenerateResource.Cache
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\BodyIndexBasics- 6\bin\AnyCPU\Debug\BodyIndexBasics-WPF.exe.config
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\BodyIndexBasics- 6\obj\Debug\BodyIndexBasics-WPF.exe
+C:\Users\meri_\Documents\graphicImpulse\GraphicImpulse\BodyIndexBasics- 6\obj\Debug\BodyIndexBasics-WPF.pdb

@@ -264,7 +264,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         Polygon bodyPoly = new Polygon();
         Rect bodyRect = new Rect();
 
-        private int lineThickness; 
+        private int lineThickness;
+        private int x1;
+        private int y1; 
+
 
         private double newHeight = 873;
         private double newWidth = 1537;
@@ -478,6 +481,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             updateMondrianSquares(overallSW.ElapsedMilliseconds);
 
+            x1 = rnd.Next(10, 1520);
+            y1 = rnd.Next(10, 860);
+
             //Acquire new frame 
             MultiSourceFrame msf = e.FrameReference.AcquireFrame();
             
@@ -609,7 +615,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                         getAvgVelocity();
 
                                         // Console.WriteLine(avgVelocity);
-                                        Console.WriteLine(bodyHeight + " " + bodyWidth);
+                                      //  Console.WriteLine(bodyHeight + " " + bodyWidth);
                                       
                                         bodyPolygon();
                                         bodyRectangle();
@@ -745,14 +751,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                         }
                                         else if (this.overallSW.ElapsedMilliseconds >= 216000 && this.overallSW.ElapsedMilliseconds < 240000)
                                         {
-                                            if (inAir == true && onGround == false)
-                                            {
-                                                myBGCanvas.Background = new SolidColorBrush(Colors.Black);
-                                            }
-                                            else if (inAir == false && onGround == true)
-                                            {
+                                           
                                                 myBGCanvas.Background = new SolidColorBrush(Colors.White);
-                                            }
+                                            
                                         }
                                         else if (this.overallSW.ElapsedMilliseconds >= 240000 && this.overallSW.ElapsedMilliseconds < 263000)
                                         {
@@ -1102,7 +1103,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 145, 145, 145)), null, otherPoints[jointType0], 20, 20);
             }
             //duo skeleton switch
-            else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 172000)
+            else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 168000)
             {
                 Pen skelPen = new Pen(new SolidColorBrush(Color.FromArgb(greyByte, 0, 0, 0)), 6);
 
@@ -1209,44 +1210,60 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 if ((this.overallSW.ElapsedMilliseconds % 550) >= 0 && (this.overallSW.ElapsedMilliseconds % 550) <= 40)
                 {
                     Line attackLine = new Line();
-                    attackLine.X1 = avgBodyX;
-                    attackLine.Y1 = 0;
-                    attackLine.X2 = avgBodyX;
-                    attackLine.Y2 = 873;
 
 
                     if (inAir == false && onGround == true)
                     {
-                        attackLine.Stroke = blackBrush;
+                        attackLine.X1 = avgBodyX;
+                        attackLine.Y1 = 0;
+                        attackLine.X2 = avgBodyX;
+                        attackLine.Y2 = 873;
                     }
                     else if (inAir == true && onGround == false)
                     {
-                        attackLine.Stroke = whitestBrush;
+                        attackLine.X1 = x1;
+                        attackLine.Y1 = 0;
+                        attackLine.Y2 = 873;
+
+                        double XPrime = avgBodyX;
+                        double YPrime = avgBodyY;
+
+                        double slope = -((attackLine.X1 - XPrime) / (0 - YPrime));
+                        attackLine.X2 = 873 - (slope * attackLine.X1);
                     }
 
+                    attackLine.Stroke = blackBrush;
                     attackLine.StrokeThickness = lineThickness;
 
                     myCanvas.Children.Add(attackLine);
                 }
 
-                if ((this.overallSW.ElapsedMilliseconds % 900) >= 0 && (this.overallSW.ElapsedMilliseconds % 900) <= 40)
+                if ((this.overallSW.ElapsedMilliseconds % 1000) >= 0 && (this.overallSW.ElapsedMilliseconds % 1000) <= 40)
                 {
                     Line attackLine2 = new Line();
-                    attackLine2.X1 = 0;
-                    attackLine2.Y1 = avgBodyY;
-                    attackLine2.X2 = 1537;
-                    attackLine2.Y2 = avgBodyY;
-
-
+                    
                     if (inAir == false && onGround == true)
                     {
-                        attackLine2.Stroke = blackBrush;
+                        attackLine2.X1 = 0;
+                        attackLine2.Y1 = avgBodyY;
+                        attackLine2.X2 = 1537;
+                        attackLine2.Y2 = avgBodyY;
+
                     }
                     else if (inAir == true && onGround == false)
                     {
-                        attackLine2.Stroke = whitestBrush;
+                        attackLine2.X1 = 0;
+                        attackLine2.Y1 = y1;
+                        attackLine2.X2 = 1537;
+
+                        double XPrime = avgBodyX;
+                        double YPrime = avgBodyY;
+
+                        double slope = -( (attackLine2.Y1 - YPrime)/(0 - XPrime) );
+                        attackLine2.Y2 = (1537 * slope) +  attackLine2.X2;
                     }
 
+                    attackLine2.Stroke = blackBrush;
                     attackLine2.StrokeThickness = lineThickness;
 
                     myCanvas.Children.Add(attackLine2);
@@ -1263,190 +1280,139 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             {
 
 
-                if (this.overallSW.ElapsedMilliseconds >= 240500 && this.overallSW.ElapsedMilliseconds < 241000)
-                {
-                    newHeight = 50;
-                    newWidth = 50;
-                //    setX = avgBodyX - (newWidth / 2);
-                  //  setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 241000 && this.overallSW.ElapsedMilliseconds < 241500)
+                if (this.overallSW.ElapsedMilliseconds >= 240512 && this.overallSW.ElapsedMilliseconds < 240888)
                 {
                     newHeight = 85;
-                    newWidth = 85 ;
-                    //setX = avgBodyX - (newWidth / 2);
-                    // setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
+                    newWidth = 85;
+                    setX = jointPoints[JointType.Head].X - (3 * newWidth / 4);
+                    setY = jointPoints[JointType.Head].Y - (3 * newHeight / 4);
+
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 241500 && this.overallSW.ElapsedMilliseconds < 242000)
+                else if (this.overallSW.ElapsedMilliseconds >= 240888 && this.overallSW.ElapsedMilliseconds < 241186)
                 {
                     newHeight = 125;
                     newWidth = 125;
-                    // setX = avgBodyX - (newWidth / 2);
-                    // setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
+                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
+                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
                 }
-
-                else if (this.overallSW.ElapsedMilliseconds >= 242000 && this.overallSW.ElapsedMilliseconds < 243500)
+                else if (this.overallSW.ElapsedMilliseconds >= 241186 && this.overallSW.ElapsedMilliseconds < 243194)
                 {
-                    newHeight = 200;
-                    newWidth = 200;
-                    //  setX = avgBodyX - (newWidth / 2);
-                    //  setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
+                    newHeight = 175;
+                    newWidth = 175;
+                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
+                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 243500 && this.overallSW.ElapsedMilliseconds < 244000)
+
+                else if (this.overallSW.ElapsedMilliseconds >= 243194 && this.overallSW.ElapsedMilliseconds < 243518)
                 {
-                    newHeight = 275;
-                    newWidth = 275 ;
-                    // setX = avgBodyX - (newWidth / 2);
-                    //setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
+                    newHeight = 250;
+                    newWidth = 250;
+                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
+                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
                 }
-
-                else if (this.overallSW.ElapsedMilliseconds >= 244000 && this.overallSW.ElapsedMilliseconds < 246000)
+                else if (this.overallSW.ElapsedMilliseconds >= 243518 && this.overallSW.ElapsedMilliseconds < 243919)
                 {
                     newHeight = 350;
                     newWidth = 350;
-                    //  setX = avgBodyX - (newWidth / 2);
-                    //  setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
+                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
+                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 246000 && this.overallSW.ElapsedMilliseconds < 247000)
+
+                else if (this.overallSW.ElapsedMilliseconds >= 243919 && this.overallSW.ElapsedMilliseconds < 245902)
+                {
+                    newHeight = 400;
+                    newWidth = 400;
+                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
+                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
+
+                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
+                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
+                }
+                else if (this.overallSW.ElapsedMilliseconds >= 245902 && this.overallSW.ElapsedMilliseconds < 246757)
                 {
                     newHeight = 450;
                     newWidth = 450;
-                    //   setX = avgBodyX - (newWidth / 2);
-                    //   setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
+                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
+                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
                 }
 
-                else if (this.overallSW.ElapsedMilliseconds >= 247000 && this.overallSW.ElapsedMilliseconds < 248000)
+                else if (this.overallSW.ElapsedMilliseconds >= 246757 && this.overallSW.ElapsedMilliseconds < 247651)
                 {
                     newHeight = 525;
                     newWidth = 525;
-                    //   setX = avgBodyX - (newWidth / 2);
-                    //    setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
+                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
+                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 248000 && this.overallSW.ElapsedMilliseconds < 248500)
+                else if (this.overallSW.ElapsedMilliseconds >= 247651 && this.overallSW.ElapsedMilliseconds < 249581)
                 {
                     newHeight = 600;
                     newWidth = 600;
-                    // setX = avgBodyX - (newWidth / 2);
-                    // setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
+                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
+                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
                 }
 
-                else if (this.overallSW.ElapsedMilliseconds >= 248500 && this.overallSW.ElapsedMilliseconds < 249500)
+                else if (this.overallSW.ElapsedMilliseconds >= 249581 && this.overallSW.ElapsedMilliseconds < 249944)
                 {
                     newHeight =525 ;
                     newWidth = 525;
-                    // setX = avgBodyX - (newWidth / 2);
-                    //  setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
+                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
+                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
 
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 249500 && this.overallSW.ElapsedMilliseconds < 250000)
+                else if (this.overallSW.ElapsedMilliseconds >= 249944 && this.overallSW.ElapsedMilliseconds < 250294)
                 {
                     newHeight = 450;
                     newWidth = 450;
-                    //  setX = avgBodyX - (newWidth / 2);
-                    //    setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
+                    setX = jointPoints[JointType.Head].X - (3 * newWidth / 4);
+                    setY = jointPoints[JointType.Head].Y - (3 * newHeight / 4);
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
 
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 250000 && this.overallSW.ElapsedMilliseconds < 251250)
+                else if (this.overallSW.ElapsedMilliseconds >= 250294 && this.overallSW.ElapsedMilliseconds < 251770)
                 {
-                    newHeight =350;
-                    newWidth = 350;
-                    //setX = avgBodyX - (newWidth / 2);
-                    //setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2); 
+                    newHeight =400;
+                    newWidth = 400;
+                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
+                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 251250 && this.overallSW.ElapsedMilliseconds < 251750)
+                else if (this.overallSW.ElapsedMilliseconds >= 251770 && this.overallSW.ElapsedMilliseconds < 258000)
                 {
-                    newHeight = 200;
-                    newWidth = 200;
-                    //setX = avgBodyX - (newWidth / 2);
-                    //setY = avgBodyY - (newHeight / 2);
-
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 251750 && this.overallSW.ElapsedMilliseconds < 252000)
-                {
-                    newHeight = 100;
-                    newWidth = 100;
-                    // setX = avgBodyX - (newWidth / 2);
-                    //setY = avgBodyY - (newHeight / 2);
-
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 252000 && this.overallSW.ElapsedMilliseconds < 258000)
-                {
-                    newHeight = 50 ;
+                    newHeight = bodyHeight+200;
                     newWidth = 50;
-                    // setX = avgBodyX - (newWidth / 2);
-                    //  setY = avgBodyY - (newHeight / 2);
-                    setX = myHead.X - (newWidth / 2);
-                    setY = myHead.Y - (newHeight / 2);
+                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
+                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect1);
@@ -2102,7 +2068,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                       dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
                 }
 
-                else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 172000)
+                else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 176000)
                 {
                     p.Color = Color.FromArgb(50, opposingByte, opposingByte, colorByte);
 
@@ -2131,7 +2097,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 15, 15);
                     dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 172000)
+                else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 176000)
                 {
                     
                     p.Color = Color.FromArgb(50, colorByte, colorByte, opposingByte);
@@ -2161,7 +2127,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 15, 15);
                    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
                }
-               else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 172000)
+               else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 176000)
                {
                    
                    p.Color = Color.FromArgb(50, colorByte, opposingByte, opposingByte);
@@ -2194,7 +2160,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 emitters[1].Center = bodyCenter;
                 emitters[2].Center = rightFoot;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 172000)
+            else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 176000)
             {
                 if (rightSide == true && leftSide == false)
                 {
