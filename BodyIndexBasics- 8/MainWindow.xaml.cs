@@ -260,6 +260,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private bool rightSide;
         private bool onGround;
         private bool inAir;
+        private bool inProfile;
+        private bool topOfPoleGesture;
 
         Polygon bodyPoly = new Polygon();
         Rect bodyRect = new Rect();
@@ -477,9 +479,10 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             double millisecondsElapsed = mySW.ElapsedMilliseconds;
             mySW.Restart();
             //  Console.WriteLine(overallSW.ElapsedMilliseconds);
-            timeText.Text = this.minutes + ":" + this.seconds; 
+            string timeString = this.overallSW.ElapsedMilliseconds.ToString();
+            timeText.Text = timeString;
 
-            updateMondrianSquares(overallSW.ElapsedMilliseconds);
+            updateMondrianSquares();
 
             x1 = rnd.Next(10, 1520);
             y1 = rnd.Next(10, 860);
@@ -610,154 +613,158 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                         myLeftFoot = new Point(jointPoints[JointType.FootLeft].X + 15, jointPoints[JointType.FootLeft].Y + 15);
                                         #endregion
 
-                                        getAvgCoordinates();
 
-                                        getAvgVelocity();
-
-                                        // Console.WriteLine(avgVelocity);
-                                      //  Console.WriteLine(bodyHeight + " " + bodyWidth);
-                                      
-                                        bodyPolygon();
-                                        bodyRectangle();
-
-                                        #region check sideways and vertical movement
-                                        if (XYOriginPoint.X == -1000 && XYOriginPoint.Y  == -1000)
+                                        if (this.overallSW.ElapsedMilliseconds <= 263000)
                                         {
-                                            XYOriginPoint = new Point(avgXYZCoordinates[0], avgXYZCoordinates[1]);
-                                        }
-                                        else
-                                        {
-                                            Point updatedPoint = new Point(avgXYZCoordinates[0], avgXYZCoordinates[1]);
-                                            checkLeftRightMovement(XYOriginPoint, updatedPoint, avgXYZCoordinates[2]);
-                                            checkUpDownMovement(XYOriginPoint, updatedPoint, avgXYZCoordinates[2]);
-                                            XYOriginPoint = new Point(updatedPoint.X, updatedPoint.Y);
-                                        }
-                                        #endregion
+                                            getAvgCoordinates();
 
-                                        #region check for sweep movements
-                                        if (handRightOriginPt == notFoundPt || handLeftOriginPt == notFoundPt || footLeftOriginPt == notFoundPt || footRightOriginPt == notFoundPt)
-                                        {
-                                            handRightOriginPt = jointPoints[JointType.HandRight];
-                                            handLeftOriginPt = jointPoints[JointType.HandLeft];
-                                            footLeftOriginPt = jointPoints[JointType.FootLeft];
-                                            footRightOriginPt = jointPoints[JointType.FootRight];
-                                        }
-                                        else
-                                        {
-                                            checkForSweepMovement(handRightOriginPt, jointPoints[JointType.HandRight], handLeftOriginPt, jointPoints[JointType.HandLeft], footLeftOriginPt, jointPoints[JointType.FootLeft], footRightOriginPt, jointPoints[JointType.FootRight]);
-                                            handRightOriginPt = jointPoints[JointType.HandRight];
-                                            handLeftOriginPt = jointPoints[JointType.HandLeft];
-                                            footLeftOriginPt = jointPoints[JointType.FootLeft];
-                                            footRightOriginPt = jointPoints[JointType.FootRight];
-                                        }
-                                        #endregion 
+                                            getAvgVelocity();
 
-                                        bodyOrientation(jointPoints[JointType.HipLeft], jointPoints[JointType.HipRight], jointPoints[JointType.ShoulderLeft], jointPoints[JointType.ShoulderRight], jointPoints[JointType.FootLeft], jointPoints[JointType.FootRight]);
+                                             Console.WriteLine(avgVelocity);
+                                            //  Console.WriteLine(bodyHeight + " " + bodyWidth);
 
-                                        this.DrawBody(joints, jointPoints, otherPoints, dc, new Pen(new SolidColorBrush( Color.FromArgb(255, 225, 60, 255) ), 5));
-                                       this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc, true);
-                                       this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc, false);
-                                       
-                                       getRegionOccupied();
-                                       updateRegionSquares();
+                                            bodyPolygon();
+                                            bodyRectangle();
 
-                                        //if (this.overallSW.ElapsedMilliseconds >= 67552)
-                                        if (this.overallSW.ElapsedMilliseconds >= 106000 )
-                                        {
-
-                                            #region particle emitters
-                                            updateParticleEmitters(jointPoints[JointType.Head],
-                                                jointPoints[JointType.SpineBase],
-                                                jointPoints[JointType.FootRight],
-                                                otherPoints[JointType.Head],
-                                                otherPoints[JointType.SpineBase],
-                                                otherPoints[JointType.FootRight],
-                                                dc);
-
-                                            if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 172000)
+                                            #region check sideways and vertical movement
+                                            if (XYOriginPoint.X == -1000 && XYOriginPoint.Y == -1000)
                                             {
-
-                                                if (this.overallSW.ElapsedMilliseconds % 300 >= 0 && this.overallSW.ElapsedMilliseconds % 300 <= 50)
-                                                {
-                                                    if (colorByte >= 255)
-                                                    {
-                                                        colorByte = 255;
-                                                    }
-                                                    else
-                                                    {
-                                                        colorByte += 1;
-                                                    }
-
-                                                    if (opposingByte <= 0)
-                                                    {
-                                                        opposingByte = 0;
-                                                    }
-                                                    else
-                                                    {
-                                                        opposingByte -= 1;
-                                                    }
-
-                                                    if (greyByte >= 255)
-                                                    {
-                                                        greyByte = 255;
-                                                    }
-                                                    else
-                                                    {
-                                                        greyByte += 1;
-                                                    }
-
-                                                    if (greyByte1 >= 255)
-                                                    {
-                                                        greyByte1 = 255;
-                                                    }
-                                                    else
-                                                    {
-                                                        greyByte1 += 1;
-                                                    }
-
-                                                    if (greyByte2 <= 0)
-                                                    {
-                                                        greyByte2 = 0;
-                                                    }
-                                                    else
-                                                    {
-                                                        greyByte2 -= 1;
-                                                    }
-                                                    
-                                                }
+                                                XYOriginPoint = new Point(avgXYZCoordinates[0], avgXYZCoordinates[1]);
+                                            }
+                                            else
+                                            {
+                                                Point updatedPoint = new Point(avgXYZCoordinates[0], avgXYZCoordinates[1]);
+                                                checkLeftRightMovement(XYOriginPoint, updatedPoint, avgXYZCoordinates[2]);
+                                                checkUpDownMovement(XYOriginPoint, updatedPoint, avgXYZCoordinates[2]);
+                                                XYOriginPoint = new Point(updatedPoint.X, updatedPoint.Y);
                                             }
                                             #endregion
-                                        }
 
-                                        if (this.overallSW.ElapsedMilliseconds < 62782)
-                                        {
-                                            myBGCanvas.Background = new SolidColorBrush(Colors.White);
-                                        }
-                                        else if (this.overallSW.ElapsedMilliseconds >= 62782 && this.overallSW.ElapsedMilliseconds < 106000)
-                                        {
-
-                                            if (inAir == true && onGround == false)
+                                            #region check for sweep movements
+                                            if (handRightOriginPt == notFoundPt || handLeftOriginPt == notFoundPt || footLeftOriginPt == notFoundPt || footRightOriginPt == notFoundPt)
                                             {
-                                                myBGCanvas.Background = new SolidColorBrush(Colors.Black);
+                                                handRightOriginPt = jointPoints[JointType.HandRight];
+                                                handLeftOriginPt = jointPoints[JointType.HandLeft];
+                                                footLeftOriginPt = jointPoints[JointType.FootLeft];
+                                                footRightOriginPt = jointPoints[JointType.FootRight];
                                             }
-                                            else if (inAir == false && onGround == true)
+                                            else
+                                            {
+                                                checkForSweepMovement(handRightOriginPt, jointPoints[JointType.HandRight], handLeftOriginPt, jointPoints[JointType.HandLeft], footLeftOriginPt, jointPoints[JointType.FootLeft], footRightOriginPt, jointPoints[JointType.FootRight]);
+                                                handRightOriginPt = jointPoints[JointType.HandRight];
+                                                handLeftOriginPt = jointPoints[JointType.HandLeft];
+                                                footLeftOriginPt = jointPoints[JointType.FootLeft];
+                                                footRightOriginPt = jointPoints[JointType.FootRight];
+                                            }
+                                            #endregion
+
+                                            bodyOrientation(jointPoints[JointType.HipLeft], jointPoints[JointType.HipRight], jointPoints[JointType.ShoulderLeft], jointPoints[JointType.ShoulderRight], jointPoints[JointType.FootLeft], jointPoints[JointType.FootRight]);
+
+                                            this.DrawBody(joints, jointPoints, otherPoints, dc, new Pen(new SolidColorBrush(Color.FromArgb(255, 225, 60, 255)), 5));
+                                            this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc, true);
+                                            this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc, false);
+
+                                            getRegionOccupied();
+                                            updateRegionSquares();
+
+                                            //if (this.overallSW.ElapsedMilliseconds >= 67552)
+                                            if (this.overallSW.ElapsedMilliseconds >= 106000)
+                                            {
+
+                                                #region particle emitters
+                                                updateParticleEmitters(jointPoints[JointType.Head],
+                                                    jointPoints[JointType.SpineBase],
+                                                    jointPoints[JointType.FootRight],
+                                                    otherPoints[JointType.Head],
+                                                    otherPoints[JointType.SpineBase],
+                                                    otherPoints[JointType.FootRight],
+                                                    dc);
+
+                                                if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 172000)
+                                                {
+
+                                                    if (this.overallSW.ElapsedMilliseconds % 300 >= 0 && this.overallSW.ElapsedMilliseconds % 300 <= 50)
+                                                    {
+                                                        if (colorByte >= 255)
+                                                        {
+                                                            colorByte = 255;
+                                                        }
+                                                        else
+                                                        {
+                                                            colorByte += 1;
+                                                        }
+
+                                                        if (opposingByte <= 0)
+                                                        {
+                                                            opposingByte = 0;
+                                                        }
+                                                        else
+                                                        {
+                                                            opposingByte -= 1;
+                                                        }
+
+                                                        if (greyByte >= 255)
+                                                        {
+                                                            greyByte = 255;
+                                                        }
+                                                        else
+                                                        {
+                                                            greyByte += 1;
+                                                        }
+
+                                                        if (greyByte1 >= 255)
+                                                        {
+                                                            greyByte1 = 255;
+                                                        }
+                                                        else
+                                                        {
+                                                            greyByte1 += 1;
+                                                        }
+
+                                                        if (greyByte2 <= 0)
+                                                        {
+                                                            greyByte2 = 0;
+                                                        }
+                                                        else
+                                                        {
+                                                            greyByte2 -= 1;
+                                                        }
+
+                                                    }
+                                                }
+                                                #endregion
+                                            }
+
+                                            if (this.overallSW.ElapsedMilliseconds < 62782)
                                             {
                                                 myBGCanvas.Background = new SolidColorBrush(Colors.White);
                                             }
-                                        }
-                                        else if (this.overallSW.ElapsedMilliseconds >= 106000 && this.overallSW.ElapsedMilliseconds < 216000)
-                                        {
-                                            myBGCanvas.Background = new SolidColorBrush(Colors.White);
-                                        }
-                                        else if (this.overallSW.ElapsedMilliseconds >= 216000 && this.overallSW.ElapsedMilliseconds < 240000)
-                                        {
-                                           
+                                            else if (this.overallSW.ElapsedMilliseconds >= 62782 && this.overallSW.ElapsedMilliseconds < 106000)
+                                            {
+
+                                                if (inAir == true && onGround == false)
+                                                {
+                                                    myBGCanvas.Background = new SolidColorBrush(Colors.Black);
+                                                }
+                                                else if (inAir == false && onGround == true)
+                                                {
+                                                    myBGCanvas.Background = new SolidColorBrush(Colors.White);
+                                                }
+                                            }
+                                            else if (this.overallSW.ElapsedMilliseconds >= 106000 && this.overallSW.ElapsedMilliseconds < 216000)
+                                            {
                                                 myBGCanvas.Background = new SolidColorBrush(Colors.White);
-                                            
-                                        }
-                                        else if (this.overallSW.ElapsedMilliseconds >= 240000 && this.overallSW.ElapsedMilliseconds < 263000)
-                                        {
-                                            myBGCanvas.Background = blackBrush;
+                                            }
+                                            else if (this.overallSW.ElapsedMilliseconds >= 216000 && this.overallSW.ElapsedMilliseconds < 240000)
+                                            {
+
+                                                myBGCanvas.Background = new SolidColorBrush(Colors.White);
+
+                                            }
+                                            else if (this.overallSW.ElapsedMilliseconds >= 240000 && this.overallSW.ElapsedMilliseconds < 263000)
+                                            {
+                                                myBGCanvas.Background = blackBrush;
+                                            }
                                         }
                                         else
                                         {
@@ -941,23 +948,32 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 drawPen = drawingPen;
             }
 
-            drawingContext.DrawLine(drawPen, jointPoints[jointType0], jointPoints[jointType1]);
+           // drawingContext.DrawLine(drawPen, jointPoints[jointType0], jointPoints[jointType1]);
 
-            drawingContext.DrawEllipse(new SolidColorBrush(Colors.Fuchsia), null, new Point(bodyXMax, bodyYMin), 10, 10);
-            drawingContext.DrawEllipse(new SolidColorBrush(Colors.Firebrick), null, new Point(bodyXMin, bodyYMin), 10, 10);
-            drawingContext.DrawEllipse(new SolidColorBrush(Colors.LimeGreen), null, new Point(bodyXMin, bodyYMax), 10, 10);
-            drawingContext.DrawEllipse(new SolidColorBrush(Colors.Coral), null, new Point(bodyXMax, bodyYMax), 10, 10);
-            drawingContext.DrawEllipse(redBrush, null, upperExtreme, 10, 10);
-            drawingContext.DrawEllipse(blueBrush, null, lowerExtreme, 10, 10);
-            drawingContext.DrawEllipse(yellowBrush, null, rightExtreme, 10, 10);
-            drawingContext.DrawEllipse(yellowBrush, null, leftExtreme, 10, 10);
+            //drawingContext.DrawEllipse(new SolidColorBrush(Colors.Fuchsia), null, new Point(bodyXMax, bodyYMin), 10, 10);
+            //drawingContext.DrawEllipse(new SolidColorBrush(Colors.Firebrick), null, new Point(bodyXMin, bodyYMin), 10, 10);
+            //drawingContext.DrawEllipse(new SolidColorBrush(Colors.LimeGreen), null, new Point(bodyXMin, bodyYMax), 10, 10);
+            //drawingContext.DrawEllipse(new SolidColorBrush(Colors.Coral), null, new Point(bodyXMax, bodyYMax), 10, 10);
+            //drawingContext.DrawEllipse(redBrush, null, upperExtreme, 10, 10);
+            //drawingContext.DrawEllipse(blueBrush, null, lowerExtreme, 10, 10);
+            //drawingContext.DrawEllipse(yellowBrush, null, rightExtreme, 10, 10);
+            //drawingContext.DrawEllipse(yellowBrush, null, leftExtreme, 10, 10);
 
             double xMidPoint = jointPoints[jointType0].X + jointPoints[jointType1].X / 2;
             double yMidPoint = jointPoints[jointType0].Y + jointPoints[jointType1].Y / 2;
             double length = Math.Sqrt(Math.Pow(jointPoints[jointType0].X - jointPoints[jointType1].X, 2) + Math.Pow(jointPoints[jointType0].Y - jointPoints[jointType1].Y, 2));
 
             //rectangle dancers
-            if (this.overallSW.ElapsedMilliseconds > 12000 && this.overallSW.ElapsedMilliseconds < 36500)
+            if(this.overallSW.ElapsedMilliseconds <= 12000 )
+            {
+                if(inProfile == true)
+                {
+                    drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 115, 115, 115)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X, jointPoints[jointType0].Y - 450), new Point(jointPoints[jointType1].X, jointPoints[jointType1].Y - 450)));
+                    drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 145, 145, 145)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X + 175, jointPoints[jointType0].Y - 50), new Point(jointPoints[jointType1].X + 175, jointPoints[jointType1].Y - 50)));
+                    drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 145, 145, 145)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X - 175, jointPoints[jointType0].Y - 50), new Point(jointPoints[jointType1].X - 175, jointPoints[jointType1].Y - 50)));
+                }
+            }
+            else if (this.overallSW.ElapsedMilliseconds > 12000 && this.overallSW.ElapsedMilliseconds < 36500)
             {
                 drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 115, 115, 115)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X, jointPoints[jointType0].Y - 450), new Point(jointPoints[jointType1].X, jointPoints[jointType1].Y - 450)));
                 drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 145, 145, 145)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X + 175, jointPoints[jointType0].Y - 50), new Point(jointPoints[jointType1].X + 175, jointPoints[jointType1].Y - 50)));
@@ -1119,8 +1135,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             else if (this.overallSW.ElapsedMilliseconds >= 168000 && this.overallSW.ElapsedMilliseconds < 180000)
             {
                 Rectangle myBodyRectangle = new Rectangle();
-                myBodyRectangle.Width = bodyWidth;
-                myBodyRectangle.Height = bodyHeight;
+                myBodyRectangle.Width = bodyWidth + 50;
+                myBodyRectangle.Height = bodyHeight + 50;
                 myBodyRectangle.StrokeThickness = 10;
 
                 //   if ((this.overallSW.ElapsedMilliseconds % 2000) >= 0 && (this.overallSW.ElapsedMilliseconds % 2000) <= 100)
@@ -1171,33 +1187,22 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             //crazy polygons during stillness
             else if (this.overallSW.ElapsedMilliseconds >= 194000 && this.overallSW.ElapsedMilliseconds <= 214000)
             {
-                Polygon myBodyPoly = new Polygon();
-                PointCollection myBodyPolyPoints = new PointCollection();
-
-                myBodyPolyPoints.Add(jointPoints[JointType.Head]);
-                myBodyPolyPoints.Add(jointPoints[JointType.SpineShoulder]);
-                myBodyPolyPoints.Add(jointPoints[JointType.SpineBase]);
-                myBodyPolyPoints.Add(jointPoints[JointType.HipLeft]);
-                myBodyPolyPoints.Add(jointPoints[JointType.KneeRight]);
-                myBodyPolyPoints.Add(jointPoints[JointType.AnkleLeft]);
-                myBodyPolyPoints.Add(jointPoints[JointType.FootRight]);
-                myBodyPolyPoints.Add(jointPoints[JointType.KneeLeft]);
-                myBodyPolyPoints.Add(jointPoints[JointType.HandLeft]);
-                myBodyPolyPoints.Add(jointPoints[JointType.ElbowLeft]);
-                myBodyPolyPoints.Add(jointPoints[JointType.SpineMid]);
-
-                myBodyPoly.Points = myBodyPolyPoints;
-
+                Line myLine = new Line();
+                myLine.X1 = jointPoints[jointType0].X;
+                myLine.Y1 = jointPoints[jointType0].Y;
+                myLine.X2 = jointPoints[jointType1].X;
+                myLine.Y2 = jointPoints[jointType1].Y;
+                
                 byte r = Convert.ToByte(avgXYZCoordinates[0] % 255);
                 byte g = Convert.ToByte(avgXYZCoordinates[1] % 255);
                 byte b = Convert.ToByte((avgXYZCoordinates[2] * 100) % 255);
-                myBodyPoly.Stroke = new SolidColorBrush(Color.FromArgb(150, r, g, b));
-                myBodyPoly.StrokeThickness = 5;
+                myLine.Stroke = new SolidColorBrush(Color.FromArgb(150, r, g, b));
+                myLine.StrokeThickness = 5;
 
                 //  if ((this.overallSW.ElapsedMilliseconds % 2000) >= 0 && (this.overallSW.ElapsedMilliseconds % 2000) <= 100)
                 if (avgVelocity <= 15)
                 {
-                    myCanvas.Children.Add(myBodyPoly);
+                    myCanvas.Children.Add(myLine);
                 }
             }
             else if (this.overallSW.ElapsedMilliseconds > 214000 && this.overallSW.ElapsedMilliseconds < 216000)
@@ -1279,21 +1284,32 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             //ending rectangle
             else if (this.overallSW.ElapsedMilliseconds >= 240500 && this.overallSW.ElapsedMilliseconds < 258000)
             {
+                byte gradientByte = 255;
 
                 if (this.overallSW.ElapsedMilliseconds >= 240500 && this.overallSW.ElapsedMilliseconds < 251770)
                 {
-                    Rect endRect = new Rect(bodyXMin, bodyYMin, bodyWidth, bodyHeight);
+                    Rect endRect = new Rect(bodyXMin, bodyYMin, bodyWidth+50, bodyHeight+50);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect);
                 }
                 else if (this.overallSW.ElapsedMilliseconds >= 251770 && this.overallSW.ElapsedMilliseconds < 258000)
                 {
-                    newHeight = bodyHeight + 200;
+                    if (this.overallSW.ElapsedMilliseconds % 25 == 20)
+                    {
+                        if (gradientByte > 0)
+                        {
+                            gradientByte -= 1;
+                        }
+                    }
+
+                    newHeight = 873;
                     newWidth = 50;
                     setX = jointPoints[JointType.Head].X - (newWidth / 2);
                     setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
+                    SolidColorBrush endRectBrush = new SolidColorBrush(Color.FromArgb(gradientByte, 255, 255, 255));
+
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
+                    drawingContext.DrawRectangle(endRectBrush, null, endRect1);
                 }
             }
             #endregion
@@ -1364,7 +1380,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     rightHandRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, gradientByte));
                 }
             }
-            else if (overallSW.ElapsedMilliseconds >= 53500 && overallSW.ElapsedMilliseconds < 62758)
+            else if ((overallSW.ElapsedMilliseconds >= 53500 || topOfPoleGesture == true) && overallSW.ElapsedMilliseconds < 62758)
             {
                 leftHandRect.Fill = blueBrush;
                 rightHandRect.Fill = yellowBrush;
@@ -1454,7 +1470,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 total2 += v;
             }
 
-            avgVelocity = 100*Math.Abs((total1 + total2) / (length * 2));
+            avgVelocity = 100*Math.Abs((total1/25 + total2/25)/2 );
 
 
             if (avgVelocity >= 255)
@@ -1478,7 +1494,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             {
                 velocityRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, colorByte, colorByte));
             }
-            else if (overallSW.ElapsedMilliseconds >= 53500 && overallSW.ElapsedMilliseconds < 62758)
+            else if ((overallSW.ElapsedMilliseconds >= 53500 || topOfPoleGesture == true) && overallSW.ElapsedMilliseconds < 62758)
             {
                 velocityRect.Fill = redBrush;
             }
@@ -1576,6 +1592,15 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             }
 
+           if ( avgXYZCoordinates[1] < 300  && Math.Abs(bodyXMax - bodyYMin) > 300 )
+            {
+                topOfPoleGesture = true;
+            }
+           else
+            {
+                topOfPoleGesture = false; 
+            }
+
         }
         #endregion
 
@@ -1668,7 +1693,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 yregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, yByte));
                 zregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, zByte, zByte, 255));
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 53500 && this.overallSW.ElapsedMilliseconds < 62758)
+            else if ((this.overallSW.ElapsedMilliseconds >= 53500 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 62758)
             {
                 xregionColorRect.Fill = redBrush;
                 yregionColorRect.Fill = yellowBrush;
@@ -1689,9 +1714,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             //   double xRange = 0.6153 * distance;
             double xRange = 1537;
             double displacement = oldPoint.X - newPoint.X;
-
-         //   Console.WriteLine(oldPoint.X + " " + newPoint.X + " " + displacement + " " + xRange / 100);
-
+            
             if (displacement > xRange/100)
             {
                 leftMovement = true;
@@ -1708,7 +1731,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 rightMovement = false;
             }
 
-            byte gradientByte = Convert.ToByte(checkDoubleForByteConversion(255 - (Math.Abs(displacement)*100)));
+            byte gradientByte = Convert.ToByte(checkDoubleForByteConversion(255 - (Math.Abs(displacement)* 20)));
+
+          //  Console.WriteLine("Left right movements: " + oldPoint.X + "-" + newPoint.X + "=" + displacement + ", " + xRange / 100);
+          //  Console.WriteLine("Byte: " + (255 - (Math.Abs(displacement) * 20)));
+          //  Console.WriteLine();
 
             if (this.overallSW.ElapsedMilliseconds < 12050)
             {
@@ -1723,7 +1750,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 sidewaysMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, gradientByte));
 
             }
-            else if (this.overallSW.ElapsedMilliseconds > 53500 && this.overallSW.ElapsedMilliseconds < 62758)
+            else if ((this.overallSW.ElapsedMilliseconds > 53500 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 62758)
             {
                 sidewaysMvmtRect.Fill = yellowBrush;
             }
@@ -1740,31 +1767,26 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             double yRange = 873;
          //   double yRange = 0.4615 * distance;
             double displacement = oldPoint.Y - newPoint.Y;
-            bool up;
-            bool down;
-            
+
+           // Console.WriteLine("Up Down movements: " + oldPoint.Y + "-" + newPoint.Y + "=" + displacement + ", " + yRange / 100);
+           // Console.WriteLine("Byte: " + (255 - (Math.Abs(displacement) * 20)));
+           // Console.WriteLine("");
 
             if (displacement > yRange / 100 )
             {
-                up = true;
-                down = false;
                 upwardMovement = true;
             }
             else if (displacement < -(yRange / 100))
             {
-                up = false;
-                down = true;
                 downwardMovement = true; 
             }
             else
             {
-                up = false;
-                down = false;
                 upwardMovement = false;
                 downwardMovement = false;
             }
 
-            double toBecomeByte = checkDoubleForByteConversion(255 - (Math.Abs(displacement) * 50));
+            double toBecomeByte = checkDoubleForByteConversion(255 - (Math.Abs(displacement) * 20));
 
             byte gradientByte = Convert.ToByte(toBecomeByte);
 
@@ -1780,7 +1802,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             {
                 verticalMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, gradientByte, gradientByte));
             }
-            else if (this.overallSW.ElapsedMilliseconds > 53500 && this.overallSW.ElapsedMilliseconds < 62758)
+            else if ((this.overallSW.ElapsedMilliseconds > 53500 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 62758)
             {
                 verticalMvmtRect.Fill = redBrush;
             }
@@ -1841,7 +1863,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 footLeftSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, LFByte, LFByte, 255));
                 footRightSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, RFByte));
             }
-            else if (this.overallSW.ElapsedMilliseconds > 53500 && this.overallSW.ElapsedMilliseconds < 62758)
+            else if ((this.overallSW.ElapsedMilliseconds > 53500 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 62758)
             {
                 handLeftSweepXRect.Fill = blueBrush;
                 handLeftSweepYRect.Fill = redBrush;
@@ -1859,8 +1881,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 footLeftSweepRect.Fill = whiteBrush;
                 footRightSweepRect.Fill = whiteBrush;
             }
-
-
+            
         }
         #endregion
 
@@ -1872,7 +1893,19 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             double shoulderDist = 0.6 * ((shoulderRight.X - shoulderLeft.X) * avgXYZCoordinates[2]);
 
             double displacement = ((hipDist * 2) + shoulderDist) / 2;
- 
+
+            if (Math.Abs(displacement) < 112)
+            {
+                inProfile = true;
+            }
+            else
+            {
+                inProfile = false;
+            }
+
+            //Console.WriteLine("Orientation displacement: " + displacement);
+            //Console.WriteLine("");
+
             double toBecomeByte = checkDoubleForByteConversion((Math.Abs(displacement) * 4.0));
             
             byte gradientByte = Convert.ToByte(toBecomeByte);
@@ -1889,7 +1922,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             {
                 orientationRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, 255));
             }
-            else if (this.overallSW.ElapsedMilliseconds > 53500 && this.overallSW.ElapsedMilliseconds < 62758)
+            else if ((this.overallSW.ElapsedMilliseconds > 53500 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 62758)
             {
                 orientationRect.Fill = yellowBrush;
             }
@@ -2069,10 +2102,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         }
         #endregion
 
-        private void updateMondrianSquares(double milliseconds)
+        private void updateMondrianSquares()
         {
             #region stroke
-            if (milliseconds < 507)
+           
+            if (this.overallSW.ElapsedMilliseconds < 507)
             {
                 xregionColorRect.Stroke = whiteBrush;
                 yregionColorRect.Stroke = whiteBrush;
@@ -2090,7 +2124,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 507 && milliseconds < 1308)
+            else if (this.overallSW.ElapsedMilliseconds >= 507 && this.overallSW.ElapsedMilliseconds < 1308)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = whiteBrush;
@@ -2108,7 +2142,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 1308 && milliseconds < 2028)
+            else if (this.overallSW.ElapsedMilliseconds >= 1308 && this.overallSW.ElapsedMilliseconds < 2028)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2126,7 +2160,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 2028 && milliseconds < 2775)
+            else if (this.overallSW.ElapsedMilliseconds >= 2028 && this.overallSW.ElapsedMilliseconds < 2775)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2144,7 +2178,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 2775 && milliseconds < 4616)
+            else if (this.overallSW.ElapsedMilliseconds >= 2775 && this.overallSW.ElapsedMilliseconds < 4616)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2162,7 +2196,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 4616 && milliseconds < 5604)
+            else if (this.overallSW.ElapsedMilliseconds >= 4616 && this.overallSW.ElapsedMilliseconds < 5604)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2180,7 +2214,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 5604 && milliseconds < 5750)
+            else if (this.overallSW.ElapsedMilliseconds >= 5604 && this.overallSW.ElapsedMilliseconds < 5750)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2198,7 +2232,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 5750 && milliseconds < 6137)
+            else if (this.overallSW.ElapsedMilliseconds >= 5750 && this.overallSW.ElapsedMilliseconds < 6137)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2216,7 +2250,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 6137 && milliseconds < 6524)
+            else if (this.overallSW.ElapsedMilliseconds >= 6137 && this.overallSW.ElapsedMilliseconds < 6524)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2234,7 +2268,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 6524 && milliseconds < 7298)
+            else if (this.overallSW.ElapsedMilliseconds >= 6524 && this.overallSW.ElapsedMilliseconds < 7298)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2252,7 +2286,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 7298 && milliseconds < 8045)
+            else if (this.overallSW.ElapsedMilliseconds >= 7298 && this.overallSW.ElapsedMilliseconds < 8045)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2270,7 +2304,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 8045 && milliseconds < 8792)
+            else if (this.overallSW.ElapsedMilliseconds >= 8045 && this.overallSW.ElapsedMilliseconds < 8792)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2288,7 +2322,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (milliseconds >= 8792 && milliseconds < 10620)
+            else if (this.overallSW.ElapsedMilliseconds >= 8792 && this.overallSW.ElapsedMilliseconds < 10620)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2306,7 +2340,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = blackBrush;
             }
-            else if (milliseconds >= 10620 && milliseconds < 11621)
+            else if (this.overallSW.ElapsedMilliseconds >= 10620 && this.overallSW.ElapsedMilliseconds < 11621)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2324,7 +2358,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = blackBrush;
                 orientationRect.Stroke = blackBrush;
             }
-            else if (milliseconds >= 11621 && milliseconds < 11781)
+            else if (this.overallSW.ElapsedMilliseconds >= 11621 && this.overallSW.ElapsedMilliseconds < 11781)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2342,7 +2376,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = blackBrush;
                 orientationRect.Stroke = blackBrush;
             }
-            else if (milliseconds >= 11781 && milliseconds < 62758)
+            else if (this.overallSW.ElapsedMilliseconds >= 11781 && this.overallSW.ElapsedMilliseconds < 62758)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2360,7 +2394,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = blackBrush;
                 orientationRect.Stroke = blackBrush;
             }
-            else if (milliseconds >= 62758)
+            else if (this.overallSW.ElapsedMilliseconds >= 62758)
             {
                 xregionColorRect.Stroke = whiteBrush;
                 yregionColorRect.Stroke = whiteBrush;
@@ -2738,6 +2772,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             overallSW.Reset();
             overallSW.Start();
         }
+
+        private void timerStartButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.overallSW.Start();
+        }
         #endregion
 
         #region Sensor change event handler
@@ -2795,10 +2834,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         }
         #endregion
 
-        private void timerStartButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.overallSW.Start();
-        }
+       
         
     }
 
