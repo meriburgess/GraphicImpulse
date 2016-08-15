@@ -565,8 +565,8 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                             }
 
                                             DepthSpacePoint depthSpacePoint = this.coordinateMapper.MapCameraPointToDepthSpace(position);
-                                            jointPoints[jointType] = new Point(((this.displayWidth - depthSpacePoint.X) - 570) * 2.5, (depthSpacePoint.Y + 80) * 2.5);
-                                            otherPoints[jointType] = new Point(depthSpacePoint.X * 2.5, (depthSpacePoint.Y + 80) * 2.5);
+                                            jointPoints[jointType] = new Point(((this.displayWidth - depthSpacePoint.X) - 570) * 2.5, (depthSpacePoint.Y + 80) * 2.25);
+                                            otherPoints[jointType] = new Point(depthSpacePoint.X * 2.5, (depthSpacePoint.Y + 80) * 2.25);
 
                                             //If first coordinates for velocity have not been established yet, assign current coordinates 
                                             if (oldPositions[jointType].X == -10 && oldPositions[jointType].Y == -10)
@@ -1280,137 +1280,14 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             else if (this.overallSW.ElapsedMilliseconds >= 240500 && this.overallSW.ElapsedMilliseconds < 258000)
             {
 
-
-                if (this.overallSW.ElapsedMilliseconds >= 240512 && this.overallSW.ElapsedMilliseconds < 240888)
+                if (this.overallSW.ElapsedMilliseconds >= 240500 && this.overallSW.ElapsedMilliseconds < 251770)
                 {
-                    newHeight = 85;
-                    newWidth = 85;
-                    setX = jointPoints[JointType.Head].X - (3 * newWidth / 4);
-                    setY = jointPoints[JointType.Head].Y - (3 * newHeight / 4);
-
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 240888 && this.overallSW.ElapsedMilliseconds < 241186)
-                {
-                    newHeight = 125;
-                    newWidth = 125;
-                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
-                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 241186 && this.overallSW.ElapsedMilliseconds < 243194)
-                {
-                    newHeight = 175;
-                    newWidth = 175;
-                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
-                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-
-                else if (this.overallSW.ElapsedMilliseconds >= 243194 && this.overallSW.ElapsedMilliseconds < 243518)
-                {
-                    newHeight = 250;
-                    newWidth = 250;
-                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
-                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 243518 && this.overallSW.ElapsedMilliseconds < 243919)
-                {
-                    newHeight = 350;
-                    newWidth = 350;
-                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
-                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-
-                else if (this.overallSW.ElapsedMilliseconds >= 243919 && this.overallSW.ElapsedMilliseconds < 245902)
-                {
-                    newHeight = 400;
-                    newWidth = 400;
-                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
-                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 245902 && this.overallSW.ElapsedMilliseconds < 246757)
-                {
-                    newHeight = 450;
-                    newWidth = 450;
-                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
-                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-
-                else if (this.overallSW.ElapsedMilliseconds >= 246757 && this.overallSW.ElapsedMilliseconds < 247651)
-                {
-                    newHeight = 525;
-                    newWidth = 525;
-                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
-                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 247651 && this.overallSW.ElapsedMilliseconds < 249581)
-                {
-                    newHeight = 600;
-                    newWidth = 600;
-                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
-                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-                }
-
-                else if (this.overallSW.ElapsedMilliseconds >= 249581 && this.overallSW.ElapsedMilliseconds < 249944)
-                {
-                    newHeight =525 ;
-                    newWidth = 525;
-                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
-                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 249944 && this.overallSW.ElapsedMilliseconds < 250294)
-                {
-                    newHeight = 450;
-                    newWidth = 450;
-                    setX = jointPoints[JointType.Head].X - (3 * newWidth / 4);
-                    setY = jointPoints[JointType.Head].Y - (3 * newHeight / 4);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
-
-                }
-                else if (this.overallSW.ElapsedMilliseconds >= 250294 && this.overallSW.ElapsedMilliseconds < 251770)
-                {
-                    newHeight =400;
-                    newWidth = 400;
-                    setX = jointPoints[JointType.Head].X - (newWidth / 2);
-                    setY = jointPoints[JointType.Head].Y - (newHeight / 2);
-
-                    Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
-                    drawingContext.DrawRectangle(whitestBrush, null, endRect1);
+                    Rect endRect = new Rect(bodyXMin, bodyYMin, bodyWidth, bodyHeight);
+                    drawingContext.DrawRectangle(whitestBrush, null, endRect);
                 }
                 else if (this.overallSW.ElapsedMilliseconds >= 251770 && this.overallSW.ElapsedMilliseconds < 258000)
                 {
-                    newHeight = bodyHeight+200;
+                    newHeight = bodyHeight + 200;
                     newWidth = 50;
                     setX = jointPoints[JointType.Head].X - (newWidth / 2);
                     setY = jointPoints[JointType.Head].Y - (newHeight / 2);
