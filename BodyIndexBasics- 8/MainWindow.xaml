@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="" 
         Height="873.695" Width="1537.792" 
-        Closing="MainWindow_Closing" BorderBrush="Black" WindowStartupLocation="CenterScreen" Background="Black" WindowStyle="None">
+        Closing="MainWindow_Closing" BorderBrush="Black" WindowStartupLocation="CenterScreen" Background="Black">
     <Window.Resources>
         <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
         <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f" />

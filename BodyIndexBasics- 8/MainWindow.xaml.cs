@@ -281,6 +281,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private byte greyByte = 0;
         private byte greyByte1 = 100;
         private byte greyByte2 = 100;
+        private byte gradientByteForEnd = 255;
 
         #endregion
 
@@ -620,7 +621,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                                             getAvgVelocity();
 
-                                             Console.WriteLine(avgVelocity);
+                                         //    Console.WriteLine(avgVelocity);
                                             //  Console.WriteLine(bodyHeight + " " + bodyWidth);
 
                                             bodyPolygon();
@@ -1284,7 +1285,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             //ending rectangle
             else if (this.overallSW.ElapsedMilliseconds >= 240500 && this.overallSW.ElapsedMilliseconds < 258000)
             {
-                byte gradientByte = 255;
+                
 
                 if (this.overallSW.ElapsedMilliseconds >= 240500 && this.overallSW.ElapsedMilliseconds < 251770)
                 {
@@ -1293,11 +1294,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 }
                 else if (this.overallSW.ElapsedMilliseconds >= 251770 && this.overallSW.ElapsedMilliseconds < 258000)
                 {
-                    if (this.overallSW.ElapsedMilliseconds % 25 == 20)
+                    if (this.overallSW.ElapsedMilliseconds % 25 >= 20 && this.overallSW.ElapsedMilliseconds % 25 <= 35)
                     {
-                        if (gradientByte > 0)
+                        if (gradientByteForEnd > 0)
                         {
-                            gradientByte -= 1;
+                            gradientByteForEnd -= 1;
                         }
                     }
 
@@ -1306,7 +1307,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     setX = jointPoints[JointType.Head].X - (newWidth / 2);
                     setY = jointPoints[JointType.Head].Y - (newHeight / 2);
 
-                    SolidColorBrush endRectBrush = new SolidColorBrush(Color.FromArgb(gradientByte, 255, 255, 255));
+                    SolidColorBrush endRectBrush = new SolidColorBrush(Color.FromArgb(gradientByteForEnd, 255, 255, 255));
 
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(endRectBrush, null, endRect1);
@@ -1592,7 +1593,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             }
 
-           if ( avgXYZCoordinates[1] < 300  && Math.Abs(bodyXMax - bodyYMin) > 300 )
+
+            Console.WriteLine(avgXYZCoordinates[1] + " " + bodyWidth);
+           if ( avgXYZCoordinates[1] < 350  && Math.Abs(bodyXMax - bodyYMin) > 230 )
             {
                 topOfPoleGesture = true;
             }
