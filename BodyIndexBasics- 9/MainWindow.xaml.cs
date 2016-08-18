@@ -615,7 +615,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                         #endregion
 
 
-                                        if (this.overallSW.ElapsedMilliseconds <= 263000)
+                                        if (this.overallSW.ElapsedMilliseconds <= 261500)
                                         {
                                             getAvgCoordinates();
 
@@ -669,7 +669,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                             updateRegionSquares();
 
                                             //if (this.overallSW.ElapsedMilliseconds >= 67552)
-                                            if (this.overallSW.ElapsedMilliseconds >= 106000)
+                                            if (this.overallSW.ElapsedMilliseconds >= 104500)
                                             {
 
                                                 #region particle emitters
@@ -736,11 +736,11 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                                 #endregion
                                             }
 
-                                            if (this.overallSW.ElapsedMilliseconds < 62782)
+                                            if (this.overallSW.ElapsedMilliseconds < 61275)
                                             {
                                                 myBGCanvas.Background = new SolidColorBrush(Colors.White);
                                             }
-                                            else if (this.overallSW.ElapsedMilliseconds >= 62782 && this.overallSW.ElapsedMilliseconds < 106000)
+                                            else if (this.overallSW.ElapsedMilliseconds >= 61275 && this.overallSW.ElapsedMilliseconds < 104500)
                                             {
 
                                                 if (inAir == true && onGround == false)
@@ -752,17 +752,17 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                                                     myBGCanvas.Background = new SolidColorBrush(Colors.White);
                                                 }
                                             }
-                                            else if (this.overallSW.ElapsedMilliseconds >= 106000 && this.overallSW.ElapsedMilliseconds < 216000)
+                                            else if (this.overallSW.ElapsedMilliseconds >= 104500 && this.overallSW.ElapsedMilliseconds < 214500)
                                             {
                                                 myBGCanvas.Background = new SolidColorBrush(Colors.White);
                                             }
-                                            else if (this.overallSW.ElapsedMilliseconds >= 216000 && this.overallSW.ElapsedMilliseconds < 240000)
+                                            else if (this.overallSW.ElapsedMilliseconds >= 214500 && this.overallSW.ElapsedMilliseconds < 239850)
                                             {
 
                                                 myBGCanvas.Background = new SolidColorBrush(Colors.White);
 
                                             }
-                                            else if (this.overallSW.ElapsedMilliseconds >= 240000 && this.overallSW.ElapsedMilliseconds < 263000)
+                                            else if (this.overallSW.ElapsedMilliseconds >= 239850 && this.overallSW.ElapsedMilliseconds < 263000)
                                             {
                                                 myBGCanvas.Background = blackBrush;
                                             }
@@ -965,7 +965,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             double length = Math.Sqrt(Math.Pow(jointPoints[jointType0].X - jointPoints[jointType1].X, 2) + Math.Pow(jointPoints[jointType0].Y - jointPoints[jointType1].Y, 2));
 
             //rectangle dancers
-            if(this.overallSW.ElapsedMilliseconds <= 12000 )
+            if(this.overallSW.ElapsedMilliseconds <= 10493 )
             {
                 if(inProfile == true)
                 {
@@ -974,21 +974,21 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 145, 145, 145)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X - 175, jointPoints[jointType0].Y - 50), new Point(jointPoints[jointType1].X - 175, jointPoints[jointType1].Y - 50)));
                 }
             }
-            else if (this.overallSW.ElapsedMilliseconds > 12000 && this.overallSW.ElapsedMilliseconds < 36500)
+            else if (this.overallSW.ElapsedMilliseconds > 10493 && this.overallSW.ElapsedMilliseconds < 35000)
             {
                 drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 115, 115, 115)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X, jointPoints[jointType0].Y - 450), new Point(jointPoints[jointType1].X, jointPoints[jointType1].Y - 450)));
                 drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 145, 145, 145)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X + 175, jointPoints[jointType0].Y - 50), new Point(jointPoints[jointType1].X + 175, jointPoints[jointType1].Y - 50)));
                 drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(200, 145, 145, 145)), new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X - 175, jointPoints[jointType0].Y - 50), new Point(jointPoints[jointType1].X - 175, jointPoints[jointType1].Y - 50)));
             }
             //primary color rounded rectangle dancers
-            else if (this.overallSW.ElapsedMilliseconds >= 36500 && this.overallSW.ElapsedMilliseconds < 62500)
+            else if (this.overallSW.ElapsedMilliseconds >= 35000 && this.overallSW.ElapsedMilliseconds < 61000)
             {
                 drawingContext.DrawRoundedRectangle(redBrush, new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X, jointPoints[jointType0].Y - 350), new Point(jointPoints[jointType1].X, jointPoints[jointType1].Y - 350)), length, length);
                 drawingContext.DrawRoundedRectangle(blueBrush, new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X + 150, jointPoints[jointType0].Y - 50), new Point(jointPoints[jointType1].X + 150, jointPoints[jointType1].Y - 50)), length, length);
                 drawingContext.DrawRoundedRectangle(yellowBrush, new Pen(whiteBrush, 1), new Rect(new Point(jointPoints[jointType0].X - 150, jointPoints[jointType0].Y - 50), new Point(jointPoints[jointType1].X - 150, jointPoints[jointType1].Y - 50)), length, length);
             }
             //michelin man
-            else if (this.overallSW.ElapsedMilliseconds >= 62500 && this.overallSW.ElapsedMilliseconds < 90000)
+            else if (this.overallSW.ElapsedMilliseconds >= 61000 && this.overallSW.ElapsedMilliseconds < 88500)
             {
                 drawingContext.DrawEllipse(whiteBrush, new Pen(greyBrush, 1), new Point(xMidPoint, yMidPoint), length, length);
                 drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 125, 125, 125)), new Pen(whiteBrush, 1), new Point(xMidPoint + 170, yMidPoint - 100), length, length);
@@ -1039,7 +1039,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             }
             //polygon
-            else if (this.overallSW.ElapsedMilliseconds >= 90000 && this.overallSW.ElapsedMilliseconds < 106000)
+            else if (this.overallSW.ElapsedMilliseconds >= 88500 && this.overallSW.ElapsedMilliseconds < 104500)
             {
                 Pen polyPen = new Pen(blackBrush, 5);
 
@@ -1113,7 +1113,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             }
             //first emitter section
-            else if (this.overallSW.ElapsedMilliseconds >= 106000 && this.overallSW.ElapsedMilliseconds < 132000)
+            else if (this.overallSW.ElapsedMilliseconds >= 104500 && this.overallSW.ElapsedMilliseconds < 130500)
             {
                 myCanvas.Children.Clear();
 
@@ -1121,7 +1121,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 145, 145, 145)), null, otherPoints[jointType0], 20, 20);
             }
             //duo skeleton switch
-            else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 168000)
+            else if (this.overallSW.ElapsedMilliseconds >= 130500 && this.overallSW.ElapsedMilliseconds < 166500)
             {
                 Pen skelPen = new Pen(new SolidColorBrush(Color.FromArgb(greyByte, 0, 0, 0)), 6);
 
@@ -1133,7 +1133,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(greyByte1, 145, 145, 145)), null, otherPoints[jointType0], 20, 20);
             }
             //rectangle during stillness
-            else if (this.overallSW.ElapsedMilliseconds >= 168000 && this.overallSW.ElapsedMilliseconds < 180000)
+            else if (this.overallSW.ElapsedMilliseconds >= 166500 && this.overallSW.ElapsedMilliseconds < 178500)
             {
                 Rectangle myBodyRectangle = new Rectangle();
                 myBodyRectangle.Width = bodyWidth + 50;
@@ -1154,12 +1154,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     myCanvas.Children.Add(myBodyRectangle);
                 }
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 180000 && this.overallSW.ElapsedMilliseconds < 181000)
+            else if (this.overallSW.ElapsedMilliseconds >= 178500 && this.overallSW.ElapsedMilliseconds < 179500)
             {
                 myCanvas.Children.Clear();
             }
             //polygons during stillness
-            else if (this.overallSW.ElapsedMilliseconds >= 181000 && this.overallSW.ElapsedMilliseconds < 193000)
+            else if (this.overallSW.ElapsedMilliseconds >= 179500 && this.overallSW.ElapsedMilliseconds < 191500)
             {
                 Polygon myBodyPoly = new Polygon();
                 PointCollection myBodyPolyPoints = new PointCollection();
@@ -1181,12 +1181,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     myCanvas.Children.Add(myBodyPoly);
                 }
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 193000 && this.overallSW.ElapsedMilliseconds < 194000)
+            else if (this.overallSW.ElapsedMilliseconds >= 191500 && this.overallSW.ElapsedMilliseconds < 192500)
             {
                 myCanvas.Children.Clear();
             }
             //crazy polygons during stillness
-            else if (this.overallSW.ElapsedMilliseconds >= 194000 && this.overallSW.ElapsedMilliseconds <= 214000)
+            else if (this.overallSW.ElapsedMilliseconds >= 192500 && this.overallSW.ElapsedMilliseconds <= 212500)
             {
                 Line myLine = new Line();
                 myLine.X1 = jointPoints[jointType0].X;
@@ -1206,12 +1206,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     myCanvas.Children.Add(myLine);
                 }
             }
-            else if (this.overallSW.ElapsedMilliseconds > 214000 && this.overallSW.ElapsedMilliseconds < 216000)
+            else if (this.overallSW.ElapsedMilliseconds > 212500 && this.overallSW.ElapsedMilliseconds < 214500)
             {
                 myCanvas.Children.Clear();
             }
             //lines come in 
-            else if (this.overallSW.ElapsedMilliseconds >= 216000 && this.overallSW.ElapsedMilliseconds < 240000)
+            else if (this.overallSW.ElapsedMilliseconds >= 214500 && this.overallSW.ElapsedMilliseconds < 238500)
             {
 
                 if ((this.overallSW.ElapsedMilliseconds % 550) >= 0 && (this.overallSW.ElapsedMilliseconds % 550) <= 40)
@@ -1277,24 +1277,24 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 }
 
             } 
-            else if (this.overallSW.ElapsedMilliseconds >= 240000 && this.overallSW.ElapsedMilliseconds < 240500)
+            else if (this.overallSW.ElapsedMilliseconds >= 238500 && this.overallSW.ElapsedMilliseconds < 239000)
             {
                 myCanvas.Children.Clear();
             }
             #region ending rectangle
             //ending rectangle
-            else if (this.overallSW.ElapsedMilliseconds >= 240500 && this.overallSW.ElapsedMilliseconds < 258000)
+            else if (this.overallSW.ElapsedMilliseconds >= 239000 && this.overallSW.ElapsedMilliseconds < 256500)
             {
                 
 
-                if (this.overallSW.ElapsedMilliseconds >= 240500 && this.overallSW.ElapsedMilliseconds < 251770)
+                if (this.overallSW.ElapsedMilliseconds >= 239000 && this.overallSW.ElapsedMilliseconds < 250263)
                 {
-                    Rect endRect = new Rect(bodyXMin, bodyYMin, bodyWidth+50, bodyHeight+50);
+                    Rect endRect = new Rect(bodyXMin-100, bodyYMin-100, bodyWidth+200, bodyHeight+100);
                     drawingContext.DrawRectangle(whitestBrush, null, endRect);
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 251770 && this.overallSW.ElapsedMilliseconds < 258000)
+                else if (this.overallSW.ElapsedMilliseconds >= 250263 && this.overallSW.ElapsedMilliseconds < 256500)
                 {
-                    if (this.overallSW.ElapsedMilliseconds % 25 >= 20 && this.overallSW.ElapsedMilliseconds % 25 <= 35)
+                    if (this.overallSW.ElapsedMilliseconds % 25 >= 20 && this.overallSW.ElapsedMilliseconds % 25 <= 40)
                     {
                         if (gradientByteForEnd > 0)
                         {
@@ -1312,8 +1312,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     Rect endRect1 = new Rect(setX, setY, newWidth, newHeight);
                     drawingContext.DrawRectangle(endRectBrush, null, endRect1);
                 }
+                #endregion
             }
-            #endregion
+
 
 
 
@@ -1354,12 +1355,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             byte gradientByte = Convert.ToByte(level);
 
 
-            if (this.overallSW.ElapsedMilliseconds < 12050)
+            if (this.overallSW.ElapsedMilliseconds < 10550)
             {
                 leftHandRect.Fill = whiteBrush;
                 rightHandRect.Fill = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds < 36500)
+            else if (this.overallSW.ElapsedMilliseconds >= 10550 && this.overallSW.ElapsedMilliseconds < 34000)
             {
                 if (leftHand)
                 {
@@ -1370,7 +1371,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     rightHandRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
                 }
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            else if (this.overallSW.ElapsedMilliseconds >= 34000 && this.overallSW.ElapsedMilliseconds < 51000)
             {
                 if (leftHand)
                 {
@@ -1381,18 +1382,18 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     rightHandRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, gradientByte));
                 }
             }
-            else if ((overallSW.ElapsedMilliseconds >= 53500 || topOfPoleGesture == true) && overallSW.ElapsedMilliseconds < 62758)
+            else if ((overallSW.ElapsedMilliseconds >= 51000 || topOfPoleGesture == true) && overallSW.ElapsedMilliseconds < 61251)
             {
                 leftHandRect.Fill = blueBrush;
                 rightHandRect.Fill = yellowBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 62758 && this.overallSW.ElapsedMilliseconds < 106000)
+            else if (this.overallSW.ElapsedMilliseconds >= 61251 && this.overallSW.ElapsedMilliseconds < 104500)
             {
 
                 leftHandRect.Fill = whiteBrush;
                 rightHandRect.Fill = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds > 106000 && this.overallSW.ElapsedMilliseconds < 132000)
+            else if (this.overallSW.ElapsedMilliseconds > 104500 && this.overallSW.ElapsedMilliseconds < 130500)
             {
                 drawingContext.DrawEllipse(new SolidColorBrush(Color.FromArgb(100, 125, 125, 125)), null, handPosition, 30, 30);
             }
@@ -1483,19 +1484,19 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
           
             byte colorByte = Convert.ToByte(toBecomeByte);
 
-            if (this.overallSW.ElapsedMilliseconds < 12050)
+            if (this.overallSW.ElapsedMilliseconds < 10550)
             {
                 velocityRect.Fill = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds < 36500)
+            else if (this.overallSW.ElapsedMilliseconds >= 10550 && this.overallSW.ElapsedMilliseconds < 35000)
             {
                 velocityRect.Fill = new SolidColorBrush(Color.FromArgb(255, colorByte, colorByte, colorByte));
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            else if (this.overallSW.ElapsedMilliseconds >= 35000 && this.overallSW.ElapsedMilliseconds < 51000)
             {
                 velocityRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, colorByte, colorByte));
             }
-            else if ((overallSW.ElapsedMilliseconds >= 53500 || topOfPoleGesture == true) && overallSW.ElapsedMilliseconds < 62758)
+            else if ((overallSW.ElapsedMilliseconds >= 51000 || topOfPoleGesture == true) && overallSW.ElapsedMilliseconds < 61251)
             {
                 velocityRect.Fill = redBrush;
             }
@@ -1678,25 +1679,25 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             //byte yByte = Convert.ToByte(Math.Abs(avgBodyY/2) % 255);
             byte zByte = Convert.ToByte(checkDoubleForByteConversion(255 - Math.Abs(avgXYZCoordinates[2] * 56.6)));
 
-            if (this.overallSW.ElapsedMilliseconds < 12050)
+            if (this.overallSW.ElapsedMilliseconds < 10550)
             {
                 xregionColorRect.Fill = whiteBrush;
                 yregionColorRect.Fill = whiteBrush;
                 zregionColorRect.Fill = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds < 36500)
+            else if (this.overallSW.ElapsedMilliseconds >= 10550 && this.overallSW.ElapsedMilliseconds < 35000)
             {
                 xregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, xByte, xByte, xByte));
                 yregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, yByte, yByte, yByte));
                 zregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, zByte, zByte, zByte));
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            else if (this.overallSW.ElapsedMilliseconds >= 35000 && this.overallSW.ElapsedMilliseconds < 51000)
             {
                 xregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, xByte, xByte));
                 yregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, yByte));
                 zregionColorRect.Fill = new SolidColorBrush(Color.FromArgb(255, zByte, zByte, 255));
             }
-            else if ((this.overallSW.ElapsedMilliseconds >= 53500 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 62758)
+            else if ((this.overallSW.ElapsedMilliseconds >= 51000 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 61251)
             {
                 xregionColorRect.Fill = redBrush;
                 yregionColorRect.Fill = yellowBrush;
@@ -1740,20 +1741,20 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
           //  Console.WriteLine("Byte: " + (255 - (Math.Abs(displacement) * 20)));
           //  Console.WriteLine();
 
-            if (this.overallSW.ElapsedMilliseconds < 12050)
+            if (this.overallSW.ElapsedMilliseconds < 10550)
             {
                 sidewaysMvmtRect.Fill = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
+            else if (this.overallSW.ElapsedMilliseconds >= 10550 && this.overallSW.ElapsedMilliseconds <= 35000)
             {
                 sidewaysMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
             }
-            else if (this.overallSW.ElapsedMilliseconds > 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            else if (this.overallSW.ElapsedMilliseconds > 35000 && this.overallSW.ElapsedMilliseconds < 51000)
             {
                 sidewaysMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, gradientByte));
 
             }
-            else if ((this.overallSW.ElapsedMilliseconds > 53500 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 62758)
+            else if ((this.overallSW.ElapsedMilliseconds > 51000 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 61251)
             {
                 sidewaysMvmtRect.Fill = yellowBrush;
             }
@@ -1793,19 +1794,19 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             byte gradientByte = Convert.ToByte(toBecomeByte);
 
-            if(this.overallSW.ElapsedMilliseconds < 12050)
+            if(this.overallSW.ElapsedMilliseconds < 10550)
             {
                 verticalMvmtRect.Fill = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
+            else if (this.overallSW.ElapsedMilliseconds >= 10550 && this.overallSW.ElapsedMilliseconds <= 35000)
             {
                 verticalMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
             }
-            else if (this.overallSW.ElapsedMilliseconds > 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            else if (this.overallSW.ElapsedMilliseconds > 35000 && this.overallSW.ElapsedMilliseconds < 51000)
             {
                 verticalMvmtRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, gradientByte, gradientByte));
             }
-            else if ((this.overallSW.ElapsedMilliseconds > 53500 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 62758)
+            else if ((this.overallSW.ElapsedMilliseconds > 51000 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 61251)
             {
                 verticalMvmtRect.Fill = redBrush;
             }
@@ -1839,7 +1840,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             byte LFByte = Convert.ToByte(toBecomeLFByte);
             byte RFByte = Convert.ToByte(toBecomeRFByte);
 
-            if(this.overallSW.ElapsedMilliseconds < 12050)
+            if(this.overallSW.ElapsedMilliseconds < 10550)
             {
                 handLeftSweepXRect.Fill = whiteBrush;
                 handLeftSweepYRect.Fill = whiteBrush;
@@ -1848,7 +1849,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 footLeftSweepRect.Fill = whiteBrush;
                 footRightSweepRect.Fill = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
+            else if (this.overallSW.ElapsedMilliseconds >= 10550 && this.overallSW.ElapsedMilliseconds <= 35000)
             {
                 handLeftSweepXRect.Fill = new SolidColorBrush(Color.FromArgb(255, LHXByte, LHXByte, LHXByte));
                 handLeftSweepYRect.Fill = new SolidColorBrush(Color.FromArgb(255, LHYByte, LHYByte, LHYByte));
@@ -1857,7 +1858,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 footLeftSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, LFByte, LFByte, LFByte));
                 footRightSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, RFByte, RFByte, RFByte));
             }
-            else if (this.overallSW.ElapsedMilliseconds > 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            else if (this.overallSW.ElapsedMilliseconds > 35000 && this.overallSW.ElapsedMilliseconds < 51000)
             {
                 handLeftSweepXRect.Fill = new SolidColorBrush(Color.FromArgb(255, LHXByte, LHXByte, 255));
                 handLeftSweepYRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, LHYByte, LHYByte ));
@@ -1866,7 +1867,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 footLeftSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, LFByte, LFByte, 255));
                 footRightSweepRect.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, RFByte));
             }
-            else if ((this.overallSW.ElapsedMilliseconds > 53500 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 62758)
+            else if ((this.overallSW.ElapsedMilliseconds > 51000 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 61251)
             {
                 handLeftSweepXRect.Fill = blueBrush;
                 handLeftSweepYRect.Fill = redBrush;
@@ -1910,22 +1911,31 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             //Console.WriteLine("");
 
             double toBecomeByte = checkDoubleForByteConversion((Math.Abs(displacement) * 4.0));
+            if (toBecomeByte > 255 )
+            {
+                toBecomeByte = 255;
+            }
             
+            if (toBecomeByte < 0)
+            {
+                toBecomeByte = 0;
+            }
+
             byte gradientByte = Convert.ToByte(toBecomeByte);
 
-            if (this.overallSW.ElapsedMilliseconds < 12050)
+            if (this.overallSW.ElapsedMilliseconds < 10550)
             {
                 orientationRect.Fill = whiteBrush;
             }
-            if (this.overallSW.ElapsedMilliseconds >= 12050 && this.overallSW.ElapsedMilliseconds <= 36500)
+            if (this.overallSW.ElapsedMilliseconds >= 10550 && this.overallSW.ElapsedMilliseconds <= 35000)
             {
                 orientationRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, gradientByte));
             }
-            else if (this.overallSW.ElapsedMilliseconds > 36500 && this.overallSW.ElapsedMilliseconds < 53500)
+            else if (this.overallSW.ElapsedMilliseconds > 35000 && this.overallSW.ElapsedMilliseconds < 51000)
             {
                 orientationRect.Fill = new SolidColorBrush(Color.FromArgb(255, gradientByte, gradientByte, 255));
             }
-            else if ((this.overallSW.ElapsedMilliseconds > 53500 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 62758)
+            else if ((this.overallSW.ElapsedMilliseconds > 51000 || topOfPoleGesture == true) && this.overallSW.ElapsedMilliseconds < 61251)
             {
                 orientationRect.Fill = yellowBrush;
             }
@@ -1971,7 +1981,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
                 //c.A /= 2;
                 
-                if (this.overallSW.ElapsedMilliseconds >= 106000 && this.overallSW.ElapsedMilliseconds < 132000)
+                if (this.overallSW.ElapsedMilliseconds >= 104500 && this.overallSW.ElapsedMilliseconds < 130500)
                 {
                     p.Color = Color.FromArgb(50, 60, 60, 60);
 
@@ -1982,7 +1992,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                       dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
                 }
 
-                else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 176000)
+                else if (this.overallSW.ElapsedMilliseconds >= 130500 && this.overallSW.ElapsedMilliseconds < 174500)
                 {
                     p.Color = Color.FromArgb(50, opposingByte, opposingByte, colorByte);
 
@@ -2001,7 +2011,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
 
             //    c.A /= 2;
                 
-                if (this.overallSW.ElapsedMilliseconds >= 106000 && this.overallSW.ElapsedMilliseconds < 132000)
+                if (this.overallSW.ElapsedMilliseconds >= 104500 && this.overallSW.ElapsedMilliseconds < 130500)
                 {
                     p.Color = Color.FromArgb(50, 60, 60, 60);
 
@@ -2011,7 +2021,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                     dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 15, 15);
                     dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
                 }
-                else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 176000)
+                else if (this.overallSW.ElapsedMilliseconds >= 130500 && this.overallSW.ElapsedMilliseconds < 174500)
                 {
                     
                     p.Color = Color.FromArgb(50, colorByte, colorByte, opposingByte);
@@ -2031,7 +2041,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             emitter.particles.ForEach(p =>
            {
              
-               if (this.overallSW.ElapsedMilliseconds >= 106000 && this.overallSW.ElapsedMilliseconds < 132000)
+               if (this.overallSW.ElapsedMilliseconds >= 104500 && this.overallSW.ElapsedMilliseconds < 130500)
                {
                    p.Color = Color.FromArgb(50, 60, 60, 60);
                   
@@ -2041,7 +2051,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 15, 15);
                    dc.DrawEllipse(new SolidColorBrush(p.Color), null, p.Position, 5, 5);
                }
-               else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 176000)
+               else if (this.overallSW.ElapsedMilliseconds >= 130500 && this.overallSW.ElapsedMilliseconds < 174500)
                {
                    
                    p.Color = Color.FromArgb(50, colorByte, opposingByte, opposingByte);
@@ -2068,13 +2078,13 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             canvas.Children.Clear();
             canvas.Children.Add(element);
 
-            if (this.overallSW.ElapsedMilliseconds >= 106000 && this.overallSW.ElapsedMilliseconds < 132000)
+            if (this.overallSW.ElapsedMilliseconds >= 104500 && this.overallSW.ElapsedMilliseconds < 130500)
             {
                 emitters[0].Center = head;
                 emitters[1].Center = bodyCenter;
                 emitters[2].Center = rightFoot;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 132000 && this.overallSW.ElapsedMilliseconds < 176000)
+            else if (this.overallSW.ElapsedMilliseconds >= 130500 && this.overallSW.ElapsedMilliseconds < 174500)
             {
                 if (rightSide == true && leftSide == false)
                 {
@@ -2109,27 +2119,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         {
             #region stroke
            
-            if (this.overallSW.ElapsedMilliseconds < 507)
-            {
-                
-                xregionColorRect.Stroke = whiteBrush;
-                yregionColorRect.Stroke = whiteBrush;
-                zregionColorRect.Stroke = whiteBrush;
-                sidewaysMvmtRect.Stroke = whiteBrush;
-                verticalMvmtRect.Stroke = whiteBrush;
-                handLeftSweepXRect.Stroke = whiteBrush;
-                handLeftSweepYRect.Stroke = whiteBrush;
-                handRightSweepXRect.Stroke = whiteBrush;
-                handRightSweepYRect.Stroke = whiteBrush;
-                footLeftSweepRect.Stroke = whiteBrush;
-                footRightSweepRect.Stroke = whiteBrush;
-                rightHandRect.Stroke = whiteBrush;
-                leftHandRect.Stroke = whiteBrush;
-                velocityRect.Stroke = whiteBrush;
-                orientationRect.Stroke = whiteBrush;
-                
-            }
-            else if (this.overallSW.ElapsedMilliseconds >= 507 && this.overallSW.ElapsedMilliseconds < 1308)
+            if(this.overallSW.ElapsedMilliseconds < 100)
             {
                 xregionColorRect.Stroke = whiteBrush;
                 yregionColorRect.Stroke = whiteBrush;
@@ -2147,11 +2137,12 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 1308 && this.overallSW.ElapsedMilliseconds < 2028)
+            else if (this.overallSW.ElapsedMilliseconds >= 100 && this.overallSW.ElapsedMilliseconds < 521)
             {
+                
                 xregionColorRect.Stroke = blackBrush;
-                yregionColorRect.Stroke = blackBrush;
-                zregionColorRect.Stroke = whiteBrush;
+                yregionColorRect.Stroke = whiteBrush;
+                zregionColorRect.Stroke = blackBrush;
                 sidewaysMvmtRect.Stroke = whiteBrush;
                 verticalMvmtRect.Stroke = whiteBrush;
                 handLeftSweepXRect.Stroke = whiteBrush;
@@ -2164,8 +2155,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 leftHandRect.Stroke = whiteBrush;
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
+                
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 2028 && this.overallSW.ElapsedMilliseconds < 2775)
+            else if (this.overallSW.ElapsedMilliseconds >= 521 && this.overallSW.ElapsedMilliseconds < 1268)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2183,7 +2175,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 2775 && this.overallSW.ElapsedMilliseconds < 4616)
+            else if (this.overallSW.ElapsedMilliseconds >= 1268 && this.overallSW.ElapsedMilliseconds < 3109)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2201,7 +2193,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 4616 && this.overallSW.ElapsedMilliseconds < 5604)
+            else if (this.overallSW.ElapsedMilliseconds >= 3109 && this.overallSW.ElapsedMilliseconds < 4097)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2219,7 +2211,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 5604 && this.overallSW.ElapsedMilliseconds < 5750)
+            else if (this.overallSW.ElapsedMilliseconds >= 4097 && this.overallSW.ElapsedMilliseconds < 4243)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2237,7 +2229,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 5750 && this.overallSW.ElapsedMilliseconds < 6137)
+            else if (this.overallSW.ElapsedMilliseconds >= 4243 && this.overallSW.ElapsedMilliseconds < 4630)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2255,7 +2247,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 6137 && this.overallSW.ElapsedMilliseconds < 6524)
+            else if (this.overallSW.ElapsedMilliseconds >= 4630 && this.overallSW.ElapsedMilliseconds < 5017)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2273,7 +2265,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 6524 && this.overallSW.ElapsedMilliseconds < 7298)
+            else if (this.overallSW.ElapsedMilliseconds >= 5017 && this.overallSW.ElapsedMilliseconds < 5791)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2291,7 +2283,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 7298 && this.overallSW.ElapsedMilliseconds < 8045)
+            else if (this.overallSW.ElapsedMilliseconds >= 5791 && this.overallSW.ElapsedMilliseconds < 6538)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2309,7 +2301,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 8045 && this.overallSW.ElapsedMilliseconds < 8792)
+            else if (this.overallSW.ElapsedMilliseconds >= 6538 && this.overallSW.ElapsedMilliseconds < 7285)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2327,7 +2319,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = whiteBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 8792 && this.overallSW.ElapsedMilliseconds < 10620)
+            else if (this.overallSW.ElapsedMilliseconds >= 7285 && this.overallSW.ElapsedMilliseconds < 9113)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2345,7 +2337,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = whiteBrush;
                 orientationRect.Stroke = blackBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 10620 && this.overallSW.ElapsedMilliseconds < 11621)
+            else if (this.overallSW.ElapsedMilliseconds >= 9113 && this.overallSW.ElapsedMilliseconds < 10114)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2363,7 +2355,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = blackBrush;
                 orientationRect.Stroke = blackBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 11621 && this.overallSW.ElapsedMilliseconds < 11781)
+            else if (this.overallSW.ElapsedMilliseconds >= 10114 && this.overallSW.ElapsedMilliseconds < 10274)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2381,7 +2373,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = blackBrush;
                 orientationRect.Stroke = blackBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 11781 && this.overallSW.ElapsedMilliseconds < 62758)
+            else if (this.overallSW.ElapsedMilliseconds >= 10274 && this.overallSW.ElapsedMilliseconds < 61251)
             {
                 xregionColorRect.Stroke = blackBrush;
                 yregionColorRect.Stroke = blackBrush;
@@ -2399,7 +2391,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Stroke = blackBrush;
                 orientationRect.Stroke = blackBrush;
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 62758)
+            else if (this.overallSW.ElapsedMilliseconds >= 61251)
             {
                 xregionColorRect.Stroke = whiteBrush;
                 yregionColorRect.Stroke = whiteBrush;
@@ -2428,7 +2420,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
             double[] heightChanges = { 41, 80, 17, 15, 28, 35, 18, 51, 22, 16, 18, 34, 65, 66, 27 };
             double[] widthChanges = { 32, 73, 72, 55, 50, 53, 53, 42, 50, 31, 60, 73, 75, 102, 35 };
 
-            if (this.overallSW.ElapsedMilliseconds < 54512)
+            if (this.overallSW.ElapsedMilliseconds < 53005)
             {
                 xregionColorRect.Height = startingHeights[0];
                 yregionColorRect.Height = startingHeights[1];
@@ -2462,7 +2454,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Width = startingWidths[13];
                 orientationRect.Width = startingWidths[14];
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 54512 && this.overallSW.ElapsedMilliseconds < 55224)
+            else if (this.overallSW.ElapsedMilliseconds >= 53005 && this.overallSW.ElapsedMilliseconds < 53717)
             {
                 for (int i = 0; i < heights.Length; i++)
                 {
@@ -2484,7 +2476,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Height = heights[13];
                 orientationRect.Height = heights[14];
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 55224 && this.overallSW.ElapsedMilliseconds < 56105)
+            else if (this.overallSW.ElapsedMilliseconds >= 53717 && this.overallSW.ElapsedMilliseconds < 54598)
             {
                 for (int i = 0; i < widths.Length; i++)
                 {
@@ -2507,7 +2499,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Width = widths[13];
                 orientationRect.Width = widths[14];
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 56105 && this.overallSW.ElapsedMilliseconds < 56766)
+            else if (this.overallSW.ElapsedMilliseconds >= 54598 && this.overallSW.ElapsedMilliseconds < 55259)
             {
                 for (int i = 0; i < heights.Length; i++)
                 {
@@ -2530,7 +2522,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 orientationRect.Height = heights[14];
 
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 56766 && this.overallSW.ElapsedMilliseconds < 58496)
+            else if (this.overallSW.ElapsedMilliseconds >= 55259 && this.overallSW.ElapsedMilliseconds < 56989)
             {
                 for (int i = 0; i < widths.Length; i++)
                 {
@@ -2553,7 +2545,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Width = widths[13];
                 orientationRect.Width = widths[14];
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 58496 && this.overallSW.ElapsedMilliseconds < 59616)
+            else if (this.overallSW.ElapsedMilliseconds >= 56989 && this.overallSW.ElapsedMilliseconds < 58109)
             {
                 for (int i = 0; i < heights.Length; i++)
                 {
@@ -2575,7 +2567,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Height = heights[13];
                 orientationRect.Height = heights[14];
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 59616 && this.overallSW.ElapsedMilliseconds < 59765)
+            else if (this.overallSW.ElapsedMilliseconds >= 58109 && this.overallSW.ElapsedMilliseconds < 58258)
             {
                 for (int i = 0; i < widths.Length; i++)
                 {
@@ -2598,7 +2590,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Width = widths[13];
                 orientationRect.Width = widths[14];
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 59765 && this.overallSW.ElapsedMilliseconds < 60523)
+            else if (this.overallSW.ElapsedMilliseconds >= 58258 && this.overallSW.ElapsedMilliseconds < 59016)
             {
                 for (int i = 0; i < heights.Length; i++)
                 {
@@ -2620,7 +2612,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Height = heights[13];
                 orientationRect.Height = heights[14];
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 60523 && this.overallSW.ElapsedMilliseconds < 61294)
+            else if (this.overallSW.ElapsedMilliseconds >= 59016 && this.overallSW.ElapsedMilliseconds < 59787)
             {
                 for (int i = 0; i < widths.Length; i++)
                 {
@@ -2643,7 +2635,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Width = widths[13];
                 orientationRect.Width = widths[14];
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 61294 && this.overallSW.ElapsedMilliseconds < 62020)
+            else if (this.overallSW.ElapsedMilliseconds >= 59787 && this.overallSW.ElapsedMilliseconds < 60513)
             {
                 for (int i = 0; i < heights.Length; i++)
                 {
@@ -2665,7 +2657,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 velocityRect.Height = heights[13];
                 orientationRect.Height = heights[14];
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 62020 && this.overallSW.ElapsedMilliseconds < 62758)
+            else if (this.overallSW.ElapsedMilliseconds >= 60513 && this.overallSW.ElapsedMilliseconds < 61251)
             {
                 for (int i = 0; i < widths.Length; i++)
                 {
@@ -2689,7 +2681,7 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
                 orientationRect.Width = widths[14];
 
             }
-            else if (this.overallSW.ElapsedMilliseconds >= 62758)
+            else if (this.overallSW.ElapsedMilliseconds >= 61251)
             {
                 xregionColorRect.Width = 0;
                 yregionColorRect.Width = 0;
@@ -2781,6 +2773,9 @@ namespace Microsoft.Samples.Kinect.BodyIndexBasics
         private void timerStartButton_Click(object sender, RoutedEventArgs e)
         {
             this.overallSW.Start();
+            timerStartButton.Content = ""; 
+            timerStartButton.Background = transparentBrush;
+            timerStartButton.BorderBrush = transparentBrush;
         }
         #endregion
 
